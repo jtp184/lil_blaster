@@ -1,4 +1,4 @@
-require "lil_blaster/version"
+require 'lil_blaster/version'
 
 module LilBlaster
   class Error < StandardError; end
