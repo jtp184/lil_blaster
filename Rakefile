@@ -3,18 +3,16 @@ require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
+RDOC_EXCLUDE = [].map { |r| "--exclude=#{r}" }.join(' ').freeze
+
 task default: :spec
 
 task :docs do
-  rd_exclude = RDOC_EXCLUDE.map { |r| "--exclude=#{r}" }.join(' ')
-
-  sh "rdoc --output=docs --format=hanna --all --main=README.md #{rd_exclude}"
+  sh "rdoc --output=docs --format=hanna --all --main=README.md #{RDOC_EXCLUDE}"
 end
 
 task :doc_check do
-  rd_exclude = RDOC_EXCLUDE.map { |r| "--exclude=#{r}" }.join(' ')
-
-  sh "rdoc -C --output=docs --format=hanna --all --main=README.md #{rd_exclude}"
+  sh "rdoc -C --output=docs --format=hanna --all --main=README.md #{RDOC_EXCLUDE}"
 end
 
 task :reinstall do
