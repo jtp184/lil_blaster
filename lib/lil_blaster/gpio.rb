@@ -68,8 +68,6 @@ module LilBlaster
           @direction = dir
           gpio_pin.mode = dir == :input ? 0 : 1
         end
-
-        self
       end
 
       # Detect whether gpio_pin reads as 1
