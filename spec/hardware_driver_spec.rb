@@ -1,7 +1,7 @@
 RSpec.describe 'Hardware driver spec' do
   it 'has a hardware driver when pigpio is defined' do
     # Fake constant to trick #defined?
-    Pigpio = 1
+    Pigpio = 1 unless defined?(Pigpio)
 
     expect(LilBlaster::GPIO.driver).to be(Pigpio)
 
