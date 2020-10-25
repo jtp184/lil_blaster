@@ -84,11 +84,13 @@ module LilBlaster
       # Writes a 1 to the gpio_pin
       def turn_on
         gpio_pin.write(1) if direction == :output
+        self
       end
 
       # Writes a 0 to the gpio_pin
       def turn_off
         gpio_pin.write(0) if direction == :output
+        self
       end
 
       # Waits until the pin reads #on? or +timeout+ seconds have ellapsed
@@ -125,12 +127,14 @@ module LilBlaster
                    end
 
         @callback = gpio_pin.callback(edge_num, &blk)
+        self
       end
 
       # Stops the callback stored on the pin object
       def stop_callback
         @callback.cancel
         @callback = nil
+        self
       end
     end
   end
