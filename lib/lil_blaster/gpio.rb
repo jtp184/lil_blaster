@@ -57,7 +57,8 @@ module LilBlaster
       def initialize(pin, dir = :input)
         @id = pin
         @gpio_pin = GPIO.gpio_pin(id)
-        @direction = dir
+
+        self.direction = dir
       end
 
       # Sets the direction using the pin path direction file
@@ -98,10 +99,8 @@ module LilBlaster
         else
           start_time = Time.now
 
-          timeup, pinon = nil
-
           loop do
-            timeup = Time.now - start_time < timeout
+            timeup = Time.now - start_time > timeout
             pinon = on?
 
             break if timeup || pinon
