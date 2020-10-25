@@ -23,7 +23,7 @@ task :docs do
   sh "rdoc --output=docs --format=hanna --all --main=README.md #{RDOC_EXCLUDE}"
 end
 
-task :doc_check do
+task :docs? do
   sh "rdoc -C --output=docs --format=hanna --all --main=README.md #{RDOC_EXCLUDE}"
 end
 
