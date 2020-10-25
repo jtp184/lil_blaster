@@ -6,7 +6,16 @@ RSpec::Core::RakeTask.new(:test) do |t|
   t.rspec_opts = '--tag ~@hardware'
 end
 
-RDOC_EXCLUDE = [].map { |r| "--exclude=#{r}" }.join(' ').freeze
+RDOC_EXCLUDE = %w[
+  bin/setup
+  bin/console
+  Gemfile
+  Gemfile.lock
+  Rakefile
+  tmp
+  docs
+  spec
+].map { |r| "--exclude=#{r}" }.join(' ').freeze
 
 task default: :test
 
