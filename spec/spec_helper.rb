@@ -1,3 +1,4 @@
+require 'pigpio' if Gem.platforms.last.os == 'linux' && File.read('/proc/cpuinfo') =~ /Raspberry Pi/
 require 'bundler/setup'
 require 'lil_blaster'
 
