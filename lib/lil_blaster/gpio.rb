@@ -38,7 +38,7 @@ module LilBlaster
 
     # Models the pin as an object, simplifying the interface
     class Pin
-      include Forwardable
+      extend Forwardable
 
       # Which pin is in question
       attr_reader :id
