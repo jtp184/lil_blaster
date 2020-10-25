@@ -6,7 +6,7 @@ module LilBlaster
     class << self
       extend Forwardable
 
-      def_delegators :@pin, :turn_on, :turn_off, :on?, :off?
+      def_delegators :pin, :turn_on, :turn_off, :on?, :off?
 
       private
 
