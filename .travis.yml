@@ -4,6 +4,4 @@ cache: bundler
 rvm:
   - 2.7.1
 before_install: 
-  - sudo apt-get install pigpio
   - gem install bundler -v 2.1.4
-  - gem install pigpio
