@@ -1,3 +1,4 @@
+require 'pigpio' if Gem.platforms.last.os == 'linux'
 require 'bundler/setup'
 require 'lil_blaster'
 
