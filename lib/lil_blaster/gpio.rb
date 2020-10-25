@@ -100,6 +100,11 @@ module LilBlaster
         self
       end
 
+      # If on, turns off, and vice versa
+      def toggle
+        on? ? turn_off : turn_on
+      end
+
       # Waits until the pin reads #on? or +timeout+ seconds have ellapsed
       def wait(timeout = nil)
         if timeout.nil?
