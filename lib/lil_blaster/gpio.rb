@@ -71,11 +71,10 @@ module LilBlaster
       # Sets the direction using the pin path direction file
       def direction=(dir)
         raise ArgumentError unless %i[input output].include?(dir)
+        return if  direction == dir
 
-        unless direction == dir
-          @direction = dir
-          gpio_pin.mode = dir == :input ? 0 : 1
-        end
+        @direction = dir
+        gpio_pin.mode = dir == :input ? 0 : 1
       end
 
       # Detect whether gpio_pin reads as 1
