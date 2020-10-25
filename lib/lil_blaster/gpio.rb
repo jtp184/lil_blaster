@@ -26,19 +26,12 @@ module LilBlaster
 
       # Determines what to use as the driver, based on #pigpio_defined?
       def driver
-        if pigpio_defined?
+        if defined?(Pigpio)
           Pigpio
         else
           warn 'Pigpio is not defined, please require it.'
           nil
         end
-      end
-
-      private
-
-      # Checks if we have Pigpio defined for use
-      def pigpio_defined?
-        defined?(Pigpio)
       end
     end
 
