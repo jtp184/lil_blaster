@@ -24,7 +24,7 @@ RSpec.describe LilBlaster::GPIO::Pin, :hardware do
 
     @output_pin.direction = :input
 
-    expect(pin.direction).to eq(:input)
+    expect(@output_pin.direction).to eq(:input)
   end
 
   it 'Can check the value of the input pin attached to' do
