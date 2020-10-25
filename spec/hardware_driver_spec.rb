@@ -17,7 +17,7 @@ RSpec.describe 'Hardware driver spec' do
     backup = defined?(Pigpio) ? Pigpio : nil
     og_stderr = $stderr
 
-    Object.send(:remove_const, :Pigpio) if defined(Pigpio)
+    Object.send(:remove_const, :Pigpio) if defined?(Pigpio)
     $stderr = StringIO.new
 
     expect(LilBlaster::GPIO.driver).to be(nil)
