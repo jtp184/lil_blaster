@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>LilBlaster::GPIO::Pin</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='class' id='wrapper'>
+<div class='header'>
+<h1 class='name'><span class='type'>class</span>
+LilBlaster::GPIO::Pin
+</h1>
+<ol class='paths'>
+<li>
+<a href="../../../files/lib/lil_blaster/gpio_rb.html">lib/lil_blaster/gpio.rb</a>
+</li>
+</ol>
+<div class='parent'>
+Superclass:
+<strong>Object</strong>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<p>Models the pin as an object, simplifying the interface</p>
+</div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-new">new</a></li>
+</ol>
+<h3>Public Instance</h3>
+<ol>
+<li><a href="#attribute-i-callback">callback</a></li>
+<li><a href="#attribute-i-direction">direction</a></li>
+<li><a href="#method-i-direction-3D">direction=</a></li>
+<li><a href="#attribute-i-gpio_pin">gpio_pin</a></li>
+<li><a href="#attribute-i-id">id</a></li>
+<li><a href="#method-i-off-3F">off?</a></li>
+<li><a href="#method-i-on-3F">on?</a></li>
+<li><a href="#method-i-start_callback">start_callback</a></li>
+<li><a href="#method-i-stop_callback">stop_callback</a></li>
+<li><a href="#method-i-turn_off">turn_off</a></li>
+<li><a href="#method-i-turn_on">turn_on</a></li>
+<li><a href="#method-i-wait">wait</a></li>
+</ol>
+</div>
+<div id='context'>
+</div>
+<div id='section'>
+<div id='attribute-list'>
+<h2 class='section-bar'>Attributes</h2>
+<div class='name-list'>
+<table>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-i-callback'>callback</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'>
+<p>The currently configured callback, if any</p>
+</td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-i-direction'>direction</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'>
+<p>Whether this pin is for input or output</p>
+</td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-i-gpio_pin'>gpio_pin</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'>
+<p>The <a href="../GPIO.html">GPIO</a> pin object to puppet</p>
+</td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-i-id'>id</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'>
+<p>Which pin is in question</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-new'>
+<a name='method-c-new'></a>
+<div class='synopsis'>
+<span class='name'>new</span>
+<span class='arguments'>(pin, dir = :input)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in the <code>pin</code> number and the <code>dir</code> symbol for
+direction</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">pin</span>, <span class="ruby-identifier">dir</span> = <span class="ruby-value">:input</span>)&#x000A;  <span class="ruby-ivar">@id</span> = <span class="ruby-identifier">pin</span>&#x000A;  <span class="ruby-ivar">@gpio_pin</span> = <span class="ruby-constant">GPIO</span>.<span class="ruby-identifier">gpio_pin</span>(<span class="ruby-identifier">id</span>)&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">direction</span> = <span class="ruby-identifier">dir</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Public Instance methods</h2>
+<div class='method public-instance' id='method-method-i-direction-3D'>
+<a name='method-i-direction-3D'></a>
+<div class='synopsis'>
+<span class='name'>direction=</span>
+<span class='arguments'>(dir)</span>
+
+</div>
+<div class='description'>
+
+<p>Sets the direction using the pin path direction file</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-direction-3D-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-direction-3D-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 72</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">direction=</span>(<span class="ruby-identifier">dir</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword">unless</span> <span class="ruby-node">%i[input output]</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">dir</span>)&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">direction</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">dir</span>&#x000A;    <span class="ruby-ivar">@direction</span> = <span class="ruby-identifier">dir</span>&#x000A;    <span class="ruby-identifier">gpio_pin</span>.<span class="ruby-identifier">mode</span> = <span class="ruby-identifier">dir</span> <span class="ruby-operator">==</span> <span class="ruby-value">:input</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-off-3F'>
+<a name='method-i-off-3F'></a>
+<div class='synopsis'>
+<span class='name'>off?</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Detect whether <a href="Pin.html#attribute-i-gpio_pin">#gpio_pin</a> reads
+as 0</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-off-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-off-3F-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 87</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">off?</span>&#x000A;  <span class="ruby-identifier">gpio_pin</span>.<span class="ruby-identifier">read</span>.<span class="ruby-identifier">zero?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-on-3F'>
+<a name='method-i-on-3F'></a>
+<div class='synopsis'>
+<span class='name'>on?</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Detect whether <a href="Pin.html#attribute-i-gpio_pin">#gpio_pin</a> reads
+as 1</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-on-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-on-3F-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 82</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on?</span>&#x000A;  <span class="ruby-identifier">gpio_pin</span>.<span class="ruby-identifier">read</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-start_callback'>
+<a name='method-i-start_callback'></a>
+<div class='synopsis'>
+<span class='name'>start_callback</span>
+<span class='arguments'>(edge_sym, &blk)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in an <code>edge_sym</code> for whether to trigger on rising,
+falling, or either, and a <code>blk</code> function to run for the
+callback, and commits it to an instance variable</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-start_callback-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-start_callback-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 126</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_callback</span>(<span class="ruby-identifier">edge_sym</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;  <span class="ruby-identifier">edge_num</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">edge_sym</span>&#x000A;             <span class="ruby-keyword">when</span> <span class="ruby-value">:rising</span>&#x000A;               <span class="ruby-value">0</span>&#x000A;             <span class="ruby-keyword">when</span> <span class="ruby-value">:falling</span>&#x000A;               <span class="ruby-value">1</span>&#x000A;             <span class="ruby-keyword">when</span> <span class="ruby-value">:either</span>&#x000A;               <span class="ruby-value">2</span>&#x000A;             <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-ivar">@callback</span> = <span class="ruby-identifier">gpio_pin</span>.<span class="ruby-identifier">callback</span>(<span class="ruby-identifier">edge_num</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-stop_callback'>
+<a name='method-i-stop_callback'></a>
+<div class='synopsis'>
+<span class='name'>stop_callback</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Stops the callback stored on the pin object</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-stop_callback-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-stop_callback-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 141</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stop_callback</span>&#x000A;  <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">cancel</span>&#x000A;  <span class="ruby-ivar">@callback</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-turn_off'>
+<a name='method-i-turn_off'></a>
+<div class='synopsis'>
+<span class='name'>turn_off</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Writes a 0 to the <a href="Pin.html#attribute-i-gpio_pin">#gpio_pin</a></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-turn_off-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-turn_off-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 98</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">turn_off</span>&#x000A;  <span class="ruby-identifier">gpio_pin</span>.<span class="ruby-identifier">write</span>(<span class="ruby-value">0</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">direction</span> <span class="ruby-operator">==</span> <span class="ruby-value">:output</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-turn_on'>
+<a name='method-i-turn_on'></a>
+<div class='synopsis'>
+<span class='name'>turn_on</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Writes a 1 to the <a href="Pin.html#attribute-i-gpio_pin">#gpio_pin</a></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-turn_on-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-turn_on-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 92</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">turn_on</span>&#x000A;  <span class="ruby-identifier">gpio_pin</span>.<span class="ruby-identifier">write</span>(<span class="ruby-value">1</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">direction</span> <span class="ruby-operator">==</span> <span class="ruby-value">:output</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-wait'>
+<a name='method-i-wait'></a>
+<div class='synopsis'>
+<span class='name'>wait</span>
+<span class='arguments'>(timeout = nil)</span>
+
+</div>
+<div class='description'>
+
+<p>Waits until the pin reads <a href="Pin.html#method-i-on-3F">on?</a> or
+<code>timeout</code> seconds have ellapsed</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-wait-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-wait-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 104</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">wait</span>(<span class="ruby-identifier">timeout</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">timeout</span>.<span class="ruby-identifier">nil?</span>&#x000A;    <span class="ruby-keyword">nil</span> <span class="ruby-keyword">until</span> <span class="ruby-identifier">on?</span>&#x000A;    <span class="ruby-keyword">true</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">start_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>&#x000A;&#x000A;    <span class="ruby-identifier">timeup</span>, <span class="ruby-identifier">pinon</span> = <span class="ruby-keyword">nil</span>&#x000A;&#x000A;    <span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">timeup</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">start_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">timeout</span>&#x000A;      <span class="ruby-identifier">pinon</span> = <span class="ruby-identifier">on?</span>&#x000A;&#x000A;      <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">timeup</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">pinon</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">pinon</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
