@@ -14,7 +14,7 @@ RSpec.describe 'Hardware driver spec' do
   end
 
   it 'has a hardware driver when pigpio is undefined, and issues a warning' do
-    backup = defined?(Pigpio) ? pigpio : nil
+    backup = defined?(Pigpio) ? Pigpio : nil
     og_stderr = $stderr
 
     Object.send(:remove_const, :Pigpio) if defined(Pigpio)
