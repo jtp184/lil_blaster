@@ -5,8 +5,8 @@ RSpec.describe LilBlaster::GPIO::Pin, :hardware do
   end
 
   before :each do
-    @input_pin = subject.new(@input_test_pin)
-    @output_pin = subject.new(@output_test_pin, :output)
+    @input_pin = LilBlaster::GPIO::Pin.new(@input_test_pin)
+    @output_pin = LilBlaster::GPIO::Pin.new(@output_test_pin, :output)
   end
 
   it 'Can be initialized for input' do
