@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'forwardable'
 
 module LilBlaster
   # Handles the low level interfacing with the Pi
@@ -37,6 +38,8 @@ module LilBlaster
 
     # Models the pin as an object, simplifying the interface
     class Pin
+      include Forwardable
+
       # Which pin is in question
       attr_reader :id
       # Whether this pin is for input or output
@@ -45,6 +48,8 @@ module LilBlaster
       attr_reader :gpio_pin
       # The currently configured callback, if any
       attr_reader :callback
+
+      def_delegators :@gpio_pin, :read, :write, :mode
 
       # Takes in the +pin+ number and the +dir+ symbol for direction
       def initialize(pin, dir = :input)
