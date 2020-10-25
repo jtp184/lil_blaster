@@ -99,6 +99,8 @@ module LilBlaster
         else
           start_time = Time.now
 
+          timeup, pinon = nil
+
           loop do
             timeup = Time.now - start_time > timeout
             pinon = on?
