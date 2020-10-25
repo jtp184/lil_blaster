@@ -1,4 +1,4 @@
-RSpec.describe LilBlaster::GPIO do
+RSpec.describe 'Hardware driver spec' do
   it 'has a hardware driver when pigpio is defined' do
     # Fake constant to trick #defined?
     Pigpio = 1
