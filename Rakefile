@@ -1,11 +1,14 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:spec)
+# By default don't assume we have the HAT, just run the tests we need to
+RSpec::Core::RakeTask.new(:test) do |t|
+  t.rspec_opts = '--tag ~@hardware'
+end
 
 RDOC_EXCLUDE = [].map { |r| "--exclude=#{r}" }.join(' ').freeze
 
-task default: :spec
+task default: :test
 
 task :docs do
   sh "rdoc --output=docs --format=hanna --all --main=README.md #{RDOC_EXCLUDE}"
