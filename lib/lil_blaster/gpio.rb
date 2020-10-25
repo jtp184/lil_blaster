@@ -25,7 +25,8 @@ module LilBlaster
         @connection ||= driver.new
       end
 
-      # Determines what to use as the driver, based on #pigpio_defined?
+      # Determines what to use as the driver, based on whether we have access to Pigpio.
+      # Attempts to load it if possible, but not on non-pi hardware
       def driver
         if defined?(Pigpio)
           Pigpio
