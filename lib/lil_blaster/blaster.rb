@@ -6,7 +6,12 @@ module LilBlaster
     class << self
       extend Forwardable
 
-      def_delegators :pin, :turn_on, :turn_off, :on?, :off?
+      %i[turn_on turn_off on? off?].each do |symbol|
+        define_method(symbol) do
+          val = pin.send(symbol)
+          symbol.to_s =~ /\?$/ ? val : true
+        end
+      end
 
       private
 
