@@ -29,8 +29,16 @@ module LilBlaster
       def driver
         if defined?(Pigpio)
           Pigpio
+        elsif Gem.platforms.last.os == 'linux' && File.read('/proc/cpuinfo') =~ /Raspberry Pi/
+          begin
+            require 'pigpio'
+            Pigpio
+          rescue LoadError
+            warn 'WARN: Pigpio is not defined, please require it.'
+            nil
+          end
         else
-          warn 'Pigpio is not defined, please require it.'
+          warn 'WARN: Pigpio driver is not available on non Raspberry Pi hardware.'
           nil
         end
       end

@@ -24,7 +24,7 @@ RSpec.describe 'Hardware driver spec' do
 
     $stderr.rewind
 
-    expect($stderr.string.chomp).to eq('Pigpio is not defined, please require it.')
+    expect($stderr.string.chomp).to match('WARN: ')
 
     $stderr = og_stderr
     Pigpio = backup
