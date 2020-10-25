@@ -5,16 +5,6 @@ module LilBlaster
   # Handles the low level interfacing with the Pi
   module GPIO
     class << self
-      # Takes the +on_pin+, +off_pin+, and +length+ and composes a pulse
-      def pulse_converter(on_pin, off_pin, length)
-        wavetuner.pulse(on_pin, off_pin, length)
-      end
-
-      # Exposes the waveform creation and execution interface
-      def wavetuner
-        connection.wave
-      end
-
       # Takes in the +pin_id+ and returns a gpio pin class
       def gpio_pin(pin_id)
         connection.gpio(pin_id)
@@ -41,6 +31,69 @@ module LilBlaster
         else
           warn 'WARN: Pigpio driver is not available on non Raspberry Pi hardware.'
           nil
+        end
+      end
+    end
+
+    # Models the hardware level signal processing
+    class Wave
+      class << self
+        # Creates a carrier wave, taking arguments for the frequency,
+        # gpio_pin, pulse_length, and cycle_length
+        def carrier(args = {})
+          gpio = args.fetch(:gpio_pin)
+          timer = 0
+
+          math = cycle_math(args)
+
+          math[:cycle_count].times.with_object([]) do |cy, wave|
+            target = ((cy + 1) * math[:cycle]).round
+
+            timer += math[:blink_length]
+            delay = (target - timer)
+            timer += delay
+
+            wave << on_pulse(gpio)
+            wave << off_pulse(gpio)
+          end
+        end
+
+        # A pulse which turns +gpio_pin+ on for +length+
+        def on_pulse(gpio_pin, length = 1)
+          pulse_converter(1 << gpio_pin, 0, length)
+        end
+
+        # A pulse which turns +gpio_pin+ off for +length+
+        def off_pulse(gpio_pin, length = 1)
+          pulse_converter(0, 1 << gpio_pin, length)
+        end
+
+        # A pulse with a +length+ and no signal
+        def empty_pulse(length = 1)
+          pulse_converter(0, 0, length)
+        end
+
+        # Takes the +on_pin+, +off_pin+, and +length+ and composes a pulse
+        def pulse_converter(on_pin, off_pin, length)
+          wavetuner.pulse(on_pin, off_pin, length)
+        end
+
+        # Exposes the waveform creation and execution interface
+        def wavetuner
+          GPIO.connection.wave
+        end
+
+        private
+
+        # Tidy up the carrier function by breaking out the math here
+        def cycle_math(args)
+          ret = {}
+
+          ret[:cycle] = args.fetch(:cycle_length, 1000.0).to_f / args.fetch(:frequency, 38.0)
+          ret[:cycle_count] = (args.fetch(:length) / ret[:cycle]).round
+          ret[:blink_length] = (ret[:cycle] / 2.0).round
+
+          ret
         end
       end
     end
