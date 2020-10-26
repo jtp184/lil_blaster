@@ -5,16 +5,6 @@ module LilBlaster
   # Handles the low level interfacing with the Pi
   module GPIO
     class << self
-      # Takes the +on_pin+, +off_pin+, and +length+ and composes a pulse
-      def pulse_converter(on_pin, off_pin, length)
-        wavetuner.pulse(on_pin, off_pin, length)
-      end
-
-      # Exposes the waveform creation and execution interface
-      def wavetuner
-        connection.wave
-      end
-
       # Takes in the +pin_id+ and returns a gpio pin class
       def gpio_pin(pin_id)
         connection.gpio(pin_id)
@@ -45,6 +35,89 @@ module LilBlaster
       end
     end
 
+    # Models the hardware level signal processing
+    class Wave
+      class << self
+        # Takes in an array of 3-tuples, +data+ as constructed by #on_pulse
+        # and runs it through #pulse_converter
+        def add_to_wave(data)
+          wavetuner.add_generic(data.map { |x| pulse_converter(*x) })
+        end
+
+        # Syntax sugar for wavetuner#add_new
+        def begin_wave
+          wavetuner.add_new
+        end
+
+        # Syntax sugar for wavetuner#create, returns a wave id
+        def end_wave
+          wavetuner.create
+        end
+
+        # Creates a carrier wave, taking arguments for the frequency,
+        # gpio_pin, pulse_length, and cycle_length
+        def carrier(args = {})
+          gpio = args.fetch(:gpio_pin)
+          timer = 0
+
+          math = cycle_math(args)
+
+          math[:cycle_count].times.with_object([]) do |cy, wave|
+            target = ((cy + 1) * math[:cycle]).round
+
+            timer += math[:blink_length]
+            delay = (target - timer)
+            timer += delay
+
+            wave << on_pulse(gpio)
+            wave << off_pulse(gpio)
+          end
+        end
+
+        # A pulse which turns +gpio_pin+ on for +length+
+        def on_pulse(gpio_pin, length = 1)
+          [1 << gpio_pin, 0, length]
+        end
+
+        # A pulse which turns +gpio_pin+ off for +length+
+        def off_pulse(gpio_pin, length = 1)
+          [0, 1 << gpio_pin, length]
+        end
+
+        # A pulse with a +length+ and no signal
+        def empty_pulse(length = 1)
+          [0, 0, length]
+        end
+
+        # Takes the +on_pin+, +off_pin+, and +length+ and composes a pulse
+        def pulse_converter(on_pin, off_pin, length)
+          wavetuner.pulse(on_pin, off_pin, length)
+        end
+
+        # Exposes the waveform creation and execution interface
+        def wavetuner
+          GPIO.connection.wave
+        end
+
+        private
+
+        def wave_buffer
+          @wave_buffer ||= []
+        end
+
+        # Tidy up the carrier function by breaking out the math here
+        def cycle_math(args)
+          ret = {}
+
+          ret[:cycle] = args.fetch(:cycle_length, 1000.0).to_f / args.fetch(:frequency, 38.0)
+          ret[:cycle_count] = (args.fetch(:length) / ret[:cycle]).round
+          ret[:blink_length] = (ret[:cycle] / 2.0).round
+
+          ret
+        end
+      end
+    end
+
     # Models the pin as an object, simplifying the interface
     class Pin
       extend Forwardable
@@ -71,11 +144,10 @@ module LilBlaster
       # Sets the direction using the pin path direction file
       def direction=(dir)
         raise ArgumentError unless %i[input output].include?(dir)
+        return if  direction == dir
 
-        unless direction == dir
-          @direction = dir
-          gpio_pin.mode = dir == :input ? 0 : 1
-        end
+        @direction = dir
+        gpio_pin.mode = dir == :input ? 0 : 1
       end
 
       # Detect whether gpio_pin reads as 1
@@ -98,6 +170,11 @@ module LilBlaster
       def turn_off
         gpio_pin.write(0) if direction == :output
         self
+      end
+
+      # If on, turns off, and vice versa
+      def toggle
+        on? ? turn_off : turn_on
       end
 
       # Waits until the pin reads #on? or +timeout+ seconds have ellapsed
