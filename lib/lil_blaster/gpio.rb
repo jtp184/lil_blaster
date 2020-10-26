@@ -38,6 +38,22 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
+        # Takes in an array of 3-tuples, +data+ as constructed by #on_pulse
+        # and runs it through #pulse_converter
+        def add_to_wave(data)
+          wavetuner.add_generic(data.map { |x| pulse_converter(*x) })
+        end
+
+        # Syntax sugar for wavetuner#add_new
+        def begin_wave
+          wavetuner.add_new
+        end
+
+        # Syntax sugar for wavetuner#create, returns a wave id
+        def end_wave
+          wavetuner.create
+        end
+
         # Creates a carrier wave, taking arguments for the frequency,
         # gpio_pin, pulse_length, and cycle_length
         def carrier(args = {})
@@ -60,17 +76,17 @@ module LilBlaster
 
         # A pulse which turns +gpio_pin+ on for +length+
         def on_pulse(gpio_pin, length = 1)
-          pulse_converter(1 << gpio_pin, 0, length)
+          [1 << gpio_pin, 0, length]
         end
 
         # A pulse which turns +gpio_pin+ off for +length+
         def off_pulse(gpio_pin, length = 1)
-          pulse_converter(0, 1 << gpio_pin, length)
+          [0, 1 << gpio_pin, length]
         end
 
         # A pulse with a +length+ and no signal
         def empty_pulse(length = 1)
-          pulse_converter(0, 0, length)
+          [0, 0, length]
         end
 
         # Takes the +on_pin+, +off_pin+, and +length+ and composes a pulse
@@ -84,6 +100,10 @@ module LilBlaster
         end
 
         private
+
+        def wave_buffer
+          @wave_buffer ||= []
+        end
 
         # Tidy up the carrier function by breaking out the math here
         def cycle_math(args)
