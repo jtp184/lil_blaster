@@ -38,6 +38,28 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
+        # Takes in +tuples+ of marks and spaces and returns an array of wave ids
+        def wavechain_from_tuples(tuples)
+          tuples.each do |mark, space|
+            GPIO::Wave.begin_wave
+
+            mark_wave = if data.carrier_wave?
+                          GPIO::Wave.carrier(data.carrier_wave_options.merge(length: mark))
+                        else
+                          GPIO::Wave.on_pulse(mark)
+                        end
+
+            GPIO::Wave.add_to_wave(mark_wave)
+
+            wids << GPIO::Wave.end_wave
+
+            GPIO::Wave.begin_wave
+            GPIO::Wave.add_to_wave(GPIO::Wave.empty_pulse(space))
+
+            wids << GPIO::Wave.end_wave
+          end
+        end
+
         # Takes in an array of 3-tuples, +data+ as constructed by #on_pulse
         # and runs it through #pulse_converter
         def add_to_wave(data)
@@ -57,7 +79,7 @@ module LilBlaster
         # Creates a carrier wave, taking arguments for the frequency,
         # gpio_pin, pulse_length, and cycle_length
         def carrier(args = {})
-          gpio = args.fetch(:gpio_pin)
+          gpio = args.fetch(:gpio_pin, LilBlaster.transmitter_pin)
           timer = 0
 
           math = cycle_math(args)
@@ -75,12 +97,12 @@ module LilBlaster
         end
 
         # A pulse which turns +gpio_pin+ on for +length+
-        def on_pulse(gpio_pin, length = 1)
+        def on_pulse(length = 1, gpio_pin = LilBlaster.transmitter_pin)
           [1 << gpio_pin, 0, length]
         end
 
         # A pulse which turns +gpio_pin+ off for +length+
-        def off_pulse(gpio_pin, length = 1)
+        def off_pulse(length = 1, gpio_pin = LilBlaster.transmitter_pin)
           [0, 1 << gpio_pin, length]
         end
 
@@ -97,6 +119,16 @@ module LilBlaster
         # Exposes the waveform creation and execution interface
         def wavetuner
           GPIO.connection.wave
+        end
+
+        # Chains the waves with ids +wids+ together
+        def chain_waves(wids)
+          wavetuner.chain(wids)
+        end
+
+        # Clears the waves in the wavetuner
+        def clear_waves
+          wavetuner.clear
         end
 
         private
