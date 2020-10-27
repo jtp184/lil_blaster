@@ -7,6 +7,10 @@ module LilBlaster
 
       # Blocks for a number of +seconds+, and records blips
       def record(seconds = 3.0)
+        Transmission.new(data: record!(seconds))
+      end
+
+      def record!(seconds = 3.0)
         last_tick = nil
         buffer = []
 
