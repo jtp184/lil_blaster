@@ -12,7 +12,7 @@ module LilBlaster
 
       # Takes in a Transmission +data+, and constructs and transmits waves
       def transmit(data)
-        GPIO::Wave.chain_waves(GPIO::Wave.wavechain_from_tuples(data))
+        GPIO::Wave.chain_waves(GPIO::Wave.tuples_to_wave(data))
       end
 
       private

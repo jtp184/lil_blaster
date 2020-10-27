@@ -39,39 +39,28 @@ module LilBlaster
     class Wave
       class << self
         # Takes in +tuples+ of marks and spaces and returns an array of wave ids
-        def wavechain_from_tuples(data)
+        def tuples_to_wave(data)
           data.tuples.each.with_object([]) do |pulse, wids|
             mark, space = pulse
 
-            wavetuner.add_new
-
-            mark_wave = if data.carrier_wave?
-                          GPIO::Wave.carrier(data.carrier_wave_options.merge(length: mark))
-                        else
-                          [GPIO::Wave.on_pulse(mark)]
-                        end
-
-            mark_wave.map! { |x| wavetuner.pulse(*x) }
-
-            wavetuner.add_generic(mark_wave)
-            wids << wavetuner.create
-
-            wavetuner.add_new
-
-            pause = GPIO::Wave.empty_pulse(space)
-            pause = wavetuner.pulse(*pause)
-
-            wavetuner.add_generic([pause])
-
-            wids << wavetuner.create
+            wids << add_mark_wave(mark)
+            wids << add_space_wave(space)
           end
         end
 
-        # Takes in an array of 3-tuples, +data+ as constructed by #on_pulse
-        # and runs it through #pulse_converter
+        # Syntax sugar for wavetuner#add_new
+        def begin_wave
+          wavetuner.add_new
+        end
+
+        # Syntax sugar for wavetuner#create
+        def end_wave
+          wavetuner.create
+        end
+
+        # Syntax sugar for wavetuner#add_generic, converts the array 3-tuples into pulses
         def add_to_wave(data)
-          pulses = data.map { |x| pulse_converter(*x) }
-          wavetuner.add_generic(pulses)
+          wavetuner.add_generic(data.map { |x| wavetuner.pulse(*x) })
         end
 
         # Creates a carrier wave, taking arguments for the frequency,
@@ -109,11 +98,6 @@ module LilBlaster
           [0, 0, length]
         end
 
-        # Takes the +on_pin+, +off_pin+, and +length+ and composes a pulse
-        def pulse_converter(on_pin, off_pin, length)
-          wavetuner.pulse(on_pin, off_pin, length)
-        end
-
         # Exposes the waveform creation and execution interface
         def wavetuner
           @wavetuner ||= GPIO.connection.wave
@@ -130,6 +114,31 @@ module LilBlaster
         end
 
         private
+
+        def add_mark_wave(plen)
+          begin_wave
+
+          mark_wave = if data.carrier_wave?
+                        GPIO::Wave.carrier(data.carrier_wave_options.merge(length: plen))
+                      else
+                        [GPIO::Wave.on_pulse(plen)]
+                      end
+
+          add_to_wave(mark_wave)
+
+          end_wave
+        end
+
+        def add_space_wave(plen)
+          begin_wave
+
+          pause = GPIO::Wave.empty_pulse(space)
+          pause = [wavetuner.pulse(*pause)]
+
+          add_to_wave(pause)
+
+          end_wave
+        end
 
         def wave_buffer
           @wave_buffer ||= []
