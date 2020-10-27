@@ -28,7 +28,16 @@ LilBlaster::GPIO
 </h1>
 <ol class='paths'>
 <li>
-<a href="../../files/lib/lil_blaster/gpio_rb.html">lib/lil_blaster/gpio.rb</a>
+<a href="../../files/lib/lil_blaster/gpio/gpio_rb.html">lib/lil_blaster/gpio/gpio.rb</a>
+</li>
+<li class='other'>
+<a href="../../files/lib/lil_blaster/gpio/pin_rb.html">lib/lil_blaster/gpio/pin.rb</a>
+</li>
+<li class='other'>
+<a href="../../files/lib/lil_blaster/gpio/wave_rb.html">lib/lil_blaster/gpio/wave.rb</a>
+</li>
+<li>
+<a class='show' href='#' onclick='this.parentNode.parentNode.className += &quot; expanded&quot;; this.parentNode.removeChild(this); return false'>show all</a>
 </li>
 </ol>
 </div>
@@ -43,9 +52,6 @@ LilBlaster::GPIO
 <ol>
 <li><a href="#method-c-connection">connection</a></li>
 <li><a href="#method-c-driver">driver</a></li>
-<li><a href="#method-c-gpio_pin">gpio_pin</a></li>
-<li><a href="#method-c-pulse_converter">pulse_converter</a></li>
-<li><a href="#method-c-wavetuner">wavetuner</a></li>
 </ol>
 </div>
 <div id='context'>
@@ -54,6 +60,7 @@ LilBlaster::GPIO
 <h2>Classes and Modules</h2>
 <ol>
 <li><a href="GPIO/Pin.html">LilBlaster::GPIO::Pin</a></li>
+<li><a href="GPIO/Wave.html">LilBlaster::GPIO::Wave</a></li>
 </ol>
 </div>
 <div id='section'>
@@ -75,7 +82,7 @@ LilBlaster::GPIO
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-connection-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-connection-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 24</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">connection</span>&#x000A;  <span class="ruby-ivar">@connection</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">driver</span>.<span class="ruby-identifier">new</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-connection-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/gpio.rb, line 9</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">connection</span>&#x000A;  <span class="ruby-ivar">@connection</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">driver</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">tap</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:connect</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-driver'>
@@ -95,65 +102,7 @@ Pigpio. Attempts to load it if possible, but not on non-pi hardware</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-driver-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-driver-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">driver</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-constant">Pigpio</span>)&#x000A;    <span class="ruby-constant">Pigpio</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Gem</span>.<span class="ruby-identifier">platforms</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">os</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;linux&#39;</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-string">&#39;/proc/cpuinfo&#39;</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Raspberry Pi/</span>&#x000A;    <span class="ruby-keyword">begin</span>&#x000A;      <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;pigpio&#39;</span>&#x000A;      <span class="ruby-constant">Pigpio</span>&#x000A;    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>&#x000A;      <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio is not defined, please require it.&#39;</span>&#x000A;      <span class="ruby-keyword">nil</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio driver is not available on non Raspberry Pi hardware.&#39;</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<div class='method public-class' id='method-method-c-gpio_pin'>
-<a name='method-c-gpio_pin'></a>
-<div class='synopsis'>
-<span class='name'>gpio_pin</span>
-<span class='arguments'>(pin_id)</span>
-
-</div>
-<div class='description'>
-
-<p>Takes in the <code>pin_id</code> and returns a gpio pin class</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-gpio_pin-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-c-gpio_pin-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 19</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gpio_pin</span>(<span class="ruby-identifier">pin_id</span>)&#x000A;  <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">gpio</span>(<span class="ruby-identifier">pin_id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<div class='method public-class' id='method-method-c-pulse_converter'>
-<a name='method-c-pulse_converter'></a>
-<div class='synopsis'>
-<span class='name'>pulse_converter</span>
-<span class='arguments'>(on_pin, off_pin, length)</span>
-
-</div>
-<div class='description'>
-
-<p>Takes the <code>on_pin</code>, <code>off_pin</code>, and
-<code>length</code> and composes a pulse</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pulse_converter-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-c-pulse_converter-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 9</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulse_converter</span>(<span class="ruby-identifier">on_pin</span>, <span class="ruby-identifier">off_pin</span>, <span class="ruby-identifier">length</span>)&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">pulse</span>(<span class="ruby-identifier">on_pin</span>, <span class="ruby-identifier">off_pin</span>, <span class="ruby-identifier">length</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<div class='method public-class' id='method-method-c-wavetuner'>
-<a name='method-c-wavetuner'></a>
-<div class='synopsis'>
-<span class='name'>wavetuner</span>
-<span class='arguments'>()</span>
-
-</div>
-<div class='description'>
-
-<p>Exposes the waveform creation and execution interface</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-wavetuner-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-c-wavetuner-source'><span class="ruby-comment"># File lib/lil_blaster/gpio.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">wavetuner</span>&#x000A;  <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">wave</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-driver-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/gpio.rb, line 15</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">driver</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-constant">Pigpio</span>)&#x000A;    <span class="ruby-constant">Pigpio</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Gem</span>.<span class="ruby-identifier">platforms</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">os</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;linux&#39;</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-string">&#39;/proc/cpuinfo&#39;</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Raspberry Pi/</span>&#x000A;    <span class="ruby-keyword">begin</span>&#x000A;      <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;pigpio&#39;</span>&#x000A;      <span class="ruby-constant">Pigpio</span>&#x000A;    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>&#x000A;      <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio is not defined, please require it.&#39;</span>&#x000A;      <span class="ruby-keyword">nil</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio driver is not available on non Raspberry Pi hardware.&#39;</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

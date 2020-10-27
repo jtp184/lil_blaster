@@ -31,7 +31,19 @@ LilBlaster
 <a href="../files/lib/lil_blaster_rb.html">lib/lil_blaster.rb</a>
 </li>
 <li class='other'>
-<a href="../files/lib/lil_blaster/gpio_rb.html">lib/lil_blaster/gpio.rb</a>
+<a href="../files/lib/lil_blaster/blaster_rb.html">lib/lil_blaster/blaster.rb</a>
+</li>
+<li class='other'>
+<a href="../files/lib/lil_blaster/gpio/gpio_rb.html">lib/lil_blaster/gpio/gpio.rb</a>
+</li>
+<li class='other'>
+<a href="../files/lib/lil_blaster/gpio/pin_rb.html">lib/lil_blaster/gpio/pin.rb</a>
+</li>
+<li class='other'>
+<a href="../files/lib/lil_blaster/gpio/wave_rb.html">lib/lil_blaster/gpio/wave.rb</a>
+</li>
+<li class='other'>
+<a href="../files/lib/lil_blaster/transmission_rb.html">lib/lil_blaster/transmission.rb</a>
 </li>
 <li class='other'>
 <a href="../files/lib/lil_blaster/version_rb.html">lib/lil_blaster/version.rb</a>
@@ -46,15 +58,63 @@ LilBlaster
 <div id='description'>
 <p>Ruby gem for interacting with Infrared transmissions on the Raspberry Pi</p>
 </div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-transmitter_pin">transmitter_pin</a></li>
+<li><a href="#attribute-c-transmitter_pin">transmitter_pin</a></li>
+</ol>
+</div>
 <div id='context'>
 </div>
 <div id='class-list'>
 <h2>Classes and Modules</h2>
 <ol>
 <li><a href="LilBlaster/GPIO.html">LilBlaster::GPIO</a></li>
+<li><a href="LilBlaster/Blaster.html">LilBlaster::Blaster</a></li>
+<li><a href="LilBlaster/Transmission.html">LilBlaster::Transmission</a></li>
 </ol>
 </div>
 <div id='section'>
+<div id='attribute-list'>
+<h2 class='section-bar'>Attributes</h2>
+<div class='name-list'>
+<table>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-c-transmitter_pin'>transmitter_pin</a>
+</td>
+<td class='context-item-value'>[W]</td>
+<td class='context-item-desc'>
+<p>Allows changing which pin is used to transmit on, defaults to 17</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-transmitter_pin'>
+<a name='method-c-transmitter_pin'></a>
+<div class='synopsis'>
+<span class='name'>transmitter_pin</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Defaults to 17</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmitter_pin-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-transmitter_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 13</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmitter_pin</span>&#x000A;  <span class="ruby-ivar">@transmitter_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">17</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
 </div>
 
 </div>

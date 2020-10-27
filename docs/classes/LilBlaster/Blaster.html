@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>LilBlaster::Blaster</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='class' id='wrapper'>
+<div class='header'>
+<h1 class='name'><span class='type'>class</span>
+LilBlaster::Blaster
+</h1>
+<ol class='paths'>
+<li>
+<a href="../../files/lib/lil_blaster/blaster_rb.html">lib/lil_blaster/blaster.rb</a>
+</li>
+</ol>
+<div class='parent'>
+Superclass:
+<strong>Object</strong>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<p>The IR Transmitter module</p>
+</div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-transmit">transmit</a></li>
+</ol>
+<h3>Private Class</h3>
+<ol>
+<li><a href="#method-c-pin">pin</a></li>
+</ol>
+</div>
+<div id='context'>
+</div>
+<div id='section'>
+<div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-transmit'>
+<a name='method-c-transmit'></a>
+<div class='synopsis'>
+<span class='name'>transmit</span>
+<span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in a <a href="Transmission.html">Transmission</a> <code>data</code>,
+and constructs and transmits waves</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmit-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-transmit-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmit</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Wave</span>.<span class="ruby-identifier">chain_waves</span>(<span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Wave</span>.<span class="ruby-identifier">tuples_to_wave</span>(<span class="ruby-identifier">data</span>)).<span class="ruby-identifier">zero?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Private Class methods</h2>
+<div class='method private-class' id='method-method-c-pin'>
+<a name='method-c-pin'></a>
+<div class='synopsis'>
+<span class='name'>pin</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>The underlying <a href="GPIO.html">GPIO</a> pin, id determined by <a
+href="../LilBlaster.html#method-c-transmitter_pin">LilBlaster.transmitter_pin</a></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pin-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-pin-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pin</span>&#x000A;  <span class="ruby-ivar">@pin</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Pin</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span>, <span class="ruby-value">:output</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
