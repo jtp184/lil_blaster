@@ -10,6 +10,11 @@ module LilBlaster
         end
       end
 
+      # Takes in a Transmission +data+, and constructs and transmits waves
+      def transmit(data)
+        GPIO::Wave.chain_waves(GPIO::Wave.tuples_to_wave(data)).zero? ? true : false
+      end
+
       private
 
       # The underlying GPIO pin, id determined by LilBlaster.transmitter_pin
