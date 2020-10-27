@@ -4330,21 +4330,43 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
 Element.addMethods();
 var search_index = [
+  { method: 'add_mark_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-add_mark_wave"><span class="method_name">::add_mark_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'add_space_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-add_space_wave"><span class="method_name">::add_space_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'add_to_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-add_to_wave"><span class="method_name">::add_to_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'begin_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-begin_wave"><span class="method_name">::begin_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'carrier', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-carrier"><span class="method_name">::carrier</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'chain_waves', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-chain_waves"><span class="method_name">::chain_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'clear_waves', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-clear_waves"><span class="method_name">::clear_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'connection', module: 'lilblaster::gpio', html: '<a href="classes/LilBlaster/GPIO.html#method-c-connection"><span class="method_name">::connection</span> <span class="module_name">(LilBlaster::GPIO)</span></a>' },
+  { method: 'cycle_math', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-cycle_math"><span class="method_name">::cycle_math</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'driver', module: 'lilblaster::gpio', html: '<a href="classes/LilBlaster/GPIO.html#method-c-driver"><span class="method_name">::driver</span> <span class="module_name">(LilBlaster::GPIO)</span></a>' },
-  { method: 'gpio_pin', module: 'lilblaster::gpio', html: '<a href="classes/LilBlaster/GPIO.html#method-c-gpio_pin"><span class="method_name">::gpio_pin</span> <span class="module_name">(LilBlaster::GPIO)</span></a>' },
+  { method: 'empty_pulse', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-empty_pulse"><span class="method_name">::empty_pulse</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'end_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-end_wave"><span class="method_name">::end_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'new', module: 'lilblaster::transmission', html: '<a href="classes/LilBlaster/Transmission.html#method-c-new"><span class="method_name">::new</span> <span class="module_name">(LilBlaster::Transmission)</span></a>' },
   { method: 'new', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-c-new"><span class="method_name">::new</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
-  { method: 'pulse_converter', module: 'lilblaster::gpio', html: '<a href="classes/LilBlaster/GPIO.html#method-c-pulse_converter"><span class="method_name">::pulse_converter</span> <span class="module_name">(LilBlaster::GPIO)</span></a>' },
-  { method: 'wavetuner', module: 'lilblaster::gpio', html: '<a href="classes/LilBlaster/GPIO.html#method-c-wavetuner"><span class="method_name">::wavetuner</span> <span class="module_name">(LilBlaster::GPIO)</span></a>' },
+  { method: 'off_pulse', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-off_pulse"><span class="method_name">::off_pulse</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'on_pulse', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-on_pulse"><span class="method_name">::on_pulse</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'pin', module: 'lilblaster::blaster', html: '<a href="classes/LilBlaster/Blaster.html#method-c-pin"><span class="method_name">::pin</span> <span class="module_name">(LilBlaster::Blaster)</span></a>' },
+  { method: 'transmit', module: 'lilblaster::blaster', html: '<a href="classes/LilBlaster/Blaster.html#method-c-transmit"><span class="method_name">::transmit</span> <span class="module_name">(LilBlaster::Blaster)</span></a>' },
+  { method: 'transmitter_pin', module: 'lilblaster', html: '<a href="classes/LilBlaster.html#method-c-transmitter_pin"><span class="method_name">::transmitter_pin</span> <span class="module_name">(LilBlaster)</span></a>' },
+  { method: 'tuples_to_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-tuples_to_wave"><span class="method_name">::tuples_to_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'wavetuner', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-wavetuner"><span class="method_name">::wavetuner</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'within_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-within_wave"><span class="method_name">::within_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'carrier_wave?', module: 'lilblaster::transmission', html: '<a href="classes/LilBlaster/Transmission.html#method-i-carrier_wave-3F"><span class="method_name">#carrier_wave?</span> <span class="module_name">(LilBlaster::Transmission)</span></a>' },
   { method: 'direction=', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-direction-3D"><span class="method_name">#direction=</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'off?', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-off-3F"><span class="method_name">#off?</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'on?', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-on-3F"><span class="method_name">#on?</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'start_callback', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-start_callback"><span class="method_name">#start_callback</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'stop_callback', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-stop_callback"><span class="method_name">#stop_callback</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
+  { method: 'toggle', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-toggle"><span class="method_name">#toggle</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
+  { method: 'tuples', module: 'lilblaster::transmission', html: '<a href="classes/LilBlaster/Transmission.html#method-i-tuples"><span class="method_name">#tuples</span> <span class="module_name">(LilBlaster::Transmission)</span></a>' },
   { method: 'turn_off', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-turn_off"><span class="method_name">#turn_off</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'turn_on', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-turn_on"><span class="method_name">#turn_on</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'wait', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-wait"><span class="method_name">#wait</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
+  { method: 'transmitter_pin', module: 'lilblaster', html: '<a href="classes/LilBlaster.html#attribute-c-transmitter_pin"><span class="method_name">::transmitter_pin</span> <span class="module_name">(LilBlaster)</span></a>' },
   { method: 'callback', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-callback"><span class="method_name">#callback</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
+  { method: 'carrier_wave_options', module: 'lilblaster::transmission', html: '<a href="classes/LilBlaster/Transmission.html#attribute-i-carrier_wave_options"><span class="method_name">#carrier_wave_options</span> <span class="module_name">(LilBlaster::Transmission)</span></a>' },
+  { method: 'data', module: 'lilblaster::transmission', html: '<a href="classes/LilBlaster/Transmission.html#attribute-i-data"><span class="method_name">#data</span> <span class="module_name">(LilBlaster::Transmission)</span></a>' },
   { method: 'direction', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-direction"><span class="method_name">#direction</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'gpio_pin', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-gpio_pin"><span class="method_name">#gpio_pin</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'id', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-id"><span class="method_name">#id</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
@@ -4419,21 +4441,43 @@ function performSearch() {
 </form>
 <ol class='methods' id='search-results' style='display: none'></ol>
 <ol class='methods' id='index-entries'>
+<li><a href="classes/LilBlaster.html#attribute-c-transmitter_pin"><span class="method_name">::transmitter_pin</span> <span class="module_name">(LilBlaster)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-callback"><span class="method_name">#callback</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
+<li><a href="classes/LilBlaster/Transmission.html#attribute-i-carrier_wave_options"><span class="method_name">#carrier_wave_options</span> <span class="module_name">(LilBlaster::Transmission)</span></a></li>
+<li><a href="classes/LilBlaster/Transmission.html#attribute-i-data"><span class="method_name">#data</span> <span class="module_name">(LilBlaster::Transmission)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-direction"><span class="method_name">#direction</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-gpio_pin"><span class="method_name">#gpio_pin</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#attribute-i-id"><span class="method_name">#id</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-add_mark_wave"><span class="method_name">::add_mark_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-add_space_wave"><span class="method_name">::add_space_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-add_to_wave"><span class="method_name">::add_to_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-begin_wave"><span class="method_name">::begin_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-carrier"><span class="method_name">::carrier</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-chain_waves"><span class="method_name">::chain_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-clear_waves"><span class="method_name">::clear_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO.html#method-c-connection"><span class="method_name">::connection</span> <span class="module_name">(LilBlaster::GPIO)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-cycle_math"><span class="method_name">::cycle_math</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO.html#method-c-driver"><span class="method_name">::driver</span> <span class="module_name">(LilBlaster::GPIO)</span></a></li>
-<li><a href="classes/LilBlaster/GPIO.html#method-c-gpio_pin"><span class="method_name">::gpio_pin</span> <span class="module_name">(LilBlaster::GPIO)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-empty_pulse"><span class="method_name">::empty_pulse</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-end_wave"><span class="method_name">::end_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/Transmission.html#method-c-new"><span class="method_name">::new</span> <span class="module_name">(LilBlaster::Transmission)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-c-new"><span class="method_name">::new</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
-<li><a href="classes/LilBlaster/GPIO.html#method-c-pulse_converter"><span class="method_name">::pulse_converter</span> <span class="module_name">(LilBlaster::GPIO)</span></a></li>
-<li><a href="classes/LilBlaster/GPIO.html#method-c-wavetuner"><span class="method_name">::wavetuner</span> <span class="module_name">(LilBlaster::GPIO)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-off_pulse"><span class="method_name">::off_pulse</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-on_pulse"><span class="method_name">::on_pulse</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/Blaster.html#method-c-pin"><span class="method_name">::pin</span> <span class="module_name">(LilBlaster::Blaster)</span></a></li>
+<li><a href="classes/LilBlaster/Blaster.html#method-c-transmit"><span class="method_name">::transmit</span> <span class="module_name">(LilBlaster::Blaster)</span></a></li>
+<li><a href="classes/LilBlaster.html#method-c-transmitter_pin"><span class="method_name">::transmitter_pin</span> <span class="module_name">(LilBlaster)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-tuples_to_wave"><span class="method_name">::tuples_to_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-wavetuner"><span class="method_name">::wavetuner</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-within_wave"><span class="method_name">::within_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/Transmission.html#method-i-carrier_wave-3F"><span class="method_name">#carrier_wave?</span> <span class="module_name">(LilBlaster::Transmission)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-direction-3D"><span class="method_name">#direction=</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-off-3F"><span class="method_name">#off?</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-on-3F"><span class="method_name">#on?</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-start_callback"><span class="method_name">#start_callback</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-stop_callback"><span class="method_name">#stop_callback</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-toggle"><span class="method_name">#toggle</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
+<li><a href="classes/LilBlaster/Transmission.html#method-i-tuples"><span class="method_name">#tuples</span> <span class="module_name">(LilBlaster::Transmission)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-turn_off"><span class="method_name">#turn_off</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-turn_on"><span class="method_name">#turn_on</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Pin.html#method-i-wait"><span class="method_name">#wait</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a></li>
