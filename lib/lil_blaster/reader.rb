@@ -16,7 +16,7 @@ module LilBlaster
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to clean up data or not
       # and for blip tolerance
-      def record!(seconds = 3.0, args = {})
+      def record!(args = {})
         last_tick = nil
         buffer = []
 
@@ -30,7 +30,7 @@ module LilBlaster
         end
 
         start = Time.now
-        nil until Time.now - start > seconds
+        nil until Time.now - start > args.fetch(:seconds, 3.0)
 
         pin.stop_callback
 
