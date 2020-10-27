@@ -23,7 +23,7 @@ module LilBlaster
         nil until Time.now - start > seconds
 
         pin.stop_callback
-        buffer
+        buffer.tap(&:shift)
       end
 
       private
