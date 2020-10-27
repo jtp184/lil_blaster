@@ -12,7 +12,7 @@ module LilBlaster
 
       # Memoizes and returns the hardware interface
       def connection
-        @connection ||= driver.new
+        @connection ||= driver.new.tap(&:connect)
       end
 
       # Determines what to use as the driver, based on whether we have access to Pigpio.
@@ -66,9 +66,7 @@ module LilBlaster
         # Creates a carrier wave, taking arguments for the frequency,
         # gpio_pin, pulse_length, and cycle_length
         def carrier(args = {})
-          gpio = args.fetch(:gpio_pin, LilBlaster.transmitter_pin)
           timer = 0
-
           math = cycle_math(args)
 
           math[:cycle_count].times.with_object([]) do |cy, wave|
