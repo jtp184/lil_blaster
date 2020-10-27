@@ -28,7 +28,8 @@ module LilBlaster
 
       private
 
-      def tidy_code(pairs)
+      def tidy_code(buffer)
+        pairs = buffer.each_slice(2).to_a
         [pairs.map(&:first), pairs.map(&:last)].map { |pulses| average_values(pulses) }
       end
 
