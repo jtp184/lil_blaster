@@ -9,9 +9,9 @@ module LilBlaster
     # Takes in +args+ for data, and carrier_wave
     def initialize(args = {})
       @data = args.fetch(:data, [])
-      @carrier_wave = args.key?(:carrier_wave, true)
+      @carrier_wave = (args.fetch(:carrier_wave, true) != false)
       @carrier_wave_options = if args.fetch(:carrier_wave, nil).is_a?(Hash)
-                                args.fetch(:carier_wave)
+                                args.fetch(:carrier_wave)
                               elsif args.fetch(:carrier_wave, nil).is_a?(Float)
                                 { frequency: args.fetch(:carrier_wave) }
                               else
