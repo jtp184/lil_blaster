@@ -5,11 +5,16 @@ module LilBlaster
       # The basic methods available from the pin
       %i[on? off?].each { |symbol| define_method(symbol) { pin.send(symbol) } }
 
-      # Blocks for a number of +seconds+, and records blips
-      def record(seconds = 3.0)
-        Transmission.new(data: record!(seconds))
+      # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
+      def record(args = {})
+        blips = record!(args.fetch(:seconds, 3.0))
+        start_code = blips.index { |x| x > args.fetch(:min_length, 100) }
+        stop_code = blips.index { |x| x > args.fetch(:max_length, 15_000) } - 1
+
+        Transmission.new(data: blips[start_code...stop_code])
       end
 
+      # Blocks for a number of +seconds+, and returns blips
       def record!(seconds = 3.0)
         last_tick = nil
         buffer = []
