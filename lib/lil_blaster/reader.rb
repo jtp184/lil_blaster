@@ -34,7 +34,9 @@ module LilBlaster
 
         pin.stop_callback
 
-        if args.fetch(:clean_up, true)
+        if buffer.empty?
+          buffer
+        elsif args.fetch(:clean_up, true)
           tidy_code(buffer.tap(&:shift), args)
         else
           buffer.tap(&:shift)
