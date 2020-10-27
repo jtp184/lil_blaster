@@ -43,7 +43,7 @@ module LilBlaster
         end
       end
 
-      def group_values(plens, tolerance = 500)
+      def group_values(plens, tolerance = 200)
         plens.reduce([[]]) do |mem, obj|
           last_plen = mem.last.last
 
