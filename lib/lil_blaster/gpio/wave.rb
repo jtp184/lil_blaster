@@ -3,29 +3,14 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
-        # Takes in +tuples+ of marks and spaces and returns an array of wave ids
-        def tuples_to_wave(data)
-          data.tuples.each.with_object([]) do |pulse, wids|
-            mark, space = pulse
-
-            wids << add_mark_wave(data, mark)
-            wids << add_space_wave(space)
-          end
+        # Takes in a +transmission+ and returns an array of wave ids corresponding to it
+        def create(transmission)
+          tuples_to_wave(transmission.tuples)
         end
 
-        # A pulse which turns the transmitter pin on for +length+
-        def on_pulse(length = 1)
-          [1 << LilBlaster.transmitter_pin, 0, length]
-        end
-
-        # A pulse which turns the transmitter pin off for +length+
-        def off_pulse(length = 1)
-          [0, 1 << LilBlaster.transmitter_pin, length]
-        end
-
-        # A pulse with a +length+ and no signal
-        def empty_pulse(length = 1)
-          [0, 0, length]
+        # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it
+        def transmit(transmission)
+          chain_waves create(transmission)
         end
 
         # Syntax sugar, calls begin_wave, runs the block, and calls end_wave.
@@ -74,6 +59,31 @@ module LilBlaster
         end
 
         private
+
+        # Takes in +data+ of marks and spaces tuples and returns an array of wave ids
+        def tuples_to_wave(data)
+          data.each.with_object([]) do |pulse, wids|
+            mark, space = pulse
+
+            wids << add_mark_wave(data, mark)
+            wids << add_space_wave(space)
+          end
+        end
+
+        # A pulse which turns the transmitter pin on for +length+
+        def on_pulse(length = 1)
+          [1 << LilBlaster.transmitter_pin, 0, length]
+        end
+
+        # A pulse which turns the transmitter pin off for +length+
+        def off_pulse(length = 1)
+          [0, 1 << LilBlaster.transmitter_pin, length]
+        end
+
+        # A pulse with a +length+ and no signal
+        def empty_pulse(length = 1)
+          [0, 0, length]
+        end
 
         # Takes in the Transmission +data+ and the specific mark +plen+ to add a pulse to the wave
         def add_mark_wave(data, plen)

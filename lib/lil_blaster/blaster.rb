@@ -10,9 +10,10 @@ module LilBlaster
         end
       end
 
-      # Takes in a Transmission +data+, and constructs and transmits waves
+      # Takes in a Transmission +data+, and constructs and transmits waves. Returns true if
+      # successful.
       def transmit(data)
-        GPIO::Wave.chain_waves(GPIO::Wave.tuples_to_wave(data)).zero? ? true : false
+        GPIO::Wave.transmit(data).zero? ? true : false
       end
 
       private
