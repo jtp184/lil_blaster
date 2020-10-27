@@ -7,15 +7,16 @@ module LilBlaster
 
       # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
       def record(args = {})
-        blips = record!(args.fetch(:seconds, 3.0))
+        blips = record!(args.fetch(:seconds, 3.0), args)
         start_code = blips.index { |x| x > args.fetch(:min_length, 100) }
         stop_code = blips.index { |x| x > args.fetch(:max_length, 15_000) } - 1
 
         Transmission.new(data: blips[start_code...stop_code])
       end
 
-      # Blocks for a number of +seconds+, and returns blips
-      def record!(seconds = 3.0)
+      # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to clean up data or not
+      # and for blip tolerance
+      def record!(seconds = 3.0, args = {})
         last_tick = nil
         buffer = []
 
@@ -32,15 +33,21 @@ module LilBlaster
         nil until Time.now - start > seconds
 
         pin.stop_callback
-        tidy_code(buffer.tap(&:shift))
+
+        if args.fetch(:clean_up, true)
+          tidy_code(buffer.tap(&:shift), args)
+        else
+          buffer.tap(&:shift)
+        end
       end
 
       private
 
       # Takes the code +buffer+ and does math to the marks and spaces to smooth out the transmission
-      def tidy_code(buffer)
+      # passing +args+ down
+      def tidy_code(buffer, args)
         pairs = buffer.each_slice(2).to_a
-        replace = [pairs.map(&:first), pairs.map(&:last)].map { |pulses| average_values(pulses) }
+        replace = [pairs.map(&:first), pairs.map(&:last)].map { |lens| average_values(lens, args) }
 
         buffer.map.with_index do |cd, ix|
           ix.even? ? replace[0][cd] : replace[1][cd]
@@ -48,17 +55,17 @@ module LilBlaster
       end
 
       # Given an array of +pulses+, tallies them up and uniquifies them
-      # for group_values and weighted_averages
-      def average_values(pulses)
+      # for group_values and weighted_averages, passing +args+ down
+      def average_values(pulses, args)
         tally = pulses.each_with_object(Hash.new(0)) { |obj, mem| mem.tap { |m| m[obj] += 1 } }
         plens = tally.to_a.sort.to_h.keys
 
-        weight_averages(group_values(plens))
+        weight_averages(group_values(plens, args.fetch(:tolerance, 200)))
       end
 
-      # Takes in the integer +plens+, and an optional +tolerance+ and returns an array of arrays
-      # where each value is within the tolerance of its neighbors.
-      def group_values(plens, tolerance = 200)
+      # Takes in the integer +plens+, and a +tolerance+ and returns an array of arrays
+      # where each value is within that tolerance of its neighbors.
+      def group_values(plens, tolerance)
         plens.reduce([[]]) do |mem, obj|
           last_plen = mem.last.last
 
