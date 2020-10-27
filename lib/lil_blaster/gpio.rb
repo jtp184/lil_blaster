@@ -43,22 +43,27 @@ module LilBlaster
           data.tuples.each.with_object([]) do |pulse, wids|
             mark, space = pulse
 
-            GPIO::Wave.begin_wave
+            wavetuner.add_new
 
             mark_wave = if data.carrier_wave?
                           GPIO::Wave.carrier(data.carrier_wave_options.merge(length: mark))
                         else
-                          GPIO::Wave.on_pulse(mark)
+                          [GPIO::Wave.on_pulse(mark)]
                         end
 
-            GPIO::Wave.add_to_wave(mark_wave)
+            mark_wave.map { |x| wavetuner.pulse(*x) }
 
-            wids << GPIO::Wave.end_wave
+            wavetuner.add_generic(mark_wave)
+            wids << wavetuner.create
 
-            GPIO::Wave.begin_wave
-            GPIO::Wave.add_to_wave([GPIO::Wave.empty_pulse(space)])
+            wave.add_new
 
-            wids << GPIO::Wave.end_wave
+            pause = GPIO::Wave.empty_pulse(space)
+            pause = wavetuner.pulse(*pause)
+
+            wave.add_generic([pause])
+
+            wids << wavetuner.create
           end
         end
 
@@ -67,16 +72,6 @@ module LilBlaster
         def add_to_wave(data)
           pulses = data.map { |x| pulse_converter(*x) }
           wavetuner.add_generic(pulses)
-        end
-
-        # Syntax sugar for wavetuner#add_new
-        def begin_wave
-          wavetuner.add_new
-        end
-
-        # Syntax sugar for wavetuner#create, returns a wave id
-        def end_wave
-          wavetuner.create
         end
 
         # Creates a carrier wave, taking arguments for the frequency,
