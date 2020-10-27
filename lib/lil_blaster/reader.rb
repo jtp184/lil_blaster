@@ -20,11 +20,9 @@ module LilBlaster
         end
 
         start = Time.now
-
         nil until Time.now - start > seconds
 
         pin.stop_callback
-
         buffer
       end
 
