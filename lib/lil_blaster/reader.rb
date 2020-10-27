@@ -53,11 +53,11 @@ module LilBlaster
           end
 
           mem.tap { |m| m.last << obj }
-        end.map { |x| x.reduce(&:+) / x.length }
+        end
       end
 
       def weight_averages(groups)
-        avgs = groups
+        avgs = groups.map { |x| x.reduce(&:+) / x.length }
 
         groups.zip(avgs).to_a.each_with_object({}) do |tuple, mem|
           vals, avg = tuple
