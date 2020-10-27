@@ -37,6 +37,7 @@ module LilBlaster
 
       private
 
+      # Takes the code +buffer+ and does math to the marks and spaces to smooth out the transmission
       def tidy_code(buffer)
         pairs = buffer.each_slice(2).to_a
         replace = [pairs.map(&:first), pairs.map(&:last)].map { |pulses| average_values(pulses) }
@@ -46,6 +47,8 @@ module LilBlaster
         end
       end
 
+      # Given an array of +pulses+, tallies them up and uniquifies them
+      # for group_values and weighted_averages
       def average_values(pulses)
         tally = pulses.each_with_object(Hash.new(0)) { |obj, mem| mem.tap { |m| m[obj] += 1 } }
         plens = tally.to_a.sort.to_h.keys
@@ -53,6 +56,8 @@ module LilBlaster
         weight_averages(group_values(plens))
       end
 
+      # Takes in the integer +plens+, and an optional +tolerance+ and returns an array of arrays
+      # where each value is within the tolerance of its neighbors.
       def group_values(plens, tolerance = 200)
         plens.reduce([[]]) do |mem, obj|
           last_plen = mem.last.last
@@ -66,6 +71,8 @@ module LilBlaster
         end
       end
 
+      # Takes in an array of arrays +groups+ sums and divides them, and then zips them into a hash
+      # mapping each member of the originals to the new averaged value to replace it with
       def weight_averages(groups)
         avgs = groups.map { |x| x.reduce(&:+) / x.length }
 
