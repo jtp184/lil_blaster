@@ -65,7 +65,8 @@ module LilBlaster
         # Takes in an array of 3-tuples, +data+ as constructed by #on_pulse
         # and runs it through #pulse_converter
         def add_to_wave(data)
-          wavetuner.add_generic(data.map { |x| pulse_converter(*x) })
+          pulses = data.map { |x| pulse_converter(*x) }
+          wavetuner.add_generic(pulses)
         end
 
         # Syntax sugar for wavetuner#add_new
