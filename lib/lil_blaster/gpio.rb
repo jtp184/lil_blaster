@@ -56,7 +56,7 @@ module LilBlaster
             wids << GPIO::Wave.end_wave
 
             GPIO::Wave.begin_wave
-            GPIO::Wave.add_to_wave(GPIO::Wave.empty_pulse(space))
+            GPIO::Wave.add_to_wave([GPIO::Wave.empty_pulse(space)])
 
             wids << GPIO::Wave.end_wave
           end
