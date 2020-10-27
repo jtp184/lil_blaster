@@ -39,8 +39,8 @@ module LilBlaster
     class Wave
       class << self
         # Takes in +tuples+ of marks and spaces and returns an array of wave ids
-        def wavechain_from_tuples(tuples)
-          tuples.each do |mark, space|
+        def wavechain_from_tuples(data)
+          data.tuples.each do |mark, space|
             GPIO::Wave.begin_wave
 
             mark_wave = if data.carrier_wave?
