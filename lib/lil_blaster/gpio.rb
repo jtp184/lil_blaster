@@ -51,7 +51,7 @@ module LilBlaster
                           [GPIO::Wave.on_pulse(mark)]
                         end
 
-            mark_wave.map { |x| wavetuner.pulse(*x) }
+            mark_wave.map! { |x| wavetuner.pulse(*x) }
 
             wavetuner.add_generic(mark_wave)
             wids << wavetuner.create
