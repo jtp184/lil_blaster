@@ -28,7 +28,9 @@ module LilBlaster
           [0, 0, length]
         end
 
-        # Syntax sugar, calls begin_wave, runs the block, and calls end_wave
+        # Syntax sugar, calls begin_wave, runs the block, and calls end_wave.
+        # Optionally the block can utilize an array passed as a block argument
+        # to pass pulse tuples to, which will be added to the wave
         def within_wave(&blk)
           udata = []
 
@@ -81,12 +83,12 @@ module LilBlaster
                         [on_pulse(plen), off_pulse(1)]
                       end
 
-          within_wave { add_to_wave(mark_wave) }
+          within_wave { |w| w << mark_wave }
         end
 
         # Takes in the +plen+ and generates an empty pulse of that length
         def add_space_wave(plen)
-          within_wave { add_to_wave([empty_pulse(plen)]) }
+          within_wave { |w| w << [empty_pulse(plen)] }
         end
 
         # Creates a carrier wave, taking arguments for the frequency,
