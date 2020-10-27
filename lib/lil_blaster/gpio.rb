@@ -43,7 +43,7 @@ module LilBlaster
           data.tuples.each.with_object([]) do |pulse, wids|
             mark, space = pulse
 
-            wids << add_mark_wave(mark)
+            wids << add_mark_wave(data, mark)
             wids << add_space_wave(space)
           end
         end
@@ -115,7 +115,7 @@ module LilBlaster
 
         private
 
-        def add_mark_wave(plen)
+        def add_mark_wave(data, plen)
           begin_wave
 
           mark_wave = if data.carrier_wave?
@@ -132,7 +132,7 @@ module LilBlaster
         def add_space_wave(plen)
           begin_wave
 
-          pause = GPIO::Wave.empty_pulse(space)
+          pause = GPIO::Wave.empty_pulse(plen)
           pause = [wavetuner.pulse(*pause)]
 
           add_to_wave(pause)
