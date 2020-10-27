@@ -23,10 +23,49 @@ module LilBlaster
         nil until Time.now - start > seconds
 
         pin.stop_callback
-        buffer.tap(&:shift)
+        tidy_code(buffer.tap(&:shift))
       end
 
       private
+
+      def tidy_code(pairs)
+        [pairs.map(&:first), pairs.map(&:last)].map { |pulses| average_values(pulses) }
+      end
+
+      def average_values(pulses)
+        tally = pulses.each_with_object(Hash.new(0)) { |obj, mem| mem.tap { |m| m[obj] += 1 } }
+        plens = tally.to_a.sort.to_h.keys
+
+        replace = weight_averages(group_values(plens))
+
+        pulses.map.with_index do |cd, ix|
+          ix.even? ? replace[0][cd] : replacements[1][cd]
+        end
+      end
+
+      def group_values(plens, tolerance = 500)
+        plens.reduce([[]]) do |mem, obj|
+          last_plen = mem.last.last
+
+          if last_plen.nil?
+          elsif obj - last_plen > tolerance
+            mem << []
+          end
+
+          mem.tap { |m| m.last << obj }
+        end
+      end
+
+      def weight_averages(groups)
+        avgs = groups.map { |x| x.reduce(&:+) / x.length }
+
+        groups.zip(avgs).to_a.each_with_object({}) do |tuple, mem|
+          vals, avg = tuple
+
+          vals.each { |x| mem[x] = avg }
+          mem
+        end
+      end
 
       # The underlying GPIO pin, id determined by LilBlaster.transmitter_pin
       def pin
