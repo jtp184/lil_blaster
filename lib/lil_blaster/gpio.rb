@@ -48,6 +48,28 @@ module LilBlaster
           end
         end
 
+        # A pulse which turns the transmitter pin on for +length+
+        def on_pulse(length = 1)
+          [1 << LilBlaster.transmitter_pin, 0, length]
+        end
+
+        # A pulse which turns the transmitter pin off for +length+
+        def off_pulse(length = 1)
+          [0, 1 << LilBlaster.transmitter_pin, length]
+        end
+
+        # A pulse with a +length+ and no signal
+        def empty_pulse(length = 1)
+          [0, 0, length]
+        end
+
+        # Syntax sugar, calls begin_wave, runs the block, and calls end_wave
+        def within_wave(&blk)
+          begin_wave
+          blk.call
+          end_wave
+        end
+
         # Syntax sugar for wavetuner#add_new
         def begin_wave
           wavetuner.add_new
@@ -61,6 +83,39 @@ module LilBlaster
         # Syntax sugar for wavetuner#add_generic, converts the array 3-tuples into pulses
         def add_to_wave(data)
           wavetuner.add_generic(data.map { |x| wavetuner.pulse(*x) })
+        end
+
+        # Chains the waves with ids +wids+ together
+        def chain_waves(wids)
+          wavetuner.chain(wids)
+        end
+
+        # Clears the waves in the wavetuner
+        def clear_waves
+          wavetuner.clear
+        end
+
+        # Exposes the waveform creation and execution interface
+        def wavetuner
+          @wavetuner ||= GPIO.connection.wave
+        end
+
+        private
+
+        # Takes in the Transmission +data+ and the specific mark +plen+ to add a pulse to the wave
+        def add_mark_wave(data, plen)
+          mark_wave = if data.carrier_wave?
+                        carrier(data.carrier_wave_options.merge(length: plen))
+                      else
+                        [on_pulse(plen), off_pulse(1)]
+                      end
+
+          within_wave { add_to_wave(mark_wave) }
+        end
+
+        # Takes in the +plen+ and generates an empty pulse of that length
+        def add_space_wave(plen)
+          within_wave { add_to_wave([empty_pulse(plen)]) }
         end
 
         # Creates a carrier wave, taking arguments for the frequency,
@@ -79,63 +134,6 @@ module LilBlaster
             wave << on_pulse(math[:blink_length])
             wave << off_pulse(delay)
           end
-        end
-
-        # A pulse which turns +gpio_pin+ on for +length+
-        def on_pulse(length = 1, gpio_pin = LilBlaster.transmitter_pin)
-          [1 << gpio_pin, 0, length]
-        end
-
-        # A pulse which turns +gpio_pin+ off for +length+
-        def off_pulse(length = 1, gpio_pin = LilBlaster.transmitter_pin)
-          [0, 1 << gpio_pin, length]
-        end
-
-        # A pulse with a +length+ and no signal
-        def empty_pulse(length = 1)
-          [0, 0, length]
-        end
-
-        # Exposes the waveform creation and execution interface
-        def wavetuner
-          @wavetuner ||= GPIO.connection.wave
-        end
-
-        # Chains the waves with ids +wids+ together
-        def chain_waves(wids)
-          wavetuner.chain(wids)
-        end
-
-        # Clears the waves in the wavetuner
-        def clear_waves
-          wavetuner.clear
-        end
-
-        private
-
-        # Takes in the Transmission +data+ and the specific mark +plen+ to add a pulse to the wave
-        def add_mark_wave(data, plen)
-          begin_wave
-
-          mark_wave = if data.carrier_wave?
-                        GPIO::Wave.carrier(data.carrier_wave_options.merge(length: plen))
-                      else
-                        [GPIO::Wave.on_pulse(plen)]
-                      end
-
-          add_to_wave(mark_wave)
-
-          end_wave
-        end
-
-        # Takes in the +plen+ and generates an empty pulse of that length
-        def add_space_wave(plen)
-          begin_wave
-
-          pause = GPIO::Wave.empty_pulse(plen)
-          add_to_wave([pause])
-
-          end_wave
         end
 
         # Tidy up the carrier function by breaking out the math here
