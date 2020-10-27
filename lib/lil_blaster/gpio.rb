@@ -78,8 +78,8 @@ module LilBlaster
             delay = (target - timer)
             timer += delay
 
-            wave << on_pulse(gpio)
-            wave << off_pulse(gpio)
+            wave << on_pulse(math[:blink_length])
+            wave << off_pulse(delay)
           end
         end
 
