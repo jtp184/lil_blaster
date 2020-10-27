@@ -1,5 +1,5 @@
 require 'lil_blaster/version'
-require 'lil_blaster/gpio'
+require 'lil_blaster/gpio/gpio'
 require 'lil_blaster/transmission'
 require 'lil_blaster/blaster'
 
