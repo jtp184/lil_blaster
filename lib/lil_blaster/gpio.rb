@@ -116,7 +116,7 @@ module LilBlaster
 
         # Exposes the waveform creation and execution interface
         def wavetuner
-          GPIO.connection.wave
+          @wavetuner ||= GPIO.connection.wave
         end
 
         # Chains the waves with ids +wids+ together
