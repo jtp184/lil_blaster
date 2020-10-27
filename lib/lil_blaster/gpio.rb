@@ -56,12 +56,12 @@ module LilBlaster
             wavetuner.add_generic(mark_wave)
             wids << wavetuner.create
 
-            wave.add_new
+            wavetuner.add_new
 
             pause = GPIO::Wave.empty_pulse(space)
             pause = wavetuner.pulse(*pause)
 
-            wave.add_generic([pause])
+            wavetuner.add_generic([pause])
 
             wids << wavetuner.create
           end
