@@ -115,6 +115,7 @@ module LilBlaster
 
         private
 
+        # Takes in the Transmission +data+ and the specific mark +plen+ to add a pulse to the wave
         def add_mark_wave(data, plen)
           begin_wave
 
@@ -129,6 +130,7 @@ module LilBlaster
           end_wave
         end
 
+        # Takes in the +plen+ and generates an empty pulse of that length
         def add_space_wave(plen)
           begin_wave
 
@@ -136,10 +138,6 @@ module LilBlaster
           add_to_wave([pause])
 
           end_wave
-        end
-
-        def wave_buffer
-          @wave_buffer ||= []
         end
 
         # Tidy up the carrier function by breaking out the math here
