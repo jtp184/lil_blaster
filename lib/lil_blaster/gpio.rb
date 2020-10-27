@@ -133,9 +133,7 @@ module LilBlaster
           begin_wave
 
           pause = GPIO::Wave.empty_pulse(plen)
-          pause = [wavetuner.pulse(*pause)]
-
-          add_to_wave(pause)
+          add_to_wave([pause])
 
           end_wave
         end
