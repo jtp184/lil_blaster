@@ -20,7 +20,7 @@ module LilBlaster
       # Takes in the +pin+ number and the +dir+ symbol for direction
       def initialize(pin, dir = :input)
         @id = pin
-        @gpio_pin = GPIO.gpio_pin(id)
+        @gpio_pin = GPIO.connection.gpio(id)
 
         self.direction = dir
       end

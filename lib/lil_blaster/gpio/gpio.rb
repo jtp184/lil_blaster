@@ -5,11 +5,6 @@ module LilBlaster
   # Handles the low level interfacing with the Pi
   module GPIO
     class << self
-      # Takes in the +pin_id+ and returns a gpio pin class
-      def gpio_pin(pin_id)
-        connection.gpio(pin_id)
-      end
-
       # Memoizes and returns the hardware interface
       def connection
         @connection ||= driver.new.tap(&:connect)
