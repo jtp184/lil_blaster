@@ -30,8 +30,14 @@ module LilBlaster
 
         # Syntax sugar, calls begin_wave, runs the block, and calls end_wave
         def within_wave(&blk)
+          udata = []
+
           begin_wave
-          blk.call
+
+          blk.call(udata)
+
+          udata.each { |x| add_to_wave(x) } unless udata.empty?
+
           end_wave
         end
 
