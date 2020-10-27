@@ -44,19 +44,19 @@ module LilBlaster
         gpio_pin.read.zero?
       end
 
-      # Writes a 1 to the gpio_pin
+      # Writes a 1 to the gpio_pin and returns self
       def turn_on
         gpio_pin.write(1) if direction == :output
         self
       end
 
-      # Writes a 0 to the gpio_pin
+      # Writes a 0 to the gpio_pin and returns self
       def turn_off
         gpio_pin.write(0) if direction == :output
         self
       end
 
-      # If on, turns off, and vice versa
+      # If on, turns off, and vice versa, returning self
       def toggle
         on? ? turn_off : turn_on
       end
