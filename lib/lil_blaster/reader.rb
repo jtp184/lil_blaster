@@ -30,18 +30,18 @@ module LilBlaster
 
       def tidy_code(buffer)
         pairs = buffer.each_slice(2).to_a
-        [pairs.map(&:first), pairs.map(&:last)].map { |pulses| average_values(pulses) }
+        replace = [pairs.map(&:first), pairs.map(&:last)].map { |pulses| average_values(pulses) }
+
+        buffer.map.with_index do |cd, ix|
+          ix.even? ? replace[0][cd] : replace[1][cd]
+        end
       end
 
       def average_values(pulses)
         tally = pulses.each_with_object(Hash.new(0)) { |obj, mem| mem.tap { |m| m[obj] += 1 } }
         plens = tally.to_a.sort.to_h.keys
 
-        replace = weight_averages(group_values(plens))
-
-        replace.map.with_index do |cd, ix|
-          ix.even? ? replace[0][cd] : replacements[1][cd]
-        end
+        weight_averages(group_values(plens))
       end
 
       def group_values(plens, tolerance = 200)
