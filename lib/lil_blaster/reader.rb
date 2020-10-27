@@ -38,7 +38,7 @@ module LilBlaster
 
         replace = weight_averages(group_values(plens))
 
-        pulses.map.with_index do |cd, ix|
+        replace.map.with_index do |cd, ix|
           ix.even? ? replace[0][cd] : replacements[1][cd]
         end
       end
