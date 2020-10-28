@@ -44,5 +44,6 @@ example = [
 ].freeze
 
 @transmission = LilBlaster::Transmission.new(data: example)
+@protocol, @command = LilBlaster::Protocol::RC5.identify!(@transmission)
 
 Pry.start
