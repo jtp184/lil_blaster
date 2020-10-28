@@ -33,13 +33,14 @@ module LilBlaster
         nil until Time.now - start > args.fetch(:seconds, 3.0)
 
         pin.stop_callback
+        buffer.shift
 
         if buffer.empty?
           buffer
         elsif args.fetch(:clean_up, true)
-          tidy_code(buffer.tap(&:shift), args)
+          tidy_code(buffer, args)
         else
-          buffer.tap(&:shift)
+          buffer
         end
       end
 
