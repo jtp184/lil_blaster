@@ -46,6 +46,10 @@ module LilBlaster
         Transmission.new(data: pulses.flatten)
       end
 
+      def to_bytestring(data = 0x0000)
+        pre_data.to_s(2) + data.to_s(2)
+      end
+
       private
 
       def int_to_plens(int)
@@ -64,6 +68,13 @@ module LilBlaster
       end
 
       class << self
+        def bytestring_for(transmission)
+          dta = transmission.tuples
+          ident = extract_values(dta)
+
+          dta[1..-1].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
+        end
+
         private
 
         def extract_values(data)
