@@ -26,10 +26,7 @@ module LilBlaster
 
         proto = new(extract_values(data))
 
-        [
-          proto,
-          proto.plens_to_int(data.tuples[17..-1])
-        ]
+        [proto, proto.plens_to_int(data.tuples[17..-1])]
       end
 
       # Compares +tr_one+ and +tr_two+ as bytestrings for equality. Can be used to compare
@@ -49,7 +46,7 @@ module LilBlaster
 
       # Takes in an integer +data+, and constructs a transmission with a header, the encoded
       # system_data, and the encoded integer
-      def to_transmission(data = 0x0000)
+      def call(data = 0x0000)
         raise ArgumentError unless data.is_a?(Integer) && (0x0000..0xFFFF).cover?(data)
 
         pulses = []
@@ -66,7 +63,7 @@ module LilBlaster
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
       end
 
-      # Compares self to other, returning true if their instance variables match
+      # Compares self to other, returning true if their object states match
       def ==(other)
         other.class == self.class && other.object_state == object_state
       end

@@ -10,7 +10,10 @@ module LilBlaster
           false
         end
 
-        # Superclass implementation returns nil unless the +data+ passes #identify
+        # Superclass implementation returns nil unless the +data+ passes #identify.
+        # Subclasses should call super first to take advantage of this, then perform
+        # processing as necessary to return an instance of the protocol, and a representation
+        # of the decoded data as well.
         def identify!(data)
           return nil unless identify(data)
         end
@@ -18,9 +21,11 @@ module LilBlaster
 
       # Superclass implementation ignores the +data+ and returns a blank transmission.
       # Subclasses should process the data according to protocol, and return a real transmission
-      def to_transmission(_data)
+      def call(_data)
         Transmission.new(data: [])
       end
+
+      alias create_transmission call
     end
   end
 end
