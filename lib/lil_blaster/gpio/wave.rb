@@ -5,7 +5,10 @@ module LilBlaster
       class << self
         # Takes in a +transmission+ and returns an array of wave ids corresponding to it
         def create(transmission)
-          tuples_to_wave(transmission.tuples)
+          tuples_to_wave(
+            transmission.tuples,
+            transmission.carrier_wave? ? transmission.carrier_wave_options : nil
+          )
         end
 
         # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it
@@ -61,11 +64,11 @@ module LilBlaster
         private
 
         # Takes in +data+ of marks and spaces tuples and returns an array of wave ids
-        def tuples_to_wave(data)
+        def tuples_to_wave(data, carrier_wave = nil)
           data.each.with_object([]) do |pulse, wids|
             mark, space = pulse
 
-            wids << add_mark_wave(data, mark)
+            wids << add_mark_wave(mark, carrier_wave)
             wids << add_space_wave(space)
           end
         end
@@ -86,9 +89,9 @@ module LilBlaster
         end
 
         # Takes in the Transmission +data+ and the specific mark +plen+ to add a pulse to the wave
-        def add_mark_wave(data, plen)
-          mark_wave = if data.carrier_wave?
-                        carrier(data.carrier_wave_options.merge(length: plen))
+        def add_mark_wave(plen, carrier_wave)
+          mark_wave = if carrier_wave
+                        carrier(carrier_wave.merge(length: plen))
                       else
                         [on_pulse(plen), off_pulse(1)]
                       end
