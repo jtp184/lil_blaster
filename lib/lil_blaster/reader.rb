@@ -7,7 +7,7 @@ module LilBlaster
 
       # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
       def record(args = {})
-        blips = record!(args.fetch(:seconds, 3.0), args)
+        blips = record!(args)
         start_code = blips.index { |x| x > args.fetch(:min_length, 100) }
         stop_code = blips.index { |x| x > args.fetch(:max_length, 15_000) } - 1
 
