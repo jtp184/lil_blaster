@@ -43,6 +43,6 @@ example = [
   517, 609
 ].freeze
 
-@transmission = LilBlaster::Transmission.new(data: example, carrier_wave: true)
+@transmission = LilBlaster::Transmission.new(data: example)
 
 Pry.start
