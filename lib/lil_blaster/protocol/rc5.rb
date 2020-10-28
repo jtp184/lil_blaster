@@ -39,10 +39,9 @@ module LilBlaster
         raise ArgumentError unless data.is_a?(Integer) && (0x0000..0xFFFF).cover?(data)
 
         pulses = []
+        pulses += header
         pulses += int_to_plens(pre_data)
         pulses += int_to_plens(data)
-
-        pulses.unshift(header)
 
         Transmission.new(data: pulses.flatten)
       end
