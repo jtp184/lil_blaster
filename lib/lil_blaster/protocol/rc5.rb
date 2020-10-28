@@ -47,13 +47,13 @@ module LilBlaster
       end
 
       def to_bytestring(data = 0x0000)
-        pre_data.to_s(2) + data.to_s(2)
+        [pre_data, data].map { |d| binary_pad(d) }.reduce(&:+)
       end
 
       private
 
       def int_to_plens(int)
-        int.to_s(2).chars.map do |ch|
+        binary_pad(int).chars.map do |ch|
           case ch
           when /0/
             zero_value
@@ -65,6 +65,12 @@ module LilBlaster
 
       def plens_to_int(plens)
         self.class.plens_to_int(plens, zero_value, one_value)
+      end
+
+      def binary_pad(num, digits = 16)
+        s = num.to_s(2)
+        s.prepend('0') until s.length == digits
+        s
       end
 
       class << self
@@ -88,10 +94,10 @@ module LilBlaster
           init_args[:one_value] = (plens - init_args.values).first
 
           init_args[:pre_data] = plens_to_int(
-            data.tuples[1..15],
+            data.tuples[1..16],
             init_args[:zero_value],
             init_args[:one_value]
-          )
+            )
 
           init_args
         end

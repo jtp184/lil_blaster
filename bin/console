@@ -39,8 +39,7 @@ example = [
   517, 1732,
   517, 1732,
   517, 1732,
-  517, 1732,
-  517, 609
+  517, 1732
 ].freeze
 
 @transmission = LilBlaster::Transmission.new(data: example)
