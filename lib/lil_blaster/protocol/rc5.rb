@@ -69,10 +69,9 @@ module LilBlaster
 
       class << self
         def bytestring_for(transmission)
-          dta = transmission.tuples
-          ident = extract_values(dta)
+          ident = extract_values(transmission)
 
-          dta[1..-1].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
+          transmission.tuples[1..-1].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
         end
 
         private
