@@ -8,50 +8,78 @@ module LilBlaster
       attr_reader :zero_value
       # The plen for the one value
       attr_reader :one_value
-      # The preamble before the button data
-      attr_reader :pre_data
+      # The preamble before the button press
+      attr_reader :system_data
+
+      HEX_FORMAT = '%#.4x'.freeze
+      BINARY_FORMAT = '%.16b'.freeze
 
       # Checks that there are three and only three distinct tuples in the +data+
       def self.identify(data)
         data.tuples.uniq.length == 3
       end
 
-      # Takes in the +data+, ensures it passes the identity check, and constructs an object
+      # Takes in the +data+, ensures it passes the identity check, then returns an instance
+      # based on interpreting the signal, and an integer representing the specific code sent
       def self.identify!(data)
         super(data)
 
-        init_args = extract_values(data)
+        proto = new(extract_values(data))
 
         [
-          new(init_args),
-          plens_to_int(identify_code(data), init_args[:zero_value], init_args[:one_value])
+          proto,
+          proto.plens_to_int(data.tuples[17..-1])
         ]
       end
 
-      def initialize(args = {})
-        @header = args.fetch(:header)
-        @zero_value = args.fetch(:zero_value)
-        @one_value = args.fetch(:one_value)
-        @pre_data = args.fetch(:pre_data)
+      # Compares +tr_one+ and +tr_two+ as bytestrings for equality. Can be used to compare
+      # Transmissions with inexact pulse lengths for the same underlying data
+      def self.same_data?(tr_one, tr_two)
+        raise ArgumentError unless [tr_one, tr_two].all? { |t| t.is_a?(Transmission) }
+
+        bytestring_for(tr_one) == bytestring_for(tr_two)
       end
 
+      # Takes in +args+ for instance variables
+      def initialize(args = {})
+        %i[header zero_value one_value system_data].each do |sym|
+          instance_variable_set(:"@#{sym}", args.fetch(sym))
+        end
+      end
+
+      # Takes in an integer +data+, and constructs a transmission with a header, the encoded
+      # system_data, and the encoded integer
       def to_transmission(data = 0x0000)
         raise ArgumentError unless data.is_a?(Integer) && (0x0000..0xFFFF).cover?(data)
 
         pulses = []
         pulses += header
-        pulses += int_to_plens(pre_data)
+        pulses += int_to_plens(system_data)
         pulses += int_to_plens(data)
 
         Transmission.new(data: pulses.flatten)
       end
 
+      # Takes in an integer +data+ and outputs the system_data
+      # and encoded integer joined as a bytestring
       def to_bytestring(data = 0x0000)
-        [pre_data, data].map { |d| binary_pad(d) }.reduce(&:+)
+        [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
       end
 
-      private
+      # Compares self to other, returning true if their instance variables match
+      def ==(other)
+        other.class == self.class && other.object_state == object_state
+      end
 
+      alias eql? ==
+
+      # Uses the object_state's hash
+      def hash
+        object_state.hash
+      end
+
+      # Takes in an +int+ and converts it first to binary,
+      # then to tuples based on the zero and one values
       def int_to_plens(int)
         binary_pad(int).chars.map do |ch|
           case ch
@@ -63,17 +91,33 @@ module LilBlaster
         end
       end
 
+      # Takes in tuples +plens+ and converts them into a binary string first,
+      # then to an integer based on the zero and one values
       def plens_to_int(plens)
-        self.class.plens_to_int(plens, zero_value, one_value)
+        plens.map do |pl|
+          case pl
+          when one_value
+            '1'
+          when zero_value
+            '0'
+          end
+        end.join.to_i(2)
       end
 
-      def binary_pad(num, digits = 16)
-        s = num.to_s(2)
-        s.prepend('0') until s.length == digits
-        s
+      private
+
+      # Formats a number +num+ as a 16 digit binary number
+      def binary_pad(num)
+        format(BINARY_FORMAT, num)
+      end
+
+      # Yields the variables to compare for object equality
+      def object_state
+        [header, zero_value, one_value, system_data]
       end
 
       class << self
+        # Given a +transmission+, extracts the values from it and creates a bytestring
         def bytestring_for(transmission)
           ident = extract_values(transmission)
 
@@ -82,6 +126,7 @@ module LilBlaster
 
         private
 
+        # Does the work of scanning the tuples within the +data+ and identifying the attributes
         def extract_values(data)
           plens = data.tuples.uniq
           sums = plens.map { |x| x.reduce(&:+) }
@@ -92,32 +137,18 @@ module LilBlaster
           }
 
           init_args[:one_value] = (plens - init_args.values).first
-
-          init_args[:pre_data] = plens_to_int(
-            data.tuples[1..16],
-            init_args[:zero_value],
-            init_args[:one_value]
-            )
+          init_args[:system_data] = extract_system_data(init_args, data)
 
           init_args
         end
 
-        def plens_to_int(plens, zero, one)
-          plens.map do |pl|
-            case pl
-            when one
-              '1'
-            when zero
-              '0'
-            end
-          end.join.to_i(2)
-        end
+        # Takes in the current +args+ and +data+ to identify and convert the system_data
+        def extract_system_data(args, data)
+          datum = data.tuples[1..16]
 
-        def identify_code(data)
-          tup = data.tuples
-          tup.shift
-
-          tup[16..-1]
+          datum.map { |x| x == args[:zero_value] ? '0' : '1' }
+               .join
+               .to_i(2)
         end
       end
     end

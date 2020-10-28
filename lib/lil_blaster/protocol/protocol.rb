@@ -15,6 +15,12 @@ module LilBlaster
           return nil unless identify(data)
         end
       end
+
+      # Superclass implementation ignores the +data+ and returns a blank transmission.
+      # Subclasses should process the data according to protocol, and return a real transmission
+      def to_transmission(_data)
+        Transmission.new(data: [])
+      end
     end
   end
 end
