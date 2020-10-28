@@ -43,6 +43,9 @@ LilBlaster
 <a href="../files/lib/lil_blaster/gpio/wave_rb.html">lib/lil_blaster/gpio/wave.rb</a>
 </li>
 <li class='other'>
+<a href="../files/lib/lil_blaster/reader_rb.html">lib/lil_blaster/reader.rb</a>
+</li>
+<li class='other'>
 <a href="../files/lib/lil_blaster/transmission_rb.html">lib/lil_blaster/transmission.rb</a>
 </li>
 <li class='other'>
@@ -62,6 +65,8 @@ LilBlaster
 <h2>Methods</h2>
 <h3>Public Class</h3>
 <ol>
+<li><a href="#method-c-reader_pin">reader_pin</a></li>
+<li><a href="#attribute-c-reader_pin">reader_pin</a></li>
 <li><a href="#method-c-transmitter_pin">transmitter_pin</a></li>
 <li><a href="#attribute-c-transmitter_pin">transmitter_pin</a></li>
 </ol>
@@ -73,6 +78,7 @@ LilBlaster
 <ol>
 <li><a href="LilBlaster/GPIO.html">LilBlaster::GPIO</a></li>
 <li><a href="LilBlaster/Blaster.html">LilBlaster::Blaster</a></li>
+<li><a href="LilBlaster/Reader.html">LilBlaster::Reader</a></li>
 <li><a href="LilBlaster/Transmission.html">LilBlaster::Transmission</a></li>
 </ol>
 </div>
@@ -81,6 +87,15 @@ LilBlaster
 <h2 class='section-bar'>Attributes</h2>
 <div class='name-list'>
 <table>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-c-reader_pin'>reader_pin</a>
+</td>
+<td class='context-item-value'>[W]</td>
+<td class='context-item-desc'>
+<p>Allows changing which pin is used to read on, defaults to 18</p>
+</td>
+</tr>
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>
 <a name='attribute-c-transmitter_pin'>transmitter_pin</a>
@@ -95,6 +110,25 @@ LilBlaster
 </div>
 <div id='methods'>
 <h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-reader_pin'>
+<a name='method-c-reader_pin'></a>
+<div class='synopsis'>
+<span class='name'>reader_pin</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Defaults to 18</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-reader_pin-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-reader_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reader_pin</span>&#x000A;  <span class="ruby-ivar">@reader_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">18</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-class' id='method-method-c-transmitter_pin'>
 <a name='method-c-transmitter_pin'></a>
 <div class='synopsis'>
@@ -111,7 +145,7 @@ LilBlaster
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmitter_pin-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-transmitter_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 13</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmitter_pin</span>&#x000A;  <span class="ruby-ivar">@transmitter_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">17</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-transmitter_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 16</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmitter_pin</span>&#x000A;  <span class="ruby-ivar">@transmitter_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">17</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
