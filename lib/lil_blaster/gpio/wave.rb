@@ -3,35 +3,31 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
-        # Takes in +tuples+ of marks and spaces and returns an array of wave ids
-        def tuples_to_wave(data)
-          data.tuples.each.with_object([]) do |pulse, wids|
-            mark, space = pulse
-
-            wids << add_mark_wave(data, mark)
-            wids << add_space_wave(space)
-          end
+        # Takes in a +transmission+ and returns an array of wave ids corresponding to it
+        def create(transmission)
+          tuples_to_wave(
+            transmission.tuples,
+            transmission.carrier_wave? ? transmission.carrier_wave_options : nil
+          )
         end
 
-        # A pulse which turns the transmitter pin on for +length+
-        def on_pulse(length = 1)
-          [1 << LilBlaster.transmitter_pin, 0, length]
+        # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it
+        def transmit(transmission)
+          chain_waves create(transmission)
         end
 
-        # A pulse which turns the transmitter pin off for +length+
-        def off_pulse(length = 1)
-          [0, 1 << LilBlaster.transmitter_pin, length]
-        end
-
-        # A pulse with a +length+ and no signal
-        def empty_pulse(length = 1)
-          [0, 0, length]
-        end
-
-        # Syntax sugar, calls begin_wave, runs the block, and calls end_wave
+        # Syntax sugar, calls begin_wave, runs the block, and calls end_wave.
+        # Optionally the block can utilize an array passed as a block argument
+        # to pass pulse tuples to, which will be added to the wave
         def within_wave(&blk)
+          udata = []
+
           begin_wave
-          blk.call
+
+          blk.call(udata)
+
+          udata.each { |x| add_to_wave(x) } unless udata.empty?
+
           end_wave
         end
 
@@ -67,20 +63,45 @@ module LilBlaster
 
         private
 
+        # Takes in +data+ of marks and spaces tuples and returns an array of wave ids
+        def tuples_to_wave(data, carrier_wave = nil)
+          data.each.with_object([]) do |pulse, wids|
+            mark, space = pulse
+
+            wids << add_mark_wave(mark, carrier_wave)
+            wids << add_space_wave(space)
+          end
+        end
+
+        # A pulse which turns the transmitter pin on for +length+
+        def on_pulse(length = 1)
+          [1 << LilBlaster.transmitter_pin, 0, length]
+        end
+
+        # A pulse which turns the transmitter pin off for +length+
+        def off_pulse(length = 1)
+          [0, 1 << LilBlaster.transmitter_pin, length]
+        end
+
+        # A pulse with a +length+ and no signal
+        def empty_pulse(length = 1)
+          [0, 0, length]
+        end
+
         # Takes in the Transmission +data+ and the specific mark +plen+ to add a pulse to the wave
-        def add_mark_wave(data, plen)
-          mark_wave = if data.carrier_wave?
-                        carrier(data.carrier_wave_options.merge(length: plen))
+        def add_mark_wave(plen, carrier_wave)
+          mark_wave = if carrier_wave
+                        carrier(carrier_wave.merge(length: plen))
                       else
                         [on_pulse(plen), off_pulse(1)]
                       end
 
-          within_wave { add_to_wave(mark_wave) }
+          within_wave { |w| w << mark_wave }
         end
 
         # Takes in the +plen+ and generates an empty pulse of that length
         def add_space_wave(plen)
-          within_wave { add_to_wave([empty_pulse(plen)]) }
+          within_wave { |w| w << [empty_pulse(plen)] }
         end
 
         # Creates a carrier wave, taking arguments for the frequency,
