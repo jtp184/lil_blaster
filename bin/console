@@ -43,6 +43,7 @@ example = [
 ].freeze
 
 @transmission = LilBlaster::Transmission.new(data: example)
-@protocol, @command = LilBlaster::Protocol::RC5.identify!(@transmission)
+@rc5, @power_command = LilBlaster::Protocol::RC5.identify!(@transmission)
+@morse = LilBlaster::Protocol::Morse.new
 
 Pry.start
