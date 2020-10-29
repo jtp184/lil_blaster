@@ -15,10 +15,10 @@ module LilBlaster
       DASH_LENGTH = 3
       # The inter-letter space relative to dot_length
       INTER_LETTER_SPACE = 1
-      # The between letters of the same word space relative to dot length
+      # The between letters of the same word space relative to dot_length
       BETWEEN_LETTER_SPACE = 3
       # The space between the last letter in a word and
-      # the first lettter of the next, relative to dot length
+      # the first lettter of the next, relative to dot_length
       WORD_SPACE = 7
 
       # Checks that there are only 3 unique pulse lengths in the +data+
