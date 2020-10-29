@@ -11,7 +11,9 @@ module LilBlaster
       # The preamble before the button press
       attr_reader :system_data
 
+      # How to format hex numbers for readability
       HEX_FORMAT = '%#.4x'.freeze
+      # How to format binary numbers for length and readability
       BINARY_FORMAT = '%.16b'.freeze
 
       # Checks that there are three and only three distinct tuples in the +data+
