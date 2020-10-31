@@ -20,7 +20,7 @@ module LilBlaster
       # How to format binary numbers for length and readability
       BINARY_FORMAT = '%.16b'.freeze
 
-      # Checks that there are three and only three distinct tuples in the +data+
+      # Checks that there are four and only four distinct tuples in the +data+
       def self.identify(data)
         data.tuples.uniq.length == 4
       end
@@ -115,6 +115,7 @@ module LilBlaster
 
       private
 
+      # Sends a post_bit, which is the mark with a gap sized space
       def post_bit_plen
         zero_value.clone.tap { |zv| zv[1] = gap }
       end
