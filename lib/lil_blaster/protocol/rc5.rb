@@ -10,6 +10,10 @@ module LilBlaster
       attr_reader :one_value
       # The preamble before the button press
       attr_reader :system_data
+      # Whether to send a post bit
+      attr_reader :post_bit
+      # Trailing space length
+      attr_reader :gap
 
       # How to format hex numbers for readability
       HEX_FORMAT = '%#.4x'.freeze
@@ -18,7 +22,7 @@ module LilBlaster
 
       # Checks that there are three and only three distinct tuples in the +data+
       def self.identify(data)
-        data.tuples.uniq.length == 3
+        data.tuples.uniq.length == 4
       end
 
       # Takes in the +data+, ensures it passes the identity check, then returns an instance
@@ -28,7 +32,7 @@ module LilBlaster
 
         proto = new(extract_values(data))
 
-        [proto, proto.plens_to_int(data.tuples[17..-1])]
+        [proto, proto.plens_to_int(data.tuples[17..-2])]
       end
 
       # Compares +tr_one+ and +tr_two+ as bytestrings for equality. Can be used to compare
@@ -41,7 +45,7 @@ module LilBlaster
 
       # Takes in +args+ for instance variables
       def initialize(args = {})
-        %i[header zero_value one_value system_data].each do |sym|
+        %i[header zero_value one_value system_data post_bit gap].each do |sym|
           instance_variable_set(:"@#{sym}", args.fetch(sym))
         end
       end
@@ -55,6 +59,12 @@ module LilBlaster
         pulses += header
         pulses += int_to_plens(system_data)
         pulses += int_to_plens(data)
+
+        if post_bit
+          pulses += post_bit_plen
+        else
+          pulses[-1] = gap
+        end
 
         Transmission.new(data: pulses.flatten)
       end
@@ -105,6 +115,12 @@ module LilBlaster
 
       private
 
+      def post_bit_plen
+        j = zero_value
+        j[1] = gap
+        j
+      end
+
       # Formats a number +num+ as a 16 digit binary number
       def binary_pad(num)
         format(BINARY_FORMAT, num)
@@ -120,7 +136,7 @@ module LilBlaster
         def bytestring_for(transmission)
           ident = extract_values(transmission)
 
-          transmission.tuples[1..-1].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
+          transmission.tuples[1..-2].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
         end
 
         private
@@ -128,15 +144,22 @@ module LilBlaster
         # Does the work of scanning the tuples within the +data+ and identifying the attributes
         def extract_values(data)
           plens = data.tuples.uniq
-          sums = plens.map { |x| x.reduce(&:+) }
 
           init_args = {
-            header: plens[sums.index(sums.max)],
-            zero_value: plens[sums.index(sums.min)]
+            header: plens.max { |a, _b| a[1] },
+            gap: plens.max { |_a, b| b[1] }[1],
+            zero_value: plens.min
           }
 
-          init_args[:one_value] = (plens - init_args.values).first
+          init_args[:one_value] = plens.find do |plen|
+            next unless plen != init_args[:header] && plen != init_args[:zero_value]
+            next if plen[1] == gap
+
+            plen
+          end
+
           init_args[:system_data] = extract_system_data(init_args, data)
+          init_args[:pre_bit] = plens.all? { |pl| pl.length == 2 }
 
           init_args
         end
