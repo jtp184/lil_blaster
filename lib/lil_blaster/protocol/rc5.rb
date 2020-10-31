@@ -116,9 +116,7 @@ module LilBlaster
       private
 
       def post_bit_plen
-        j = zero_value
-        j[1] = gap
-        j
+        zero_value.clone.tap { |zv| zv[1] = gap }
       end
 
       # Formats a number +num+ as a 16 digit binary number
