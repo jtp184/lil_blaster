@@ -93,9 +93,9 @@ module LilBlaster
         binary_pad(int).chars.map do |ch|
           case ch
           when /0/
-            zero_value
+            zero_value.clone
           when /1/
-            one_value
+            one_value.clone
           end
         end
       end
