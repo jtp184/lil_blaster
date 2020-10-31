@@ -153,7 +153,7 @@ module LilBlaster
 
           init_args[:one_value] = plens.find do |plen|
             next unless plen != init_args[:header] && plen != init_args[:zero_value]
-            next if plen[1] == gap
+            next if plen[1] == init_args[:gap]
 
             plen
           end
