@@ -159,7 +159,7 @@ module LilBlaster
           end
 
           init_args[:system_data] = extract_system_data(init_args, data)
-          init_args[:pre_bit] = plens.all? { |pl| pl.length == 2 }
+          init_args[:post_bit] = plens.all? { |pl| pl.length == 2 }
 
           init_args
         end
