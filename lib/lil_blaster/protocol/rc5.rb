@@ -134,7 +134,7 @@ module LilBlaster
         if post_bit
           pulses += post_bit_plen
         else
-          pulses[-1] = gap
+          pulses[-1][1] = gap
         end
 
         Transmission.new(data: pulses.flatten)
