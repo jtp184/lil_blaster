@@ -101,9 +101,13 @@ module LilBlaster
 
       # Takes in the arguments and decideds how long a space to generate
       def decide_spacer(multiple_words, last_word, last_letter, last_mark)
-        if last_mark && last_letter && (multiple_words && !last_word)
+        last_letter_of_last_mark = last_mark && last_letter
+        last_mark_of_letter = last_mark && !last_letter
+        not_last_word_of_many = (multiple_words && !last_word)
+
+        if last_letter_of_last_mark && not_last_word_of_many
           WORD_SPACE
-        elsif last_mark && !last_letter
+        elsif last_mark_of_letter
           BETWEEN_LETTER_SPACE
         else
           INTER_LETTER_SPACE
