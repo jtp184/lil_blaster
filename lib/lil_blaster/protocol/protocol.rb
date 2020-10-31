@@ -26,6 +26,23 @@ module LilBlaster
       end
 
       alias create_transmission call
+
+      # Compares self to other, returning true if their object states match
+      def ==(other)
+        other.class == self.class && other.object_state == object_state
+      end
+
+      alias eql? ==
+
+      # Uses the object_state's hash
+      def hash
+        object_state.hash
+      end
+
+      # Superclass implementation. Subclasses should put their identifying attributes
+      def object_state
+        [self]
+      end
     end
   end
 end
