@@ -146,7 +146,7 @@ module LilBlaster
           plens = data.tuples.uniq
 
           init_args = {
-            header: plens.max { |a, _b| a[1] },
+            header: plens.max { |a, b| a[0] <=> b[0] },
             gap: plens.max { |_a, b| b[1] }[1],
             zero_value: plens.min
           }
