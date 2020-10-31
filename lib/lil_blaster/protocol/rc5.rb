@@ -127,7 +127,7 @@ module LilBlaster
         raise ArgumentError unless data.is_a?(Integer) && (0x0000..0xFFFF).cover?(data)
 
         pulses = []
-        pulses += header
+        pulses += header.clone
         pulses += int_to_plens(system_data)
         pulses += int_to_plens(data)
 
