@@ -108,6 +108,7 @@ module LilBlaster
                .to_i(2)
         end
 
+        # Takes the +transmission+ and +tup_range+ and converts it to int
         def extract_data(transmission, tup_range)
           data = extract_values(transmission)
           plens_to_int(transmission.tuples[tup_range], data[:zero_value], data[:one_value])
