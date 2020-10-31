@@ -9,9 +9,9 @@ module LilBlaster
       def record(args = {})
         blips = record!(args)
         start_code = blips.index { |x| x > args.fetch(:min_length, 100) }
-        stop_code = blips.index { |x| x > args.fetch(:max_length, 15_000) } - 1
+        stop_code = blips.index { |x| x > args.fetch(:max_length, 15_000) }
 
-        Transmission.new(data: blips[start_code...stop_code])
+        Transmission.new(data: blips[start_code..stop_code])
       end
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to clean up data or not

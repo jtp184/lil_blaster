@@ -40,9 +40,11 @@ example = [
   517, 1732,
   517, 1732,
   517, 1732,
-  517, 609
+  517, 47_312
 ].freeze
 
 @transmission = LilBlaster::Transmission.new(data: example)
+@rc5, @power_command = LilBlaster::Protocol::RC5.identify!(@transmission)
+@morse = LilBlaster::Protocol::Morse.new
 
 Pry.start

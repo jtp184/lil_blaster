@@ -1,5 +1,8 @@
 require 'lil_blaster/version'
 require 'lil_blaster/gpio/gpio'
+require 'lil_blaster/protocol/protocol'
+require 'lil_blaster/protocol/morse'
+require 'lil_blaster/protocol/rc5'
 require 'lil_blaster/transmission'
 require 'lil_blaster/blaster'
 require 'lil_blaster/reader'
