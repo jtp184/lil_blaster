@@ -9,6 +9,8 @@ end
 RDOC_EXCLUDE = %w[
   bin/setup
   bin/console
+  coverage
+  pkg
   Gemfile
   Gemfile.lock
   Rakefile
