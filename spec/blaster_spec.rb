@@ -5,13 +5,9 @@ RSpec.describe LilBlaster::Blaster, :hardware do
   end
 
   it 'can perform basic blinking' do
-    LilBlaster::Blaster.turn_on
+    expect(LilBlaster::Blaster.turn_on && LilBlaster::Blaster.on?).to eq(true)
 
-    expect(LilBlaster::Blaster.on?).to eq(true)
-
-    LilBlaster::Blaster.turn_off
-    
-    expect(LilBlaster::Blaster.off?).to eq(true)
+    expect(LilBlaster::Blaster.turn_off && LilBlaster::Blaster.off?).to eq(true)
   end
 
   it 'can check its active status' do
