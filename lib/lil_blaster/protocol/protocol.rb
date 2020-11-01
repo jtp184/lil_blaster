@@ -5,9 +5,9 @@ module LilBlaster
     class Protocol
       class << self
         # To be implemented by subclasses, takes in +_data+ and returns a true if the data matches
-        # the protocol, a false otherwise
+        # the protocol. Superclass always returns true
         def identify(_data)
-          false
+          true
         end
 
         # Superclass implementation returns nil unless the +data+ passes #identify.
@@ -16,6 +16,8 @@ module LilBlaster
         # of the decoded data as well.
         def identify!(data)
           return nil unless identify(data)
+
+          [self, data]
         end
       end
 
