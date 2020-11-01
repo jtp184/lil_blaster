@@ -16,6 +16,12 @@ module LilBlaster
           chain_waves create(transmission)
         end
 
+        # Clears waves with #clear_waves before sending the +transmission+
+        def transmit!(transmission)
+          clear_waves
+          transmit(transmission)
+        end
+
         # Syntax sugar, calls begin_wave, runs the block, and calls end_wave.
         # Optionally the block can utilize an array passed as a block argument
         # to pass pulse tuples to, which will be added to the wave

@@ -7,20 +7,26 @@ module LilBlaster
 
       # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
       def record(args = {})
-        blips = record!(args)
+        raw_data = record!(args)
+
+        blips = if args.fetch(:clean_up, true)
+                  NoiseReducer.call(raw_data, args)
+                else
+                  raw_data
+                end
+
         start_code = blips.index { |x| x > args.fetch(:min_length, 100) }
         stop_code = blips.index { |x| x > args.fetch(:max_length, 15_000) }
 
         Transmission.new(data: blips[start_code..stop_code])
       end
 
-      # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to clean up data or not
-      # and for blip tolerance
+      # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record!(args = {})
         last_tick = nil
         buffer = []
 
-        pin.start_callback(:either) do |tick, _level|
+        pin.start_callback(args.fetch(:callback_edge, :either)) do |tick, _level|
           last_tick ||= tick
 
           edge = tick - last_tick
@@ -35,20 +41,24 @@ module LilBlaster
         pin.stop_callback
         buffer.shift
 
-        if buffer.empty?
-          buffer
-        elsif args.fetch(:clean_up, true)
-          tidy_code(buffer, args)
-        else
-          buffer
-        end
+        buffer
       end
 
       private
 
+      # The underlying GPIO pin, id determined by LilBlaster.transmitter_pin
+      def pin
+        @pin ||= GPIO::Pin.new(LilBlaster.reader_pin)
+      end
+    end
+  end
+
+  # Used to smooth out the data in a transmission
+  class NoiseReducer
+    class << self
       # Takes the code +buffer+ and does math to the marks and spaces to smooth out the transmission
       # passing +args+ down
-      def tidy_code(buffer, args)
+      def call(buffer, args)
         pairs = buffer.each_slice(2).to_a
         replace = [pairs.map(&:first), pairs.map(&:last)].map { |lens| average_values(lens, args) }
 
@@ -92,11 +102,6 @@ module LilBlaster
           vals.each { |x| mem[x] = avg }
           mem
         end
-      end
-
-      # The underlying GPIO pin, id determined by LilBlaster.transmitter_pin
-      def pin
-        @pin ||= GPIO::Pin.new(LilBlaster.reader_pin)
       end
     end
   end
