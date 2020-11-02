@@ -1,6 +1,28 @@
 module LilBlaster
   # Group together mechanisms for encoding / decoding transmissions
   module Protocol
+    class << self
+      def identify(transmission)
+        available_protocols.find { |_s, pr| pr.identify(transmission) == true }
+                           .first
+      end
+
+      def identify!(transmission)
+        available_protocols.find { |_s, pr| pr.identify(transmission) == true }
+                           .last
+                           .identify!(transmission)
+      end
+
+      private
+
+      def available_protocols
+        constants.reject { |c| c == :Protocol }
+                 .map { |c| [c, const_get(c)] }
+                 .select { |_s, c| c.ancestors.include?(LilBlaster::Protocol::Protocol) }
+                 .to_h
+      end
+    end
+
     # Abstract base class for different protocols to give consistent interface
     class Protocol
       class << self
