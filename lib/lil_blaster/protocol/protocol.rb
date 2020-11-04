@@ -23,9 +23,9 @@ module LilBlaster
 
       # Constants on this class which are protocols, returned as symbol => protocl hash
       def available_protocols
-        constants.reject { |c| c == :Protocol }
+        constants.reject { |c| c == :BaseProtocol }
                  .map { |c| [c, const_get(c)] }
-                 .select { |_s, c| c.ancestors.include?(LilBlaster::Protocol::Protocol) }
+                 .select { |_s, c| c.ancestors.include?(LilBlaster::Protocol::BaseProtocol) }
                  .to_h
       end
     end
