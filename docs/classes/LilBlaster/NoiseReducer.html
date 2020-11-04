@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>LilBlaster::NoiseReducer</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='class' id='wrapper'>
+<div class='header'>
+<h1 class='name'><span class='type'>class</span>
+LilBlaster::NoiseReducer
+</h1>
+<ol class='paths'>
+<li>
+<a href="../../files/lib/lil_blaster/reader_rb.html">lib/lil_blaster/reader.rb</a>
+</li>
+</ol>
+<div class='parent'>
+Superclass:
+<strong>Object</strong>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<p>Used to smooth out the data in a transmission</p>
+</div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-average_values">average_values</a></li>
+<li><a href="#method-c-call">call</a></li>
+<li><a href="#method-c-group_values">group_values</a></li>
+<li><a href="#method-c-weight_averages">weight_averages</a></li>
+</ol>
+</div>
+<div id='context'>
+</div>
+<div id='section'>
+<div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-average_values'>
+<a name='method-c-average_values'></a>
+<div class='synopsis'>
+<span class='name'>average_values</span>
+<span class='arguments'>(pulses, args)</span>
+
+</div>
+<div class='description'>
+
+<p>Given an array of <code>pulses</code>, tallies them up and uniquifies them
+for <a href="NoiseReducer.html#method-c-group_values">::group_values</a>
+and weighted_averages, passing <code>args</code> down</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-average_values-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-average_values-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 72</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">average_values</span>(<span class="ruby-identifier">pulses</span>, <span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">tally</span> = <span class="ruby-identifier">pulses</span>.<span class="ruby-identifier">each_with_object</span>(<span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>)) { <span class="ruby-operator">|</span><span class="ruby-identifier">obj</span>, <span class="ruby-identifier">mem</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mem</span>.<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>[<span class="ruby-identifier">obj</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> } }&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">tally</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_h</span>.<span class="ruby-identifier">keys</span>&#x000A;&#x000A;  <span class="ruby-identifier">weight_averages</span>(<span class="ruby-identifier">group_values</span>(<span class="ruby-identifier">plens</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:tolerance</span>, <span class="ruby-value">200</span>)))&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-call'>
+<a name='method-c-call'></a>
+<div class='synopsis'>
+<span class='name'>call</span>
+<span class='arguments'>(buffer, args)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes the code <code>buffer</code> and does math to the marks and spaces to
+smooth out the transmission passing <code>args</code> down</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-call-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-call-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 61</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">buffer</span>, <span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">pairs</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">each_slice</span>(<span class="ruby-value">2</span>).<span class="ruby-identifier">to_a</span>&#x000A;  <span class="ruby-identifier">replace</span> = [<span class="ruby-identifier">pairs</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>), <span class="ruby-identifier">pairs</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:last</span>)].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">lens</span><span class="ruby-operator">|</span> <span class="ruby-identifier">average_values</span>(<span class="ruby-identifier">lens</span>, <span class="ruby-identifier">args</span>) }&#x000A;&#x000A;  <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cd</span>, <span class="ruby-identifier">ix</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">ix</span>.<span class="ruby-identifier">even?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">replace</span>[<span class="ruby-value">0</span>][<span class="ruby-identifier">cd</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">replace</span>[<span class="ruby-value">1</span>][<span class="ruby-identifier">cd</span>]&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-group_values'>
+<a name='method-c-group_values'></a>
+<div class='synopsis'>
+<span class='name'>group_values</span>
+<span class='arguments'>(plens, tolerance)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in the integer <code>plens</code>, and a <code>tolerance</code> and
+returns an array of arrays where each value is within that tolerance of its
+neighbors.</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-group_values-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-group_values-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 81</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">group_values</span>(<span class="ruby-identifier">plens</span>, <span class="ruby-identifier">tolerance</span>)&#x000A;  <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">reduce</span>([[]]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mem</span>, <span class="ruby-identifier">obj</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">last_plen</span> = <span class="ruby-identifier">mem</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">last</span>&#x000A;&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">last_plen</span>.<span class="ruby-identifier">nil?</span>&#x000A;    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">obj</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">last_plen</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tolerance</span>&#x000A;      <span class="ruby-identifier">mem</span> <span class="ruby-operator">&lt;&lt;</span> []&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">mem</span>.<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">last</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">obj</span> }&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-weight_averages'>
+<a name='method-c-weight_averages'></a>
+<div class='synopsis'>
+<span class='name'>weight_averages</span>
+<span class='arguments'>(groups)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in an array of arrays <code>groups</code> sums and divides them, and
+then zips them into a hash mapping each member of the originals to the new
+averaged value to replace it with</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-weight_averages-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-weight_averages-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">weight_averages</span>(<span class="ruby-identifier">groups</span>)&#x000A;  <span class="ruby-identifier">avgs</span> = <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">length</span> }&#x000A;&#x000A;  <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">avgs</span>).<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">each_with_object</span>({}) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tuple</span>, <span class="ruby-identifier">mem</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">vals</span>, <span class="ruby-identifier">avg</span> = <span class="ruby-identifier">tuple</span>&#x000A;&#x000A;    <span class="ruby-identifier">vals</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mem</span>[<span class="ruby-identifier">x</span>] = <span class="ruby-identifier">avg</span> }&#x000A;    <span class="ruby-identifier">mem</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
