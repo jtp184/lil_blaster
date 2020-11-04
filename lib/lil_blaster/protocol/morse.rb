@@ -1,7 +1,7 @@
 module LilBlaster
   module Protocol
     # Blink data in morse code
-    class Morse < Protocol
+    class Morse < BaseProtocol
       # The dot length, in milis, to base timing data off of
       attr_reader :dot_length
 

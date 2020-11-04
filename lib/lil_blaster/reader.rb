@@ -6,7 +6,7 @@ module LilBlaster
       %i[on? off?].each { |symbol| define_method(symbol) { pin.send(symbol) } }
 
       # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
-      def record(args = {})
+      def record!(args = {})
         raw_data = record!(args)
 
         blips = if args.fetch(:clean_up, true)
@@ -22,7 +22,7 @@ module LilBlaster
       end
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
-      def record!(args = {})
+      def record(args = {})
         last_tick = nil
         buffer = []
 
