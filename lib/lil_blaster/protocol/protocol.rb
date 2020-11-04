@@ -31,7 +31,7 @@ module LilBlaster
     end
 
     # Abstract base class for different protocols to give consistent interface
-    class Protocol
+    class BaseProtocol
       class << self
         # To be implemented by subclasses, takes in +_data+ and returns a true if the data matches
         # the protocol. Superclass always returns true

@@ -1,7 +1,7 @@
 module LilBlaster
   module Protocol
     # The classic semi-proprietary remote control format
-    class RC5 < Protocol
+    class RC5 < BaseProtocol
       # The plen for the header
       attr_reader :header
       # The plen for the zero value
