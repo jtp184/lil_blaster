@@ -101,16 +101,13 @@ module LilBlaster
 
         # Takes in the current +args+ and +data+ to identify and convert the system_data
         def extract_system_data(args, data)
-          datum = data.tuples[1..16]
-
-          datum.map { |x| x == args[:zero_value] ? '0' : '1' }
-               .join
-               .to_i(2)
+          plens_to_int(data.tuples[1..16], args[:zero_value], args[:one_value])
         end
 
         # Takes the +transmission+ and +tup_range+ and converts it to int
         def extract_data(transmission, tup_range)
           data = extract_values(transmission)
+
           plens_to_int(transmission.tuples[tup_range], data[:zero_value], data[:one_value])
         end
       end
