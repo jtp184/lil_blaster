@@ -74,6 +74,18 @@ module LilBlaster
       def object_state
         [self]
       end
+
+      def to_sym
+        self.class
+            .name
+            .split("::")
+            .last
+            .to_sym
+      end
+
+      def export_options
+        object_state
+      end
     end
   end
 end

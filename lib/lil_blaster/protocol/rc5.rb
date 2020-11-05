@@ -144,6 +144,12 @@ module LilBlaster
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
       end
 
+      def export_options
+        %i[gap header one_value zero_value system_data post_bit].map do |sy|
+          [sy, public_send(sy)]
+        end.to_h
+      end
+
       private
 
       # Takes in an +int+ and converts it first to binary,
