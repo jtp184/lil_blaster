@@ -144,6 +144,7 @@ module LilBlaster
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
       end
 
+      # Returns a hash of the instance values for use elsewhere
       def export_options
         %i[gap header one_value zero_value system_data post_bit].map do |sy|
           [sy, public_send(sy)]
