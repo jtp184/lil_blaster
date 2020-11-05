@@ -36,8 +36,8 @@ module LilBlaster
       proto = args.fetch(:protocol, nil)
 
       @protocol = if proto.is_a?(Symbol)
-                    LilBlaster::Protocol[proto].new(args.fetch(:protocol_options, {}))
-                  elsif proto.ancestors.include?(LilBlaster::Protocol::BaseProtocol)
+                    Protocol[proto].new(args.fetch(:protocol_options, {}))
+                  elsif proto.is_a?(Class) && Protocol::BaseProtocol.descendants.include?(proto)
                     proto
                   end
     end
