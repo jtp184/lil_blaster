@@ -32,14 +32,7 @@ module LilBlaster
 
       @remote_name = args.fetch(:remote_name, 'Remote')
       @codes = args.fetch(:codes, {})
-
-      proto = args.fetch(:protocol, nil)
-
-      @protocol = if proto.is_a?(Symbol)
-                    Protocol[proto].new(args.fetch(:protocol_options, {}))
-                  elsif proto.is_a?(Class) && Protocol::BaseProtocol.descendants.include?(proto)
-                    proto
-                  end
+      @protocol = interpret_protocol_arg(args)
     end
 
     # Returns a Transmission representing the code identified by +key_sym+
@@ -91,6 +84,20 @@ module LilBlaster
         protocol_options: yaml[:metadata][:protocol_options],
         codes: yaml[:data]
       }
+    end
+
+    # Takes in the +args+ and decides how to construct the protocol object
+    def interpret_protocol_arg(args)
+      proto = args.fetch(:protocol, nil)
+      proto_opts = args.fetch(:protocol_options, {})
+
+      if proto.is_a?(Symbol)
+        Protocol[proto].new(proto_opts)
+      elsif proto.is_a?(Class) && Protocol::BaseProtocol.descendants.include?(proto)
+        proto.new(proto_opts)
+      elsif Protocol::BaseProtocol.descendants.include?(proto.class)
+        proto
+      end
     end
   end
 end
