@@ -24,11 +24,21 @@ module LilBlaster
       new(path: fpath)
     end
 
+    def self.from_yaml(yml_str)
+      new(yaml: yml_str)
+    end
+
     # Takes in +args+ and returns an instance. If :path is given, tries to load from it first
     def initialize(args = {})
       @path = args.fetch(:path, "./#{args.fetch(:remote_name, 'Remote')}_codex.txt")
 
-      load_from_existing_file && return if File.exist?(@path)
+      load_yml = if File.exist?(@path)
+                   Psych.load File.read(@path)
+                 elsif args.key?(:yaml)
+                   Psych.load args[:yaml]
+                 end
+
+      load_from_existing_yaml(load_yml) && return if load_yml
 
       @remote_name = args.fetch(:remote_name, 'Remote')
       @codes = args.fetch(:codes, {})
@@ -53,8 +63,8 @@ module LilBlaster
     private
 
     # Runs +parse_yaml+ on the file at #path and sets instance variables
-    def load_from_existing_file
-      yml = parse_yaml(Psych.load(File.read(@path)))
+    def load_from_existing_yaml(yaml = nil)
+      yml = parse_yaml(yaml)
 
       @remote_name = yml[:remote_name]
       @protocol = yml[:protocol].new(yml[:protocol_options])
@@ -71,7 +81,7 @@ module LilBlaster
       file[:metadata][:protocol] = protocol.to_sym
       file[:metadata][:protocol_options] = protocol.export_options
 
-      file[:data] = codes
+      file[:codes] = codes
 
       file
     end
@@ -82,7 +92,7 @@ module LilBlaster
         remote_name: yaml[:metadata][:remote_name],
         protocol: LilBlaster::Protocol[yaml[:metadata][:protocol]],
         protocol_options: yaml[:metadata][:protocol_options],
-        codes: yaml[:data]
+        codes: yaml[:codes]
       }
     end
 
