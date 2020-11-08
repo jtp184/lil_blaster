@@ -10,6 +10,11 @@ module LilBlaster
         end
       end
 
+      # Sends Codex#call to the +codex+ with the +sym+ argument, then runs #transmit on the result
+      def send_code(sym, codex)
+        transmit codex.call(sym)
+      end
+
       # Takes in a Transmission +data+, and constructs and transmits waves. Returns true if
       # successful.
       def transmit(data)

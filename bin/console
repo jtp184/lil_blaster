@@ -47,4 +47,12 @@ example = [
 @rc5, @power_command = LilBlaster::Protocol::RC5.identify!(@transmission)
 @morse = LilBlaster::Protocol::Morse.new
 
+if Dir.exist?('tmp')
+  @codex = Dir.entries('tmp')
+              .select { |x| x =~ /_codex.ya?ml/i }
+              .map { |y| "tmp/#{y}" }
+              .map { |y| LilBlaster::Codex.new(path: y) }
+              .first
+end
+
 Pry.start

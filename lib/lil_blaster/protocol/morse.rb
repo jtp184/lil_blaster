@@ -60,6 +60,11 @@ module LilBlaster
         self.class.code_table
       end
 
+      # Exports the dot_length as an option
+      def export_options
+        %i[dot_length].map { |sy| [sy, public_send(sy)] }.to_h
+      end
+
       private
 
       # Takes a +cluster+ and loops through it to convert every mark of every letter of every word

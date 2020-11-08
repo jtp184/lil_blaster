@@ -101,16 +101,13 @@ module LilBlaster
 
         # Takes in the current +args+ and +data+ to identify and convert the system_data
         def extract_system_data(args, data)
-          datum = data.tuples[1..16]
-
-          datum.map { |x| x == args[:zero_value] ? '0' : '1' }
-               .join
-               .to_i(2)
+          plens_to_int(data.tuples[1..16], args[:zero_value], args[:one_value])
         end
 
         # Takes the +transmission+ and +tup_range+ and converts it to int
         def extract_data(transmission, tup_range)
           data = extract_values(transmission)
+
           plens_to_int(transmission.tuples[tup_range], data[:zero_value], data[:one_value])
         end
       end
@@ -145,6 +142,25 @@ module LilBlaster
       # and encoded integer joined as a bytestring
       def to_bytestring(data = 0x0000)
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
+      end
+
+      # Returns a hash of the instance values for use elsewhere
+      def export_options
+        %i[gap header one_value zero_value system_data post_bit].map do |sy|
+          [sy, public_send(sy)]
+        end.to_h
+      end
+
+      # Allows for calling +mtd+ on the class if it exists
+      def method_missing(mtd, *args)
+        super unless self.class.respond_to?(mtd)
+
+        self.class.public_send(mtd, *args)
+      end
+
+      # Politely override method_missing
+      def respond_to_missing?(mtd, *)
+        self.class.respond_to?(mtd) || super
       end
 
       private

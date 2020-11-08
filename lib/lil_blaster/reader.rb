@@ -7,7 +7,7 @@ module LilBlaster
 
       # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
       def record!(args = {})
-        raw_data = record!(args)
+        raw_data = record(args)
 
         blips = if args.fetch(:clean_up, true)
                   NoiseReducer.call(raw_data, args)
