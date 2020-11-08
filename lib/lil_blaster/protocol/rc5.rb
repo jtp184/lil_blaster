@@ -151,6 +151,18 @@ module LilBlaster
         end.to_h
       end
 
+      # Allows for calling +mtd+ on the class if it exists
+      def method_missing(mtd, *args)
+        super unless self.class.respond_to?(mtd)
+
+        self.class.public_send(mtd, *args)
+      end
+
+      # Politely override method_missing
+      def respond_to_missing?(mtd, *)
+        self.class.respond_to?(mtd) || super
+      end
+
       private
 
       # Takes in an +int+ and converts it first to binary,
