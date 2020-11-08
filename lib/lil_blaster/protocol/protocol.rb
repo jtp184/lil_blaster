@@ -85,6 +85,7 @@ module LilBlaster
         [self]
       end
 
+      # Return a symbol representation of this class
       def to_sym
         self.class
             .name
@@ -93,6 +94,7 @@ module LilBlaster
             .to_sym
       end
 
+      # Export the object state by default
       def export_options
         object_state
       end
