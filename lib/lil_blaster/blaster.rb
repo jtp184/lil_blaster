@@ -15,10 +15,12 @@ module LilBlaster
         transmit codex.call(sym)
       end
 
-      # Takes in a Transmission +data+, and constructs and transmits waves. Returns true if
-      # successful.
-      def transmit(data)
-        GPIO::Wave.transmit(data).zero? ? true : false
+      # Takes in a Transmission +data+, and constructs and transmits waves. Uses blocking form
+      # if +args+ is set, and returns true if successful.
+      def transmit(data, args = {})
+        mtd = args.fetch(:blocking, true) ? :transmit! : :transmit
+
+        GPIO::Wave.public_send(mtd, data)
       end
 
       private

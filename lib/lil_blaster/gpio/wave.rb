@@ -16,8 +16,11 @@ module LilBlaster
           chain_waves create(transmission)
         end
 
-        # Clears waves with #clear_waves before sending the +transmission+
+        # Waits for a non-busy device, clears waves with #clear_waves
+        # before sending the +transmission+ with #transmit
         def transmit!(transmission)
+          nil while busy?
+
           clear_waves
           transmit(transmission)
         end
@@ -60,6 +63,11 @@ module LilBlaster
         # Clears the waves in the wavetuner
         def clear_waves
           wavetuner.clear
+        end
+
+        # Returns bool based on whether the device is currently transmitting a wave
+        def busy?
+          wavetuner.tx_busy
         end
 
         # Exposes the waveform creation and execution interface
