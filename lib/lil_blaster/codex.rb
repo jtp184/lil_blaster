@@ -24,6 +24,7 @@ module LilBlaster
       new(path: fpath)
     end
 
+    # Takes in the +yml_str+ and creates a new instance from it
     def self.from_yaml(yml_str)
       new(yaml: yml_str)
     end

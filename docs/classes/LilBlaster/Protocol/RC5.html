@@ -63,10 +63,13 @@ Superclass:
 <h3>Public Instance</h3>
 <ol>
 <li><a href="#method-i-call">call</a></li>
+<li><a href="#method-i-export_options">export_options</a></li>
 <li><a href="#attribute-i-gap">gap</a></li>
 <li><a href="#attribute-i-header">header</a></li>
+<li><a href="#method-i-method_missing">method_missing</a></li>
 <li><a href="#attribute-i-one_value">one_value</a></li>
 <li><a href="#attribute-i-post_bit">post_bit</a></li>
+<li><a href="#method-i-respond_to_missing-3F">respond_to_missing?</a></li>
 <li><a href="#attribute-i-system_data">system_data</a></li>
 <li><a href="#method-i-to_bytestring">to_bytestring</a></li>
 <li><a href="#attribute-i-zero_value">zero_value</a></li>
@@ -173,8 +176,7 @@ Superclass:
 <div class='method public-class' id='method-method-c-bytestring_for'>
 <a name='method-c-bytestring_for'></a>
 <div class='synopsis'>
-<span class='name'>bytestring_for</span>
-<span class='arguments'>(transmission)</span>
+<span class='name'>bytestring_for</span><span class='arguments'>(transmission)</span>
 
 </div>
 <div class='description'>
@@ -193,8 +195,7 @@ a bytestring</p>
 <div class='method public-class' id='method-method-c-command_data'>
 <a name='method-c-command_data'></a>
 <div class='synopsis'>
-<span class='name'>command_data</span>
-<span class='arguments'>(transmission)</span>
+<span class='name'>command_data</span><span class='arguments'>(transmission)</span>
 
 </div>
 <div class='description'>
@@ -214,8 +215,7 @@ href="RC5.html#method-c-command_data">::command_data</a> in the
 <div class='method public-class' id='method-method-c-identify'>
 <a name='method-c-identify'></a>
 <div class='synopsis'>
-<span class='name'>identify</span>
-<span class='arguments'>(data)</span>
+<span class='name'>identify</span><span class='arguments'>(data)</span>
 
 </div>
 <div class='description'>
@@ -234,8 +234,7 @@ datums</p>
 <div class='method public-class' id='method-method-c-identify-21'>
 <a name='method-c-identify-21'></a>
 <div class='synopsis'>
-<span class='name'>identify!</span>
-<span class='arguments'>(data)</span>
+<span class='name'>identify!</span><span class='arguments'>(data)</span>
 
 </div>
 <div class='description'>
@@ -255,8 +254,7 @@ representing the specific code sent</p>
 <div class='method public-class' id='method-method-c-new'>
 <a name='method-c-new'></a>
 <div class='synopsis'>
-<span class='name'>new</span>
-<span class='arguments'>(args = {})</span>
+<span class='name'>new</span><span class='arguments'>(args = {})</span>
 
 </div>
 <div class='description'>
@@ -268,14 +266,13 @@ representing the specific code sent</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 119</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-node">%i[header zero_value one_value system_data post_bit gap]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sym</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-value">:&quot;@#{sym}&quot;</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">sym</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 116</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-node">%i[header zero_value one_value system_data post_bit gap]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sym</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-value">:&quot;@#{sym}&quot;</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">sym</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-same_data-3F'>
 <a name='method-c-same_data-3F'></a>
 <div class='synopsis'>
-<span class='name'>same_data?</span>
-<span class='arguments'>(tr_one, tr_two)</span>
+<span class='name'>same_data?</span><span class='arguments'>(tr_one, tr_two)</span>
 
 </div>
 <div class='description'>
@@ -295,8 +292,7 @@ for the same underlying data</p>
 <div class='method public-class' id='method-method-c-system_data'>
 <a name='method-c-system_data'></a>
 <div class='synopsis'>
-<span class='name'>system_data</span>
-<span class='arguments'>(transmission)</span>
+<span class='name'>system_data</span><span class='arguments'>(transmission)</span>
 
 </div>
 <div class='description'>
@@ -317,8 +313,7 @@ href="RC5.html#method-c-system_data">::system_data</a> in the
 <div class='method private-class' id='method-method-c-extract_data'>
 <a name='method-c-extract_data'></a>
 <div class='synopsis'>
-<span class='name'>extract_data</span>
-<span class='arguments'>(transmission, tup_range)</span>
+<span class='name'>extract_data</span><span class='arguments'>(transmission, tup_range)</span>
 
 </div>
 <div class='description'>
@@ -331,14 +326,13 @@ it to int</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-extract_data-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-extract_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 112</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_data</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">tup_range</span>)&#x000A;  <span class="ruby-identifier">data</span> = <span class="ruby-identifier">extract_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">plens_to_int</span>(<span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-identifier">tup_range</span>], <span class="ruby-identifier">data</span>[<span class="ruby-value">:zero_value</span>], <span class="ruby-identifier">data</span>[<span class="ruby-value">:one_value</span>])&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-extract_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 108</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_data</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">tup_range</span>)&#x000A;  <span class="ruby-identifier">data</span> = <span class="ruby-identifier">extract_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">plens_to_int</span>(<span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-identifier">tup_range</span>], <span class="ruby-identifier">data</span>[<span class="ruby-value">:zero_value</span>], <span class="ruby-identifier">data</span>[<span class="ruby-value">:one_value</span>])&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-extract_system_data'>
 <a name='method-c-extract_system_data'></a>
 <div class='synopsis'>
-<span class='name'>extract_system_data</span>
-<span class='arguments'>(args, data)</span>
+<span class='name'>extract_system_data</span><span class='arguments'>(args, data)</span>
 
 </div>
 <div class='description'>
@@ -351,14 +345,13 @@ and convert the <a href="RC5.html#method-c-system_data">::system_data</a></p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-extract_system_data-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-extract_system_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_system_data</span>(<span class="ruby-identifier">args</span>, <span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">datum</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">16</span>]&#x000A;&#x000A;  <span class="ruby-identifier">datum</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:zero_value</span>] <span class="ruby-operator">?</span> <span class="ruby-string">&#39;0&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;1&#39;</span> }&#x000A;       .<span class="ruby-identifier">join</span>&#x000A;       .<span class="ruby-identifier">to_i</span>(<span class="ruby-value">2</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-extract_system_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_system_data</span>(<span class="ruby-identifier">args</span>, <span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">plens_to_int</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">16</span>], <span class="ruby-identifier">args</span>[<span class="ruby-value">:zero_value</span>], <span class="ruby-identifier">args</span>[<span class="ruby-value">:one_value</span>])&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-extract_values'>
 <a name='method-c-extract_values'></a>
 <div class='synopsis'>
-<span class='name'>extract_values</span>
-<span class='arguments'>(data)</span>
+<span class='name'>extract_values</span><span class='arguments'>(data)</span>
 
 </div>
 <div class='description'>
@@ -377,8 +370,7 @@ identifying the attributes</p>
 <div class='method private-class' id='method-method-c-plens_to_int'>
 <a name='method-c-plens_to_int'></a>
 <div class='synopsis'>
-<span class='name'>plens_to_int</span>
-<span class='arguments'>(plens, zero, one)</span>
+<span class='name'>plens_to_int</span><span class='arguments'>(plens, zero, one)</span>
 
 </div>
 <div class='description'>
@@ -398,8 +390,7 @@ first, then to an integer based on the zero and one values</p>
 <div class='method public-instance' id='method-method-i-call'>
 <a name='method-i-call'></a>
 <div class='synopsis'>
-<span class='name'>call</span>
-<span class='arguments'>(data = 0x0000)</span>
+<span class='name'>call</span><span class='arguments'>(data = 0x0000)</span>
 
 </div>
 <div class='description'>
@@ -414,14 +405,68 @@ integer</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-call-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-call-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 127</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-value">0x0000</span><span class="ruby-operator">..</span><span class="ruby-value">0xFFFF</span>).<span class="ruby-identifier">cover?</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses</span> = []&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">header</span>.<span class="ruby-identifier">clone</span>&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_plens</span>(<span class="ruby-identifier">system_data</span>)&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_plens</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">post_bit</span>&#x000A;    <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">post_bit_plen</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">pulses</span>[<span class="ruby-value">-1</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">pulses</span>.<span class="ruby-identifier">flatten</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-call-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 124</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-value">0x0000</span><span class="ruby-operator">..</span><span class="ruby-value">0xFFFF</span>).<span class="ruby-identifier">cover?</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses</span> = []&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">header</span>.<span class="ruby-identifier">clone</span>&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_plens</span>(<span class="ruby-identifier">system_data</span>)&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_plens</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">post_bit</span>&#x000A;    <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">post_bit_plen</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">pulses</span>[<span class="ruby-value">-1</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">pulses</span>.<span class="ruby-identifier">flatten</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-export_options'>
+<a name='method-i-export_options'></a>
+<div class='synopsis'>
+<span class='name'>export_options</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Returns a hash of the instance values for use elsewhere</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-export_options-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 148</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-node">%i[gap header one_value zero_value system_data post_bit]</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sy</span><span class="ruby-operator">|</span>&#x000A;    [<span class="ruby-identifier">sy</span>, <span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">sy</span>)]&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-method_missing'>
+<a name='method-i-method_missing'></a>
+<div class='synopsis'>
+<span class='name'>method_missing</span><span class='arguments'>(mtd, *args)</span>
+
+</div>
+<div class='description'>
+
+<p>Allows for calling <code>mtd</code> on the class if it exists</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-method_missing-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-method_missing-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 155</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_missing</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>)&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-respond_to_missing-3F'>
+<a name='method-i-respond_to_missing-3F'></a>
+<div class='synopsis'>
+<span class='name'>respond_to_missing?</span><span class='arguments'>(mtd, *)</span>
+
+</div>
+<div class='description'>
+
+<p>Politely override <a
+href="RC5.html#method-i-method_missing">#method_missing</a></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-respond_to_missing-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-respond_to_missing-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 162</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">respond_to_missing?</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span>)&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-to_bytestring'>
 <a name='method-i-to_bytestring'></a>
 <div class='synopsis'>
-<span class='name'>to_bytestring</span>
-<span class='arguments'>(data = 0x0000)</span>
+<span class='name'>to_bytestring</span><span class='arguments'>(data = 0x0000)</span>
 
 </div>
 <div class='description'>
@@ -435,15 +480,14 @@ joined as a bytestring</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-to_bytestring-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-to_bytestring-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 146</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_bytestring</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  [<span class="ruby-identifier">system_data</span>, <span class="ruby-identifier">data</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">d</span>) }.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-to_bytestring-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 143</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_bytestring</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  [<span class="ruby-identifier">system_data</span>, <span class="ruby-identifier">data</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">d</span>) }.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Instance methods</h2>
 <div class='method private-instance' id='method-method-i-binary_pad'>
 <a name='method-i-binary_pad'></a>
 <div class='synopsis'>
-<span class='name'>binary_pad</span>
-<span class='arguments'>(num)</span>
+<span class='name'>binary_pad</span><span class='arguments'>(num)</span>
 
 </div>
 <div class='description'>
@@ -455,14 +499,13 @@ joined as a bytestring</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-binary_pad-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-binary_pad-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 171</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">binary_pad</span>(<span class="ruby-identifier">num</span>)&#x000A;  <span class="ruby-identifier">format</span>(<span class="ruby-constant">BINARY_FORMAT</span>, <span class="ruby-identifier">num</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-binary_pad-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 187</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">binary_pad</span>(<span class="ruby-identifier">num</span>)&#x000A;  <span class="ruby-identifier">format</span>(<span class="ruby-constant">BINARY_FORMAT</span>, <span class="ruby-identifier">num</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-int_to_plens'>
 <a name='method-i-int_to_plens'></a>
 <div class='synopsis'>
-<span class='name'>int_to_plens</span>
-<span class='arguments'>(int)</span>
+<span class='name'>int_to_plens</span><span class='arguments'>(int)</span>
 
 </div>
 <div class='description'>
@@ -475,14 +518,13 @@ tuples based on the zero and one values</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-int_to_plens-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-int_to_plens-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 154</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">int_to_plens</span>(<span class="ruby-identifier">int</span>)&#x000A;  <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">int</span>).<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">ch</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/0/</span>&#x000A;      <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/1/</span>&#x000A;      <span class="ruby-identifier">one_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-int_to_plens-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 170</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">int_to_plens</span>(<span class="ruby-identifier">int</span>)&#x000A;  <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">int</span>).<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">ch</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/0/</span>&#x000A;      <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/1/</span>&#x000A;      <span class="ruby-identifier">one_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-object_state'>
 <a name='method-i-object_state'></a>
 <div class='synopsis'>
-<span class='name'>object_state</span>
-<span class='arguments'>()</span>
+<span class='name'>object_state</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -494,14 +536,13 @@ tuples based on the zero and one values</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-object_state-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 176</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-identifier">header</span>, <span class="ruby-identifier">zero_value</span>, <span class="ruby-identifier">one_value</span>, <span class="ruby-identifier">system_data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 192</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-identifier">header</span>, <span class="ruby-identifier">zero_value</span>, <span class="ruby-identifier">one_value</span>, <span class="ruby-identifier">system_data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-post_bit_plen'>
 <a name='method-i-post_bit_plen'></a>
 <div class='synopsis'>
-<span class='name'>post_bit_plen</span>
-<span class='arguments'>()</span>
+<span class='name'>post_bit_plen</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -514,7 +555,7 @@ mark with a gap sized space</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-post_bit_plen-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-post_bit_plen-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 166</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">post_bit_plen</span>&#x000A;  <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>.<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">zv</span><span class="ruby-operator">|</span> <span class="ruby-identifier">zv</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-post_bit_plen-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rc5.rb, line 182</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">post_bit_plen</span>&#x000A;  <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>.<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">zv</span><span class="ruby-operator">|</span> <span class="ruby-identifier">zv</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

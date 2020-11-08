@@ -72,8 +72,7 @@ LilBlaster::Protocol
 <div class='method public-class' id='method-method-c-5B-5D'>
 <a name='method-c-5B-5D'></a>
 <div class='synopsis'>
-<span class='name'>[]</span>
-<span class='arguments'>(sym)</span>
+<span class='name'>[]</span><span class='arguments'>(sym)</span>
 
 </div>
 <div class='description'>
@@ -86,14 +85,13 @@ it</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-5B-5D-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-5B-5D-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 19</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-identifier">lookup</span> = <span class="ruby-identifier">constants</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">sym</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> }&#x000A;  <span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">lookup</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-5B-5D-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 19</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-identifier">available_protocols</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span>, <span class="ruby-identifier">_pr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">sym</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> }.<span class="ruby-identifier">last</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-available_protocols'>
 <a name='method-c-available_protocols'></a>
 <div class='synopsis'>
-<span class='name'>available_protocols</span>
-<span class='arguments'>()</span>
+<span class='name'>available_protocols</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -106,14 +104,13 @@ protocl hash</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-available_protocols-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-available_protocols-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">available_protocols</span>&#x000A;  <span class="ruby-identifier">constants</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-value">:Protocol</span> }&#x000A;           .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">c</span>, <span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">c</span>)] }&#x000A;           .<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_s</span>, <span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Protocol</span><span class="ruby-operator">::</span><span class="ruby-constant">Protocol</span>) }&#x000A;           .<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-available_protocols-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 24</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">available_protocols</span>&#x000A;  <span class="ruby-constant">BaseProtocol</span>.<span class="ruby-identifier">descendants</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">cl</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">cl</span>.<span class="ruby-identifier">to_sym</span>, <span class="ruby-identifier">cl</span>] }.<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-identify'>
 <a name='method-c-identify'></a>
 <div class='synopsis'>
-<span class='name'>identify</span>
-<span class='arguments'>(transmission)</span>
+<span class='name'>identify</span><span class='arguments'>(transmission)</span>
 
 </div>
 <div class='description'>
@@ -132,8 +129,7 @@ representation</p>
 <div class='method public-class' id='method-method-c-identify-21'>
 <a name='method-c-identify-21'></a>
 <div class='synopsis'>
-<span class='name'>identify!</span>
-<span class='arguments'>(transmission)</span>
+<span class='name'>identify!</span><span class='arguments'>(transmission)</span>
 
 </div>
 <div class='description'>
