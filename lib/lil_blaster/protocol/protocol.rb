@@ -56,6 +56,8 @@ module LilBlaster
 
       # Callback method, when +subclass+ is created adds it to an internal array
       def self.inherited(subclass)
+        super
+
         @descendants ||= []
         @descendants << subclass
       end

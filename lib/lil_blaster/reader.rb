@@ -82,10 +82,7 @@ module LilBlaster
         plens.reduce([[]]) do |mem, obj|
           last_plen = mem.last.last
 
-          if last_plen.nil?
-          elsif obj - last_plen > tolerance
-            mem << []
-          end
+          mem << [] if !last_plen.nil? && obj - last_plen > tolerance
 
           mem.tap { |m| m.last << obj }
         end

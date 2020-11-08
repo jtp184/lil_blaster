@@ -17,6 +17,9 @@ module LilBlaster
 
       def_delegators :@gpio_pin, :read, :write, :mode
 
+      # Symbol to Integer hash for edge monitoring
+      EDGES = { rising: 0, falling: 1, either: 2 }.freeze
+
       # Takes in the +pin+ number and the +dir+ symbol for direction
       def initialize(pin, dir = :input)
         @id = pin
@@ -85,16 +88,7 @@ module LilBlaster
       # Takes in an +edge_sym+ for whether to trigger on rising, falling, or either, and
       # a +blk+ function to run for the callback, and commits it to an instance variable
       def start_callback(edge_sym, &blk)
-        edge_num = case edge_sym
-                   when :rising
-                     0
-                   when :falling
-                     1
-                   when :either
-                     2
-                   end
-
-        @callback = gpio_pin.callback(edge_num, &blk)
+        @callback = gpio_pin.callback(EDGES[edge_sym], &blk)
         self
       end
 

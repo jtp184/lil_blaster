@@ -10,10 +10,11 @@ module LilBlaster
     def initialize(args = {})
       @data = args.fetch(:data, [])
       @carrier_wave = (args.fetch(:carrier_wave, true) != false)
-      @carrier_wave_options = if args.fetch(:carrier_wave, nil).is_a?(Hash)
-                                args.fetch(:carrier_wave)
-                              elsif args.fetch(:carrier_wave, nil).is_a?(Float)
-                                { frequency: args.fetch(:carrier_wave) }
+      @carrier_wave_options = case args.fetch(:carrier_wave, nil)
+                              when ->(o) { o.is_a?(Hash) }
+                                args[:carrier_wave]
+                              when ->(o) { o.is_a?(Float) }
+                                { frequency: args[:carrier_wave] }
                               else
                                 {}
                               end
