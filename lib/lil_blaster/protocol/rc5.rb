@@ -86,17 +86,20 @@ module LilBlaster
             zero_value: plens.min
           }
 
-          init_args[:one_value] = plens.find do |plen|
+          init_args[:one_value] = identify_one_value(plens, init_args)
+          init_args[:system_data] = extract_system_data(init_args, data)
+          init_args[:post_bit] = plens.all? { |pl| pl.length == 2 }
+
+          init_args
+        end
+
+        def identify_one_value(plens, init_args)
+          plens.find do |plen|
             next unless plen != init_args[:header] && plen != init_args[:zero_value]
             next if plen[1] == init_args[:gap]
 
             plen
           end
-
-          init_args[:system_data] = extract_system_data(init_args, data)
-          init_args[:post_bit] = plens.all? { |pl| pl.length == 2 }
-
-          init_args
         end
 
         # Takes in the current +args+ and +data+ to identify and convert the system_data
@@ -114,6 +117,8 @@ module LilBlaster
 
       # Takes in +args+ for instance variables
       def initialize(args = {})
+        super()
+
         %i[header zero_value one_value system_data post_bit gap].each do |sym|
           instance_variable_set(:"@#{sym}", args.fetch(sym))
         end

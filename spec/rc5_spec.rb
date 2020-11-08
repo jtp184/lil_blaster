@@ -67,4 +67,3 @@ RSpec.describe 'RC5 Protocol' do
     end
   end
 end
-

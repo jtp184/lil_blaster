@@ -39,6 +39,8 @@ module LilBlaster
 
       # Takes in +args+ for dot length
       def initialize(args = {})
+        super()
+
         @dot_length = args.fetch(:dot_length, 1000)
       end
 
