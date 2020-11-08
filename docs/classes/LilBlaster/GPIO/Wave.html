@@ -47,6 +47,7 @@ Superclass:
 <ol>
 <li><a href="#method-c-add_to_wave">add_to_wave</a></li>
 <li><a href="#method-c-begin_wave">begin_wave</a></li>
+<li><a href="#method-c-busy-3F">busy?</a></li>
 <li><a href="#method-c-chain_waves">chain_waves</a></li>
 <li><a href="#method-c-clear_waves">clear_waves</a></li>
 <li><a href="#method-c-create">create</a></li>
@@ -89,7 +90,7 @@ pulses</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-add_to_wave-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-add_to_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 51</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_to_wave</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">add_generic</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">pulse</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">x</span>) })&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-add_to_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 54</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_to_wave</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">add_generic</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">pulse</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">x</span>) })&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-begin_wave'>
@@ -107,7 +108,25 @@ pulses</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-begin_wave-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-begin_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 41</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">begin_wave</span>&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">add_new</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-begin_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 44</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">begin_wave</span>&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">add_new</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-busy-3F'>
+<a name='method-c-busy-3F'></a>
+<div class='synopsis'>
+<span class='name'>busy?</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Returns bool based on whether the device is currently transmitting a wave</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-busy-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-busy-3F-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 69</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">busy?</span>&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">tx_busy</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-chain_waves'>
@@ -125,7 +144,7 @@ pulses</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-chain_waves-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-chain_waves-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 56</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">chain_waves</span>(<span class="ruby-identifier">wids</span>)&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">chain</span>(<span class="ruby-identifier">wids</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-chain_waves-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 59</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">chain_waves</span>(<span class="ruby-identifier">wids</span>)&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">chain</span>(<span class="ruby-identifier">wids</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-clear_waves'>
@@ -143,7 +162,7 @@ pulses</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-clear_waves-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-clear_waves-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 61</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_waves</span>&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">clear</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-clear_waves-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_waves</span>&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">clear</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-create'>
@@ -180,7 +199,7 @@ corresponding to it</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-end_wave-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-end_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 46</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">end_wave</span>&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">create</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-end_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 49</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">end_wave</span>&#x000A;  <span class="ruby-identifier">wavetuner</span>.<span class="ruby-identifier">create</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-transmit'>
@@ -210,14 +229,15 @@ calls <a href="Wave.html#method-c-chain_waves">::chain_waves</a> on it</p>
 </div>
 <div class='description'>
 
-<p>Clears waves with clear_waves before sending the <code>transmission</code></p>
+<p>Waits for a non-busy device, clears waves with clear_waves before sending
+the <code>transmission</code> with transmit</p>
 
 </div>
 <div class='source'>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmit-21-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-transmit-21-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 20</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmit!</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">clear_waves</span>&#x000A;  <span class="ruby-identifier">transmit</span>(<span class="ruby-identifier">transmission</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-transmit-21-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmit!</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-keyword">nil</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">busy?</span>&#x000A;&#x000A;  <span class="ruby-identifier">clear_waves</span>&#x000A;  <span class="ruby-identifier">transmit</span>(<span class="ruby-identifier">transmission</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-wavetuner'>
@@ -235,7 +255,7 @@ calls <a href="Wave.html#method-c-chain_waves">::chain_waves</a> on it</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-wavetuner-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-wavetuner-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 66</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">wavetuner</span>&#x000A;  <span class="ruby-ivar">@wavetuner</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">GPIO</span>.<span class="ruby-identifier">connection</span>.<span class="ruby-identifier">wave</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-wavetuner-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">wavetuner</span>&#x000A;  <span class="ruby-ivar">@wavetuner</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">GPIO</span>.<span class="ruby-identifier">connection</span>.<span class="ruby-identifier">wave</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-within_wave'>
@@ -256,7 +276,7 @@ argument to pass pulse tuples to, which will be added to the wave</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-within_wave-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-within_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 28</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">within_wave</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;  <span class="ruby-identifier">udata</span> = []&#x000A;&#x000A;  <span class="ruby-identifier">begin_wave</span>&#x000A;&#x000A;  <span class="ruby-identifier">blk</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">udata</span>)&#x000A;&#x000A;  <span class="ruby-identifier">udata</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">add_to_wave</span>(<span class="ruby-identifier">x</span>) } <span class="ruby-keyword">unless</span> <span class="ruby-identifier">udata</span>.<span class="ruby-identifier">empty?</span>&#x000A;&#x000A;  <span class="ruby-identifier">end_wave</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-within_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 31</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">within_wave</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;  <span class="ruby-identifier">udata</span> = []&#x000A;&#x000A;  <span class="ruby-identifier">begin_wave</span>&#x000A;&#x000A;  <span class="ruby-identifier">blk</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">udata</span>)&#x000A;&#x000A;  <span class="ruby-identifier">udata</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">add_to_wave</span>(<span class="ruby-identifier">x</span>) } <span class="ruby-keyword">unless</span> <span class="ruby-identifier">udata</span>.<span class="ruby-identifier">empty?</span>&#x000A;&#x000A;  <span class="ruby-identifier">end_wave</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Class methods</h2>
@@ -277,7 +297,7 @@ the wave</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-add_mark_wave-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-add_mark_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 98</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_mark_wave</span>(<span class="ruby-identifier">plen</span>, <span class="ruby-identifier">carrier_wave</span>)&#x000A;  <span class="ruby-identifier">mark_wave</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">carrier_wave</span>&#x000A;                <span class="ruby-identifier">carrier</span>(<span class="ruby-identifier">carrier_wave</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">length:</span> <span class="ruby-identifier">plen</span>))&#x000A;              <span class="ruby-keyword">else</span>&#x000A;                [<span class="ruby-identifier">on_pulse</span>(<span class="ruby-identifier">plen</span>), <span class="ruby-identifier">off_pulse</span>(<span class="ruby-value">1</span>)]&#x000A;              <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">within_wave</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">mark_wave</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-add_mark_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 106</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_mark_wave</span>(<span class="ruby-identifier">plen</span>, <span class="ruby-identifier">carrier_wave</span>)&#x000A;  <span class="ruby-identifier">mark_wave</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">carrier_wave</span>&#x000A;                <span class="ruby-identifier">carrier</span>(<span class="ruby-identifier">carrier_wave</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">length:</span> <span class="ruby-identifier">plen</span>))&#x000A;              <span class="ruby-keyword">else</span>&#x000A;                [<span class="ruby-identifier">on_pulse</span>(<span class="ruby-identifier">plen</span>), <span class="ruby-identifier">off_pulse</span>(<span class="ruby-value">1</span>)]&#x000A;              <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">within_wave</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">mark_wave</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-add_space_wave'>
@@ -295,7 +315,7 @@ the wave</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-add_space_wave-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-add_space_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 109</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_space_wave</span>(<span class="ruby-identifier">plen</span>)&#x000A;  <span class="ruby-identifier">within_wave</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">empty_pulse</span>(<span class="ruby-identifier">plen</span>)] }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-add_space_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 117</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_space_wave</span>(<span class="ruby-identifier">plen</span>)&#x000A;  <span class="ruby-identifier">within_wave</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">empty_pulse</span>(<span class="ruby-identifier">plen</span>)] }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-carrier'>
@@ -314,7 +334,7 @@ pulse_length, and cycle_length</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-carrier-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-carrier-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 115</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">carrier</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">timer</span> = <span class="ruby-value">0</span>&#x000A;  <span class="ruby-identifier">math</span> = <span class="ruby-identifier">cycle_math</span>(<span class="ruby-identifier">args</span>)&#x000A;&#x000A;  <span class="ruby-identifier">math</span>[<span class="ruby-value">:cycle_count</span>].<span class="ruby-identifier">times</span>.<span class="ruby-identifier">with_object</span>([]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cy</span>, <span class="ruby-identifier">wave</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">target</span> = ((<span class="ruby-identifier">cy</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">*</span> <span class="ruby-identifier">math</span>[<span class="ruby-value">:cycle</span>]).<span class="ruby-identifier">round</span>&#x000A;&#x000A;    <span class="ruby-identifier">timer</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">math</span>[<span class="ruby-value">:blink_length</span>]&#x000A;    <span class="ruby-identifier">delay</span> = (<span class="ruby-identifier">target</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">timer</span>)&#x000A;    <span class="ruby-identifier">timer</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">delay</span>&#x000A;&#x000A;    <span class="ruby-identifier">wave</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">on_pulse</span>(<span class="ruby-identifier">math</span>[<span class="ruby-value">:blink_length</span>])&#x000A;    <span class="ruby-identifier">wave</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">off_pulse</span>(<span class="ruby-identifier">delay</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-carrier-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 123</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">carrier</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">timer</span> = <span class="ruby-value">0</span>&#x000A;  <span class="ruby-identifier">math</span> = <span class="ruby-identifier">cycle_math</span>(<span class="ruby-identifier">args</span>)&#x000A;&#x000A;  <span class="ruby-identifier">math</span>[<span class="ruby-value">:cycle_count</span>].<span class="ruby-identifier">times</span>.<span class="ruby-identifier">with_object</span>([]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cy</span>, <span class="ruby-identifier">wave</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">target</span> = ((<span class="ruby-identifier">cy</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">*</span> <span class="ruby-identifier">math</span>[<span class="ruby-value">:cycle</span>]).<span class="ruby-identifier">round</span>&#x000A;&#x000A;    <span class="ruby-identifier">timer</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">math</span>[<span class="ruby-value">:blink_length</span>]&#x000A;    <span class="ruby-identifier">delay</span> = (<span class="ruby-identifier">target</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">timer</span>)&#x000A;    <span class="ruby-identifier">timer</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">delay</span>&#x000A;&#x000A;    <span class="ruby-identifier">wave</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">on_pulse</span>(<span class="ruby-identifier">math</span>[<span class="ruby-value">:blink_length</span>])&#x000A;    <span class="ruby-identifier">wave</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">off_pulse</span>(<span class="ruby-identifier">delay</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-cycle_math'>
@@ -332,7 +352,7 @@ pulse_length, and cycle_length</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-cycle_math-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-cycle_math-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 132</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cycle_math</span>(<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">ret</span> = {}&#x000A;&#x000A;  <span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle</span>] = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:cycle_length</span>, <span class="ruby-value">1000.0</span>).<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:frequency</span>, <span class="ruby-value">38.0</span>)&#x000A;  <span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle_count</span>] = (<span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:length</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle</span>]).<span class="ruby-identifier">round</span>&#x000A;  <span class="ruby-identifier">ret</span>[<span class="ruby-value">:blink_length</span>] = (<span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle</span>] <span class="ruby-operator">/</span> <span class="ruby-value">2.0</span>).<span class="ruby-identifier">round</span>&#x000A;&#x000A;  <span class="ruby-identifier">ret</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-cycle_math-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 140</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cycle_math</span>(<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">ret</span> = {}&#x000A;&#x000A;  <span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle</span>] = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:cycle_length</span>, <span class="ruby-value">1000.0</span>).<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:frequency</span>, <span class="ruby-value">38.0</span>)&#x000A;  <span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle_count</span>] = (<span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:length</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle</span>]).<span class="ruby-identifier">round</span>&#x000A;  <span class="ruby-identifier">ret</span>[<span class="ruby-value">:blink_length</span>] = (<span class="ruby-identifier">ret</span>[<span class="ruby-value">:cycle</span>] <span class="ruby-operator">/</span> <span class="ruby-value">2.0</span>).<span class="ruby-identifier">round</span>&#x000A;&#x000A;  <span class="ruby-identifier">ret</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-empty_pulse'>
@@ -350,7 +370,7 @@ pulse_length, and cycle_length</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-empty_pulse-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-empty_pulse-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 93</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty_pulse</span>(<span class="ruby-identifier">length</span> = <span class="ruby-value">1</span>)&#x000A;  [<span class="ruby-value">0</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">length</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-empty_pulse-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 101</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty_pulse</span>(<span class="ruby-identifier">length</span> = <span class="ruby-value">1</span>)&#x000A;  [<span class="ruby-value">0</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">length</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-off_pulse'>
@@ -368,7 +388,7 @@ pulse_length, and cycle_length</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-off_pulse-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-off_pulse-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 88</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">off_pulse</span>(<span class="ruby-identifier">length</span> = <span class="ruby-value">1</span>)&#x000A;  [<span class="ruby-value">0</span>, <span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span>, <span class="ruby-identifier">length</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-off_pulse-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">off_pulse</span>(<span class="ruby-identifier">length</span> = <span class="ruby-value">1</span>)&#x000A;  [<span class="ruby-value">0</span>, <span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span>, <span class="ruby-identifier">length</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-on_pulse'>
@@ -386,7 +406,7 @@ pulse_length, and cycle_length</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-on_pulse-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-on_pulse-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 83</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_pulse</span>(<span class="ruby-identifier">length</span> = <span class="ruby-value">1</span>)&#x000A;  [<span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">length</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-on_pulse-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 91</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_pulse</span>(<span class="ruby-identifier">length</span> = <span class="ruby-value">1</span>)&#x000A;  [<span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">length</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-tuples_to_wave'>
@@ -405,7 +425,7 @@ of wave ids</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-tuples_to_wave-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-tuples_to_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tuples_to_wave</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">carrier_wave</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span>.<span class="ruby-identifier">with_object</span>([]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pulse</span>, <span class="ruby-identifier">wids</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">mark</span>, <span class="ruby-identifier">space</span> = <span class="ruby-identifier">pulse</span>&#x000A;&#x000A;    <span class="ruby-identifier">wids</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">add_mark_wave</span>(<span class="ruby-identifier">mark</span>, <span class="ruby-identifier">carrier_wave</span>)&#x000A;    <span class="ruby-identifier">wids</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">add_space_wave</span>(<span class="ruby-identifier">space</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-tuples_to_wave-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/wave.rb, line 81</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tuples_to_wave</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">carrier_wave</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span>.<span class="ruby-identifier">with_object</span>([]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pulse</span>, <span class="ruby-identifier">wids</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">mark</span>, <span class="ruby-identifier">space</span> = <span class="ruby-identifier">pulse</span>&#x000A;&#x000A;    <span class="ruby-identifier">wids</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">add_mark_wave</span>(<span class="ruby-identifier">mark</span>, <span class="ruby-identifier">carrier_wave</span>)&#x000A;    <span class="ruby-identifier">wids</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">add_space_wave</span>(<span class="ruby-identifier">space</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

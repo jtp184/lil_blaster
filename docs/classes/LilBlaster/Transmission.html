@@ -49,6 +49,8 @@ Superclass:
 </ol>
 <h3>Public Instance</h3>
 <ol>
+<li><a href="#method-i-2A">*</a></li>
+<li><a href="#method-i-2B">+</a></li>
 <li><a href="#method-i-carrier_wave-3F">carrier_wave?</a></li>
 <li><a href="#attribute-i-carrier_wave_options">carrier_wave_options</a></li>
 <li><a href="#attribute-i-data">data</a></li>
@@ -104,6 +106,43 @@ Superclass:
 </div>
 </div>
 <h2>Public Instance methods</h2>
+<div class='method public-instance' id='method-method-i-2A'>
+<a name='method-i-2A'></a>
+<div class='synopsis'>
+<span class='name'>*</span><span class='arguments'>(other)</span>
+
+</div>
+<div class='description'>
+
+<p>Returns a new transmission which repeats this data a number of times</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-2A-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-2A-source'><span class="ruby-comment"># File lib/lil_blaster/transmission.rb, line 42</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">*</span>(<span class="ruby-identifier">other</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;Must multiply by amount&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Numeric</span>)&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>(&#x000A;    <span class="ruby-value">data:</span> <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">other</span>, <span class="ruby-identifier">data</span>).<span class="ruby-identifier">flatten</span>,&#x000A;    <span class="ruby-value">carrier_wave:</span> <span class="ruby-identifier">carrier_wave_options</span>.<span class="ruby-identifier">clone</span>&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-2B'>
+<a name='method-i-2B'></a>
+<div class='synopsis'>
+<span class='name'>+</span><span class='arguments'>(other)</span>
+
+</div>
+<div class='description'>
+
+<p>Combines the data for this and <code>other</code> transmission into a new
+transmission</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-2B-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-2B-source'><span class="ruby-comment"># File lib/lil_blaster/transmission.rb, line 34</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">+</span>(<span class="ruby-identifier">other</span>)&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>(&#x000A;    <span class="ruby-value">data:</span> <span class="ruby-identifier">data</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">data</span>,&#x000A;    <span class="ruby-value">carrier_wave:</span> <span class="ruby-identifier">carrier_wave_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">other</span>.<span class="ruby-identifier">carrier_wave_options</span>)&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-instance' id='method-method-i-carrier_wave-3F'>
 <a name='method-i-carrier_wave-3F'></a>
 <div class='synopsis'>

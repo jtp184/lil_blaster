@@ -4337,6 +4337,7 @@ var search_index = [
   { method: 'available_protocols', module: 'lilblaster::protocol', html: '<a href="classes/LilBlaster/Protocol.html#method-c-available_protocols"><span class="method_name">::available_protocols</span> <span class="module_name">(LilBlaster::Protocol)</span></a>' },
   { method: 'average_values', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-average_values"><span class="method_name">::average_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
   { method: 'begin_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-begin_wave"><span class="method_name">::begin_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'busy?', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-busy-3F"><span class="method_name">::busy?</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'bytestring_for', module: 'lilblaster::protocol::rc5', html: '<a href="classes/LilBlaster/Protocol/RC5.html#method-c-bytestring_for"><span class="method_name">::bytestring_for</span> <span class="module_name">(LilBlaster::Protocol::RC5)</span></a>' },
   { method: 'call', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-call"><span class="method_name">::call</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
   { method: 'carrier', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-carrier"><span class="method_name">::carrier</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
@@ -4392,6 +4393,8 @@ var search_index = [
   { method: 'wavetuner', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-wavetuner"><span class="method_name">::wavetuner</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'weight_averages', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-weight_averages"><span class="method_name">::weight_averages</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
   { method: 'within_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-within_wave"><span class="method_name">::within_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: '*', module: 'lilblaster::transmission', html: '<a href="classes/LilBlaster/Transmission.html#method-i-2A"><span class="method_name">#*</span> <span class="module_name">(LilBlaster::Transmission)</span></a>' },
+  { method: '+', module: 'lilblaster::transmission', html: '<a href="classes/LilBlaster/Transmission.html#method-i-2B"><span class="method_name">#+</span> <span class="module_name">(LilBlaster::Transmission)</span></a>' },
   { method: '==', module: 'lilblaster::protocol::baseprotocol', html: '<a href="classes/LilBlaster/Protocol/BaseProtocol.html#method-i-3D-3D"><span class="method_name">#==</span> <span class="module_name">(LilBlaster::Protocol::BaseProtocol)</span></a>' },
   { method: 'binary_pad', module: 'lilblaster::protocol::rc5', html: '<a href="classes/LilBlaster/Protocol/RC5.html#method-i-binary_pad"><span class="method_name">#binary_pad</span> <span class="module_name">(LilBlaster::Protocol::RC5)</span></a>' },
   { method: 'call', module: 'lilblaster::codex', html: '<a href="classes/LilBlaster/Codex.html#method-i-call"><span class="method_name">#call</span> <span class="module_name">(LilBlaster::Codex)</span></a>' },
@@ -4552,6 +4555,7 @@ function performSearch() {
 <li><a href="classes/LilBlaster/Protocol.html#method-c-available_protocols"><span class="method_name">::available_protocols</span> <span class="module_name">(LilBlaster::Protocol)</span></a></li>
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-average_values"><span class="method_name">::average_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-begin_wave"><span class="method_name">::begin_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-busy-3F"><span class="method_name">::busy?</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/RC5.html#method-c-bytestring_for"><span class="method_name">::bytestring_for</span> <span class="module_name">(LilBlaster::Protocol::RC5)</span></a></li>
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-call"><span class="method_name">::call</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-carrier"><span class="method_name">::carrier</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
@@ -4607,6 +4611,8 @@ function performSearch() {
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-wavetuner"><span class="method_name">::wavetuner</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-weight_averages"><span class="method_name">::weight_averages</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-within_wave"><span class="method_name">::within_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster/Transmission.html#method-i-2A"><span class="method_name">#*</span> <span class="module_name">(LilBlaster::Transmission)</span></a></li>
+<li><a href="classes/LilBlaster/Transmission.html#method-i-2B"><span class="method_name">#+</span> <span class="module_name">(LilBlaster::Transmission)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/BaseProtocol.html#method-i-3D-3D"><span class="method_name">#==</span> <span class="module_name">(LilBlaster::Protocol::BaseProtocol)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/RC5.html#method-i-binary_pad"><span class="method_name">#binary_pad</span> <span class="module_name">(LilBlaster::Protocol::RC5)</span></a></li>
 <li><a href="classes/LilBlaster/Codex.html#method-i-call"><span class="method_name">#call</span> <span class="module_name">(LilBlaster::Codex)</span></a></li>
