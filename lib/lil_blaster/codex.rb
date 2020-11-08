@@ -30,9 +30,11 @@ module LilBlaster
 
     # Takes in +args+ and returns an instance. If :path is given, tries to load from it first
     def initialize(args = {})
-      @path = args.fetch(:path, "./#{args.fetch(:remote_name, 'Remote')}_codex.txt")
+      @path = args.fetch(:path, nil)
 
-      load_yml = if File.exist?(@path)
+      load_yml = if @path.nil?
+                   nil
+                 elsif File.exist?(@path)
                    Psych.load File.read(@path)
                  elsif args.key?(:yaml)
                    Psych.load args[:yaml]
@@ -41,6 +43,7 @@ module LilBlaster
       load_from_existing_yaml(load_yml) && return if load_yml
 
       @remote_name = args.fetch(:remote_name, 'Remote')
+      @path ||= "./#{@remote_name}_codex.txt"
       @codes = args.fetch(:codes, {})
       @protocol = interpret_protocol_arg(args)
     end
@@ -67,6 +70,7 @@ module LilBlaster
       yml = parse_yaml(yaml)
 
       @remote_name = yml[:remote_name]
+      @path ||= "./#{@remote_name}_codex.txt"
       @protocol = yml[:protocol].new(yml[:protocol_options])
       @codes = yml[:codes]
     end
