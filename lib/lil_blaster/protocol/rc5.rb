@@ -93,6 +93,7 @@ module LilBlaster
           init_args
         end
 
+        # Iterates through the +plens+ to find the one value, using +init_args+ to discard
         def identify_one_value(plens, init_args)
           plens.find do |plen|
             next unless plen != init_args[:header] && plen != init_args[:zero_value]
