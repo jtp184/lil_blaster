@@ -44,8 +44,7 @@ example = [
 ].freeze
 
 @transmission = LilBlaster::Transmission.new(data: example)
-@rc5, @power_command = LilBlaster::Protocol::RC5.identify!(@transmission)
-@morse = LilBlaster::Protocol::Morse.new
+@manchester, @power_command = LilBlaster::Protocol.identify!(@transmission)
 
 if Dir.exist?('tmp')
   @codex = Dir.entries('tmp')

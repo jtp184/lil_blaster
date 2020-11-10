@@ -22,13 +22,13 @@ module LilBlaster
       WORD_SPACE = 7
 
       # Checks that there are only 3 unique pulse lengths in the +data+
-      def self.identify(data)
+      def self.match?(data)
         data.data.uniq.length == 3
       end
 
       # Identifies the transmission +data+ and returns an instance and the decoded data
-      def self.identify!(data)
-        super(data)
+      def self.decode(data)
+        return nil unless super(data)
 
         dot_length = data.tuples.map(&:first).min
         proto = new(dot_length: dot_length)
@@ -45,7 +45,7 @@ module LilBlaster
       end
 
       # Takes in a string +data+ and encodes it into a transmission of plens
-      def call(data = 'SOS')
+      def encode(data = 'SOS')
         super(data)
 
         unless data.upcase.chars.all? { |c| c == ' ' || code_table.keys.include?(c) }
