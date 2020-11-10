@@ -1,24 +1,15 @@
+require 'lil_blaster/protocol/mark_space_encoding'
+
 module LilBlaster
   module Protocol
     # The classic semi-proprietary remote control format
     class RC5 < BaseProtocol
-      # The plen for the header
-      attr_reader :header
-      # The plen for the zero value
-      attr_reader :zero_value
-      # The plen for the one value
-      attr_reader :one_value
+      include MarkSpaceEncoding
+
       # The preamble before the button press
       attr_reader :system_data
       # Whether to send a post bit
       attr_reader :post_bit
-      # Trailing space length
-      attr_reader :gap
-
-      # How to format hex numbers for readability
-      HEX_FORMAT = '%#.4x'.freeze
-      # How to format binary numbers for length and readability
-      BINARY_FORMAT = '%.16b'.freeze
 
       class << self
         # Checks that there are four distinct tuples in the +data+, and 6 datums
@@ -46,73 +37,32 @@ module LilBlaster
 
         # Given a +transmission+, extracts the values from it and creates a bytestring
         def bytestring_for(transmission)
-          ident = extract_values(transmission)
+          ident = extract_mark_values(transmission)
 
           transmission.tuples[1..-2].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
         end
 
         # Returns an integer representing the command_data in the +transmission+
         def command_data(transmission)
-          extract_data(transmission, 17..-2)
+          data_range(transmission, 17..-2)
         end
 
         # Returns an integer representing the system_data in the +transmission+
         def system_data(transmission)
-          extract_data(transmission, 1..16)
+          data_range(transmission, 1..16)
         end
 
         private
-
-        # Takes in tuples +plens+ and converts them into a binary string first,
-        # then to an integer based on the zero and one values
-        def plens_to_int(plens, zero, one)
-          plens.map do |pl|
-            case pl
-            when one
-              '1'
-            when zero
-              '0'
-            end
-          end.join.to_i(2)
-        end
 
         # Does the work of scanning the tuples within the +data+ and identifying the attributes
         def extract_values(data)
           plens = data.tuples.uniq
 
-          init_args = {
-            header: plens.max { |a, b| a[0] <=> b[0] },
-            gap: plens.max { |_a, b| b[1] }[1],
-            zero_value: plens.min
-          }
-
-          init_args[:one_value] = identify_one_value(plens, init_args)
-          init_args[:system_data] = extract_system_data(init_args, data)
+          init_args = extract_mark_values(data)
+          init_args[:system_data] = data_range(data, 1..16, init_args)
           init_args[:post_bit] = plens.all? { |pl| pl.length == 2 }
 
           init_args
-        end
-
-        # Iterates through the +plens+ to find the one value, using +init_args+ to discard
-        def identify_one_value(plens, init_args)
-          plens.find do |plen|
-            next unless plen != init_args[:header] && plen != init_args[:zero_value]
-            next if plen[1] == init_args[:gap]
-
-            plen
-          end
-        end
-
-        # Takes in the current +args+ and +data+ to identify and convert the system_data
-        def extract_system_data(args, data)
-          plens_to_int(data.tuples[1..16], args[:zero_value], args[:one_value])
-        end
-
-        # Takes the +transmission+ and +tup_range+ and converts it to int
-        def extract_data(transmission, tup_range)
-          data = extract_values(transmission)
-
-          plens_to_int(transmission.tuples[tup_range], data[:zero_value], data[:one_value])
         end
       end
 
@@ -132,8 +82,8 @@ module LilBlaster
 
         pulses = []
         pulses += header.clone
-        pulses += int_to_plens(system_data)
-        pulses += int_to_plens(data)
+        pulses += int_to_pulses(system_data)
+        pulses += int_to_pulses(data)
 
         if post_bit
           pulses += post_bit_plen
@@ -171,27 +121,9 @@ module LilBlaster
 
       private
 
-      # Takes in an +int+ and converts it first to binary,
-      # then to tuples based on the zero and one values
-      def int_to_plens(int)
-        binary_pad(int).chars.map do |ch|
-          case ch
-          when /0/
-            zero_value.clone
-          when /1/
-            one_value.clone
-          end
-        end
-      end
-
       # Sends a post_bit, which is the mark with a gap sized space
       def post_bit_plen
         zero_value.clone.tap { |zv| zv[1] = gap }
-      end
-
-      # Formats a number +num+ as a 16 digit binary number
-      def binary_pad(num)
-        format(BINARY_FORMAT, num)
       end
 
       # Yields the variables to compare for object equality
