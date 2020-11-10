@@ -1,8 +1,8 @@
-RSpec.describe 'RC5 Protocol' do
+RSpec.describe 'Manchester Protocol' do
   before :all do
-    @klass = LilBlaster::Protocol::RC5
+    @klass = LilBlaster::Protocol::Manchester
 
-    @proto = LilBlaster::Protocol::RC5.new(
+    @proto = LilBlaster::Protocol::Manchester.new(
       header: [4501, 4509],
       gap: 47_000,
       zero_value: [520, 610],
@@ -14,7 +14,7 @@ RSpec.describe 'RC5 Protocol' do
     @cmd = 0x40BF
 
     @tr = @proto.call @cmd
-    @eq = LilBlaster::Protocol::RC5.new(
+    @eq = LilBlaster::Protocol::Manchester.new(
       header: [4501, 4509],
       gap: 47_000,
       zero_value: [509, 603],
@@ -41,7 +41,7 @@ RSpec.describe 'RC5 Protocol' do
     it 'can return an instance based off a transmission' do
       protocol, command = @klass.identify!(@tr)
 
-      expect(protocol).to be_a(LilBlaster::Protocol::RC5)
+      expect(protocol).to be_a(LilBlaster::Protocol::Manchester)
       expect(command).to be_a(Integer)
 
       expect(command).to eq(@cmd)
