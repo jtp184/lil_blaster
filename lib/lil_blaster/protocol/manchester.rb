@@ -119,8 +119,6 @@ module LilBlaster
         self.class.respond_to?(mtd) || super
       end
 
-      private
-
       # Yields the variables to compare for object equality
       def object_state
         [header, zero_value, one_value, system_data]
