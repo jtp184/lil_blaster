@@ -40,12 +40,12 @@ module LilBlaster
           true
         end
 
-        # Superclass implementation returns nil unless the +data+ passes #identify.
+        # Superclass implementation returns nil unless the +data+ passes #match?.
         # Subclasses should call super first to take advantage of this, then perform
         # processing as necessary to return an instance of the protocol, and a representation
         # of the decoded data as well.
         def decode(data)
-          return nil unless identify(data)
+          return nil unless match?(data)
 
           [self, data]
         end
