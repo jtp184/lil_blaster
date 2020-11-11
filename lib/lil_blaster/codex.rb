@@ -15,7 +15,7 @@ module LilBlaster
     # The actual codes as a hash
     attr_reader :codes
 
-    def_delegators :@codes, :[], :[]=, :key, :key?, :value?
+    def_delegators :@codes, :[], :[]=, :key, :key?, :value?, :keys
 
     # Takes in a filepath +fpath+, returns a new instance if the file exists
     def self.load(fpath)
@@ -33,12 +33,12 @@ module LilBlaster
     def initialize(args = {})
       @path = args.fetch(:path, nil)
 
-      load_yml = if @path.nil?
+      load_yml = if args.key?(:yaml)
+                   Psych.load args[:yaml]
+                 elsif @path.nil?
                    nil
                  elsif File.exist?(@path)
                    Psych.load File.read(@path)
-                 elsif args.key?(:yaml)
-                   Psych.load args[:yaml]
                  end
 
       load_from_existing_yaml(load_yml) && return if load_yml
@@ -51,7 +51,7 @@ module LilBlaster
 
     # Returns a Transmission representing the code identified by +key_sym+
     def call(key_sym)
-      protocol.call self[key_sym]
+      protocol.encode self[key_sym]
     end
 
     # Exports the codex to a YAML representation and returns that string
