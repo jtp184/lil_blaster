@@ -52,7 +52,13 @@ Superclass:
 <h3>Private Class</h3>
 <ol>
 <li><a href="#method-c-code_table">code_table</a></li>
+<li><a href="#method-c-decode_dotdash_str">decode_dotdash_str</a></li>
+<li><a href="#method-c-denoise">denoise</a></li>
+<li><a href="#method-c-dotdash_to_nple">dotdash_to_nple</a></li>
+<li><a href="#method-c-fuzz">fuzz</a></li>
 <li><a href="#method-c-mark_to_int">mark_to_int</a></li>
+<li><a href="#method-c-pulse_to_dotdash">pulse_to_dotdash</a></li>
+<li><a href="#method-c-pulses_to_dotdash_str">pulses_to_dotdash_str</a></li>
 </ol>
 <h3>Public Instance</h3>
 <ol>
@@ -163,7 +169,7 @@ the decoded data</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-decode-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-decode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">decode</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">dot_length</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>).<span class="ruby-identifier">min</span>&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">new</span>(<span class="ruby-value">dot_length:</span> <span class="ruby-identifier">dot_length</span>)&#x000A;&#x000A;  <span class="ruby-comment"># TODO: decode the data</span>&#x000A;  [<span class="ruby-identifier">proto</span>, <span class="ruby-identifier">data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-decode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 41</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">decode</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">dot_length</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>).<span class="ruby-identifier">min</span>&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">new</span>(<span class="ruby-value">dot_length:</span> <span class="ruby-identifier">dot_length</span>)&#x000A;&#x000A;  [<span class="ruby-identifier">proto</span>, <span class="ruby-identifier">decode_dotdash_str</span>(<span class="ruby-identifier">pulses_to_dotdash_str</span>(<span class="ruby-identifier">data</span>))]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-match-3F'>
@@ -181,7 +187,7 @@ the decoded data</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-match-3F-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-match-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">match?</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">3</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-match-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">match?</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">data_args</span> = [<span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>, <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>).<span class="ruby-identifier">min</span>]&#x000A;  <span class="ruby-identifier">places</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>&#x000A;&#x000A;  <span class="ruby-identifier">reduced</span> = <span class="ruby-identifier">fuzz</span>(<span class="ruby-identifier">denoise</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">data_args</span>), <span class="ruby-identifier">places</span>)&#x000A;&#x000A;  <span class="ruby-identifier">checks</span> = [&#x000A;    <span class="ruby-constant">INTER_LETTER_SPACE</span>,&#x000A;    <span class="ruby-constant">BETWEEN_LETTER_SPACE</span>,&#x000A;    <span class="ruby-constant">WORD_SPACE</span>&#x000A;  ].<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">num</span><span class="ruby-operator">|</span> <span class="ruby-identifier">num</span> <span class="ruby-operator">*</span> <span class="ruby-value">10</span><span class="ruby-operator">**</span><span class="ruby-identifier">places</span> }&#x000A;&#x000A;  <span class="ruby-identifier">reduced</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">checks</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-new'>
@@ -199,7 +205,7 @@ the decoded data</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 41</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-keyword">super</span>()&#x000A;&#x000A;  <span class="ruby-ivar">@dot_length</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:dot_length</span>, <span class="ruby-value">1000</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 51</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-keyword">super</span>()&#x000A;&#x000A;  <span class="ruby-ivar">@dot_length</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:dot_length</span>, <span class="ruby-value">1000</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Class methods</h2>
@@ -219,7 +225,80 @@ href="Morse.html#MORSE">MORSE</a> constant</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-code_table-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-code_table-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 126</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">code_table</span>&#x000A;  <span class="ruby-ivar">@code_table</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">MORSE</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;\n&quot;</span>)&#x000A;                       .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39; &#39;</span>) }&#x000A;                       .<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:zip</span>)&#x000A;                       .<span class="ruby-identifier">to_h</span>&#x000A;                       .<span class="ruby-identifier">transform_values</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mark_to_int</span>(<span class="ruby-identifier">n</span>) } }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-code_table-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 136</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">code_table</span>&#x000A;  <span class="ruby-ivar">@code_table</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">MORSE</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;\n&quot;</span>)&#x000A;                       .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39; &#39;</span>) }&#x000A;                       .<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:zip</span>)&#x000A;                       .<span class="ruby-identifier">to_h</span>&#x000A;                       .<span class="ruby-identifier">transform_values</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mark_to_int</span>(<span class="ruby-identifier">n</span>) } }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-decode_dotdash_str'>
+<a name='method-c-decode_dotdash_str'></a>
+<div class='synopsis'>
+<span class='name'>decode_dotdash_str</span><span class='arguments'>(str)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in the <code>str</code> of dots and dashes, splits and maps it</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-decode_dotdash_str-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-decode_dotdash_str-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 147</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">decode_dotdash_str</span>(<span class="ruby-identifier">str</span>)&#x000A;  <span class="ruby-identifier">words</span> = <span class="ruby-identifier">str</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;  &#39;</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39; &#39;</span>) }&#x000A;&#x000A;  <span class="ruby-identifier">words</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">letters</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">letters</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">lt</span><span class="ruby-operator">|</span> <span class="ruby-identifier">code_table</span>.<span class="ruby-identifier">key</span> <span class="ruby-identifier">dotdash_to_nple</span>(<span class="ruby-identifier">lt</span>) }.<span class="ruby-identifier">join</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39; &#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-denoise'>
+<a name='method-c-denoise'></a>
+<div class='synopsis'>
+<span class='name'>denoise</span><span class='arguments'>(pulses, dot_length)</span>
+
+</div>
+<div class='description'>
+
+<p>Calls the <a href="../NoiseReducer.html">NoiseReducer</a> on
+<code>pulses</code> using <code>dot_length</code> to factor tolerance</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-denoise-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-denoise-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 188</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">denoise</span>(<span class="ruby-identifier">pulses</span>, <span class="ruby-identifier">dot_length</span>)&#x000A;  <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">NoiseReducer</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">pulses</span>, <span class="ruby-value">pairs:</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">tolerance:</span> <span class="ruby-identifier">dot_length</span> <span class="ruby-operator">*</span> <span class="ruby-value">1.5</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-dotdash_to_nple'>
+<a name='method-c-dotdash_to_nple'></a>
+<div class='synopsis'>
+<span class='name'>dotdash_to_nple</span><span class='arguments'>(str)</span>
+
+</div>
+<div class='description'>
+
+<p>Convert the characters of a <code>str</code> into an array of 0 and 1</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-dotdash_to_nple-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-dotdash_to_nple-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 165</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">dotdash_to_nple</span>(<span class="ruby-identifier">str</span>)&#x000A;  <span class="ruby-identifier">str</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ch</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;.&#39;</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-fuzz'>
+<a name='method-c-fuzz'></a>
+<div class='synopsis'>
+<span class='name'>fuzz</span><span class='arguments'>(plens, places)</span>
+
+</div>
+<div class='description'>
+
+<p>Rounds all values in <code>plens</code> to <code>places</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-fuzz-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-fuzz-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 193</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">fuzz</span>(<span class="ruby-identifier">plens</span>, <span class="ruby-identifier">places</span>)&#x000A;  <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">round</span>(<span class="ruby-operator">-</span><span class="ruby-identifier">places</span>) }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-mark_to_int'>
@@ -237,7 +316,45 @@ href="Morse.html#MORSE">MORSE</a> constant</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-mark_to_int-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-mark_to_int-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 137</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mark_to_int</span>(<span class="ruby-identifier">dot_or_dash</span>)&#x000A;  <span class="ruby-identifier">dot_or_dash</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;.&#39;</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-mark_to_int-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 198</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mark_to_int</span>(<span class="ruby-identifier">dot_or_dash</span>)&#x000A;  <span class="ruby-identifier">dot_or_dash</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;.&#39;</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-pulse_to_dotdash'>
+<a name='method-c-pulse_to_dotdash'></a>
+<div class='synopsis'>
+<span class='name'>pulse_to_dotdash</span><span class='arguments'>(pulse, multi)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in a tuple <code>pulse</code> and a decimal base <code>multi</code>
+and converts a pulse to a character</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pulse_to_dotdash-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-pulse_to_dotdash-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 170</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulse_to_dotdash</span>(<span class="ruby-identifier">pulse</span>, <span class="ruby-identifier">multi</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">pulse</span>&#x000A;  <span class="ruby-keyword">when</span> [<span class="ruby-constant">INTER_LETTER_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>, <span class="ruby-constant">INTER_LETTER_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>]&#x000A;    <span class="ruby-string">&#39;.&#39;</span>&#x000A;  <span class="ruby-keyword">when</span> [<span class="ruby-constant">INTER_LETTER_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>, <span class="ruby-constant">BETWEEN_LETTER_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>]&#x000A;    <span class="ruby-string">&#39;. &#39;</span>&#x000A;  <span class="ruby-keyword">when</span> [<span class="ruby-constant">DASH_LENGTH</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>, <span class="ruby-constant">INTER_LETTER_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>]&#x000A;    <span class="ruby-string">&#39;-&#39;</span>&#x000A;  <span class="ruby-keyword">when</span> [<span class="ruby-constant">DASH_LENGTH</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>, <span class="ruby-constant">BETWEEN_LETTER_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>]&#x000A;    <span class="ruby-string">&#39;- &#39;</span>&#x000A;  <span class="ruby-keyword">when</span> [<span class="ruby-constant">INTER_LETTER_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>, <span class="ruby-constant">WORD_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>]&#x000A;    <span class="ruby-string">&#39;.  &#39;</span>&#x000A;  <span class="ruby-keyword">when</span> [<span class="ruby-constant">DASH_LENGTH</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>, <span class="ruby-constant">WORD_SPACE</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">multi</span>]&#x000A;    <span class="ruby-string">&#39;-  &#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-pulses_to_dotdash_str'>
+<a name='method-c-pulses_to_dotdash_str'></a>
+<div class='synopsis'>
+<span class='name'>pulses_to_dotdash_str</span><span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in the <code>data</code> and converts it into a string of dots and
+dashes</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pulses_to_dotdash_str-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-pulses_to_dotdash_str-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 156</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulses_to_dotdash_str</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">multiple</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>&#x000A;&#x000A;  <span class="ruby-identifier">fuzz</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>, <span class="ruby-identifier">multiple</span>).<span class="ruby-identifier">each_slice</span>(<span class="ruby-value">2</span>)&#x000A;                           .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pulse_to_dotdash</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-value">10</span><span class="ruby-operator">**</span><span class="ruby-identifier">multiple</span>) }&#x000A;                           .<span class="ruby-identifier">join</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Public Instance methods</h2>
@@ -256,7 +373,7 @@ href="Morse.html#MORSE">MORSE</a> constant</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-code_table-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-code_table-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 61</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">code_table</span>&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">code_table</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-code_table-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 71</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">code_table</span>&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">code_table</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-encode'>
@@ -275,7 +392,7 @@ plens</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-encode-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 48</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">data</span> = <span class="ruby-string">&#39;SOS&#39;</span>)&#x000A;  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">upcase</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">code_table</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">c</span>) }&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;Invalid Characters&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">cluster_to_plens</span>(<span class="ruby-identifier">string_to_cluster</span>(<span class="ruby-identifier">data</span>)).<span class="ruby-identifier">flatten</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">plens</span>, <span class="ruby-value">carrier_wave:</span> <span class="ruby-keyword">false</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 58</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">data</span> = <span class="ruby-string">&#39;SOS&#39;</span>)&#x000A;  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">upcase</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">code_table</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">c</span>) }&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;Invalid Characters&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">cluster_to_plens</span>(<span class="ruby-identifier">string_to_cluster</span>(<span class="ruby-identifier">data</span>)).<span class="ruby-identifier">flatten</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">plens</span>, <span class="ruby-value">carrier_wave:</span> <span class="ruby-keyword">false</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-export_options'>
@@ -294,7 +411,7 @@ an option</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-export_options-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 66</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-node">%i[dot_length]</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sy</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">sy</span>, <span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">sy</span>)] }.<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 76</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-node">%i[dot_length]</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sy</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">sy</span>, <span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">sy</span>)] }.<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Instance methods</h2>
@@ -315,7 +432,7 @@ plen</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-cluster_to_plens-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-cluster_to_plens-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cluster_to_plens</span>(<span class="ruby-identifier">cluster</span>)&#x000A;  <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word</span>, <span class="ruby-identifier">ix</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">multiple_words</span> = <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>&#x000A;    <span class="ruby-identifier">last_word</span> = <span class="ruby-identifier">ix</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">pred</span>&#x000A;&#x000A;    <span class="ruby-identifier">word</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">letter</span>, <span class="ruby-identifier">jx</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">last_letter</span> = <span class="ruby-identifier">jx</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">word</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">pred</span>&#x000A;&#x000A;      <span class="ruby-identifier">letter</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mark</span>, <span class="ruby-identifier">kx</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">last_mark</span> = <span class="ruby-identifier">kx</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">letter</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">pred</span>&#x000A;&#x000A;        <span class="ruby-identifier">mark_to_plen</span>(<span class="ruby-identifier">mark</span>, <span class="ruby-identifier">decide_spacer</span>(<span class="ruby-identifier">multiple_words</span>, <span class="ruby-identifier">last_word</span>, <span class="ruby-identifier">last_letter</span>, <span class="ruby-identifier">last_mark</span>))&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-cluster_to_plens-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 84</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cluster_to_plens</span>(<span class="ruby-identifier">cluster</span>)&#x000A;  <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word</span>, <span class="ruby-identifier">ix</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">multiple_words</span> = <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>&#x000A;    <span class="ruby-identifier">last_word</span> = <span class="ruby-identifier">ix</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">pred</span>&#x000A;&#x000A;    <span class="ruby-identifier">word</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">letter</span>, <span class="ruby-identifier">jx</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">last_letter</span> = <span class="ruby-identifier">jx</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">word</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">pred</span>&#x000A;&#x000A;      <span class="ruby-identifier">letter</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mark</span>, <span class="ruby-identifier">kx</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">last_mark</span> = <span class="ruby-identifier">kx</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">letter</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">pred</span>&#x000A;&#x000A;        <span class="ruby-identifier">mark_to_plen</span>(<span class="ruby-identifier">mark</span>, <span class="ruby-identifier">decide_spacer</span>(<span class="ruby-identifier">multiple_words</span>, <span class="ruby-identifier">last_word</span>, <span class="ruby-identifier">last_letter</span>, <span class="ruby-identifier">last_mark</span>))&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-decide_spacer'>
@@ -333,7 +450,7 @@ plen</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-decide_spacer-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-decide_spacer-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 110</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">decide_spacer</span>(<span class="ruby-identifier">multiple_words</span>, <span class="ruby-identifier">last_word</span>, <span class="ruby-identifier">last_letter</span>, <span class="ruby-identifier">last_mark</span>)&#x000A;  <span class="ruby-identifier">last_letter_of_last_mark</span> = <span class="ruby-identifier">last_mark</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">last_letter</span>&#x000A;  <span class="ruby-identifier">last_mark_of_letter</span> = <span class="ruby-identifier">last_mark</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">last_letter</span>&#x000A;  <span class="ruby-identifier">not_last_word_of_many</span> = (<span class="ruby-identifier">multiple_words</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">last_word</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">last_letter_of_last_mark</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">not_last_word_of_many</span>&#x000A;    <span class="ruby-constant">WORD_SPACE</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">last_mark_of_letter</span>&#x000A;    <span class="ruby-constant">BETWEEN_LETTER_SPACE</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-constant">INTER_LETTER_SPACE</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-decide_spacer-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 120</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">decide_spacer</span>(<span class="ruby-identifier">multiple_words</span>, <span class="ruby-identifier">last_word</span>, <span class="ruby-identifier">last_letter</span>, <span class="ruby-identifier">last_mark</span>)&#x000A;  <span class="ruby-identifier">last_letter_of_last_mark</span> = <span class="ruby-identifier">last_mark</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">last_letter</span>&#x000A;  <span class="ruby-identifier">last_mark_of_letter</span> = <span class="ruby-identifier">last_mark</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">last_letter</span>&#x000A;  <span class="ruby-identifier">not_last_word_of_many</span> = (<span class="ruby-identifier">multiple_words</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">last_word</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">last_letter_of_last_mark</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">not_last_word_of_many</span>&#x000A;    <span class="ruby-constant">WORD_SPACE</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">last_mark_of_letter</span>&#x000A;    <span class="ruby-constant">BETWEEN_LETTER_SPACE</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-constant">INTER_LETTER_SPACE</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-mark_to_plen'>
@@ -352,7 +469,7 @@ returns a plen tuple</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-mark_to_plen-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-mark_to_plen-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 92</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mark_to_plen</span>(<span class="ruby-identifier">mark</span>, <span class="ruby-identifier">space_length</span> = <span class="ruby-constant">INTER_LETTER_SPACE</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">mark</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">0</span>&#x000A;    [<span class="ruby-identifier">dot_length</span>, <span class="ruby-identifier">dot_length</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">space_length</span>]&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>&#x000A;    [<span class="ruby-identifier">dot_length</span> <span class="ruby-operator">*</span> <span class="ruby-constant">DASH_LENGTH</span>, <span class="ruby-identifier">dot_length</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">space_length</span>]&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-mark_to_plen-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 102</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mark_to_plen</span>(<span class="ruby-identifier">mark</span>, <span class="ruby-identifier">space_length</span> = <span class="ruby-constant">INTER_LETTER_SPACE</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">mark</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">0</span>&#x000A;    [<span class="ruby-identifier">dot_length</span>, <span class="ruby-identifier">dot_length</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">space_length</span>]&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>&#x000A;    [<span class="ruby-identifier">dot_length</span> <span class="ruby-operator">*</span> <span class="ruby-constant">DASH_LENGTH</span>, <span class="ruby-identifier">dot_length</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">space_length</span>]&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-string_to_cluster'>
@@ -372,7 +489,7 @@ within that</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-string_to_cluster-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-string_to_cluster-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">string_to_cluster</span>(<span class="ruby-identifier">str</span>)&#x000A;  <span class="ruby-identifier">str</span>.<span class="ruby-identifier">upcase</span>&#x000A;     .<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\s+/</span>)&#x000A;     .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">code_table</span>[<span class="ruby-identifier">c</span>] } }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-string_to_cluster-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 113</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">string_to_cluster</span>(<span class="ruby-identifier">str</span>)&#x000A;  <span class="ruby-identifier">str</span>.<span class="ruby-identifier">upcase</span>&#x000A;     .<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\s+/</span>)&#x000A;     .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">code_table</span>[<span class="ruby-identifier">c</span>] } }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
