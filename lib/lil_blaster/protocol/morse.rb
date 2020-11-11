@@ -143,6 +143,7 @@ module LilBlaster
 
         private
 
+        # Takes in the +str+ of dots and dashes, splits and maps it
         def decode_dotdash_str(str)
           words = str.split('  ').map { |x| x.split(' ') }
 
@@ -151,6 +152,7 @@ module LilBlaster
           end.join(' ')
         end
 
+        # Takes in the +data+ and converts it into a string of dots and dashes
         def pulses_to_dotdash_str(data)
           multiple = data.data.max.to_s.length - 1
 
@@ -159,10 +161,12 @@ module LilBlaster
                                    .join
         end
 
+        # Convert the characters of a +str+ into an array of 0 and 1
         def dotdash_to_nple(str)
           str.chars.map { |ch| ch == '.' ? 0 : 1 }
         end
 
+        # Takes in a tuple +pulse+ and a decimal base +multi+ and converts a pulse to a character
         def pulse_to_dotdash(pulse, multi)
           case pulse
           when [INTER_LETTER_SPACE * multi, INTER_LETTER_SPACE * multi]
@@ -180,10 +184,12 @@ module LilBlaster
           end
         end
 
+        # Calls the NoiseReducer on +pulses+ using +dot_length+ to factor tolerance
         def denoise(pulses, dot_length)
           LilBlaster::NoiseReducer.call(pulses, pairs: false, tolerance: dot_length * 1.5)
         end
 
+        # Rounds all values in +plens+ to +places+
         def fuzz(plens, places)
           plens.map { |n| n.round(-places) }
         end
