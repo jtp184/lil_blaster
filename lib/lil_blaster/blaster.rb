@@ -18,6 +18,7 @@ module LilBlaster
       # Takes in a Transmission +data+, and constructs and transmits waves. Uses blocking form
       # if +args+ is set, and returns true if successful.
       def transmit(data, args = {})
+        _pin = pin unless pin
         mtd = args.fetch(:blocking, true) ? :transmit! : :transmit
 
         GPIO::Wave.public_send(mtd, data)
