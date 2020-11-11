@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'securerandom'
 
 RSpec.describe LilBlaster::Codex do
   before :all do
@@ -46,6 +47,15 @@ RSpec.describe LilBlaster::Codex do
     codex = LilBlaster::Codex.load(file.path)
 
     expect(codex.protocol).to eq(@codex.protocol)
+  end
+
+  it 'can save to its filepath' do
+    fpath = "/tmp/test_codex_#{SecureRandom.alphanumeric}"
+    f = @codex.save_file(fpath)
+
+    expect(f).to be_a(File)
+    expect(File.exist?(f.path)).to be(true)
+    expect(LilBlaster::Codex.new(path: fpath).remote_name).to eq(@codex.remote_name)
   end
 
   it 'can determine whether a symbol is known to it' do
