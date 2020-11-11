@@ -23,7 +23,9 @@ module LilBlaster
 
       # Checks that there are only 3 unique pulse lengths in the +data+
       def self.match?(data)
-        data.data.uniq.length == 3
+        plens = denoise(data.data)
+
+        plens.uniq.length == 3
       end
 
       # Identifies the transmission +data+ and returns an instance and the decoded data
@@ -68,6 +70,14 @@ module LilBlaster
       end
 
       private
+
+      def denoise(pulses)
+        LilBlaster::NoiseReducer.call(
+          pulses,
+          pairs: false,
+          tolerance: 1500
+        )
+      end
 
       # Takes a +cluster+ and loops through it to convert every mark of every letter of every word
       # of every cluster is appropriately turned into a plen
