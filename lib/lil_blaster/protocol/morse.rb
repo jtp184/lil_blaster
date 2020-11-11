@@ -23,9 +23,18 @@ module LilBlaster
 
       # Checks that there are only 3 unique pulse lengths in the +data+
       def self.match?(data)
-        plens = denoise(data.data)
+        data_args = [data.data, data.tuples.map(&:first).min]
+        places = data.data.max.to_s.length - 1
 
-        plens.uniq.length == 3
+        reduced = fuzz(denoise(*data_args), places)
+
+        checks = [
+          INTER_LETTER_SPACE,
+          BETWEEN_LETTER_SPACE,
+          WORD_SPACE
+        ].sort.map { |num| num * 10**places }
+
+        reduced.uniq.sort == checks
       end
 
       # Identifies the transmission +data+ and returns an instance and the decoded data
@@ -35,8 +44,7 @@ module LilBlaster
         dot_length = data.tuples.map(&:first).min
         proto = new(dot_length: dot_length)
 
-        # TODO: decode the data
-        [proto, data]
+        [proto, decode_dotdash_str(pulses_to_dotdash_str(data))]
       end
 
       # Takes in +args+ for dot length
@@ -70,14 +78,6 @@ module LilBlaster
       end
 
       private
-
-      def denoise(pulses)
-        LilBlaster::NoiseReducer.call(
-          pulses,
-          pairs: false,
-          tolerance: 1500
-        )
-      end
 
       # Takes a +cluster+ and loops through it to convert every mark of every letter of every word
       # of every cluster is appropriately turned into a plen
@@ -142,6 +142,51 @@ module LilBlaster
         end
 
         private
+
+        def decode_dotdash_str(str)
+          words = str.split('  ').map { |x| x.split(' ') }
+
+          words.map do |letters|
+            letters.map { |lt| code_table.key dotdash_to_nple(lt) }.join
+          end.join(' ')
+        end
+
+        def pulses_to_dotdash_str(data)
+          multiple = data.data.max.to_s.length - 1
+
+          fuzz(data.data, multiple).each_slice(2)
+                                   .map { |a, b| pulse_to_dotdash([a, b], 10**multiple) }
+                                   .join
+        end
+
+        def dotdash_to_nple(str)
+          str.chars.map { |ch| ch == '.' ? 0 : 1 }
+        end
+
+        def pulse_to_dotdash(pulse, multi)
+          case pulse
+          when [INTER_LETTER_SPACE * multi, INTER_LETTER_SPACE * multi]
+            '.'
+          when [INTER_LETTER_SPACE * multi, BETWEEN_LETTER_SPACE * multi]
+            '. '
+          when [DASH_LENGTH * multi, INTER_LETTER_SPACE * multi]
+            '-'
+          when [DASH_LENGTH * multi, BETWEEN_LETTER_SPACE * multi]
+            '- '
+          when [INTER_LETTER_SPACE * multi, WORD_SPACE * multi]
+            '.  '
+          when [DASH_LENGTH * multi, WORD_SPACE * multi]
+            '-  '
+          end
+        end
+
+        def denoise(pulses, dot_length)
+          LilBlaster::NoiseReducer.call(pulses, pairs: false, tolerance: dot_length * 1.5)
+        end
+
+        def fuzz(plens, places)
+          plens.map { |n| n.round(-places) }
+        end
 
         # Binary encoding for dots and dashes as text
         def mark_to_int(dot_or_dash)
