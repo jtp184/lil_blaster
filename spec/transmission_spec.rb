@@ -57,4 +57,16 @@ RSpec.describe LilBlaster::Transmission do
 
     expect(ex_one.carrier_wave_options).not_to have_key(:cycle_length)
   end
+
+  it 'can add transmissions together' do
+    combo = @transmission + @transmission
+
+    expect(combo.data.length).to eq(@transmission.data.length * 2)
+  end
+
+  it 'can multiply a transmission by a value' do
+    repeat = @transmission * 3
+
+    expect(repeat.data.length).to eq(@transmission.data.length * 3)
+  end
 end
