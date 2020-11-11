@@ -41,4 +41,12 @@ RSpec.describe LilBlaster::GPIO::Pin, :hardware do
     @output_pin.turn_off
     expect(@output_pin.on?).to be(false)
   end
+
+  it 'Can toggle a pin' do
+    @output_pin.toggle
+    expect(@output_pin.on?).to be(true)
+
+    @output_pin.toggle
+    expect(@output_pin.on?).to be(false)
+  end
 end
