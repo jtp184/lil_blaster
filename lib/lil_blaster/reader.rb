@@ -56,14 +56,30 @@ module LilBlaster
   # Used to smooth out the data in a transmission
   class NoiseReducer
     class << self
-      # Takes the code +buffer+ and does math to the marks and spaces to smooth out the transmission
-      # passing +args+ down
+      # Takes the code +buffer+ and does math to smooth out the transmission passing +args+ down
       def call(buffer, args)
-        pairs = buffer.each_slice(2).to_a
-        replace = [pairs.map(&:first), pairs.map(&:last)].map { |lens| average_values(lens, args) }
+        return perform_on_pairs(buffer, args) if args.fetch(:pairs, true)
 
-        buffer.map.with_index do |cd, ix|
-          ix.even? ? replace[0][cd] : replace[1][cd]
+        repl = average_values(buffer, args)
+        replace_values(buffer, repl)
+      end
+
+      # Takes the code +buffer+ and passes +args+ down, operating seperately on marks and spaces
+      def perform_on_pairs(buffer, args)
+        pairs = buffer.each_slice(2).to_a
+        marks_and_spaces = [pairs.map(&:first), pairs.map(&:last)]
+
+        replace = marks_and_spaces.map { |lens| average_values(lens, args) }
+
+        replace_values(marks_and_spaces[0], replace[0]).zip(
+          replace_values(marks_and_spaces[1], replace[1])
+        ).flatten
+      end
+
+      # Uses the +replacements+ hash to map the +buffer+ array
+      def replace_values(buffer, replacements)
+        buffer.map do |val|
+          replacements[val]
         end
       end
 
