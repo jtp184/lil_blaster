@@ -62,14 +62,11 @@ Superclass:
 <li><a href="#method-i-encode">encode</a></li>
 <li><a href="#method-i-export_options">export_options</a></li>
 <li><a href="#method-i-method_missing">method_missing</a></li>
+<li><a href="#method-i-object_state">object_state</a></li>
 <li><a href="#attribute-i-post_bit">post_bit</a></li>
 <li><a href="#method-i-respond_to_missing-3F">respond_to_missing?</a></li>
 <li><a href="#attribute-i-system_data">system_data</a></li>
 <li><a href="#method-i-to_bytestring">to_bytestring</a></li>
-</ol>
-<h3>Private Instance</h3>
-<ol>
-<li><a href="#method-i-object_state">object_state</a></li>
 </ol>
 </div>
 <div id='context'>
@@ -322,6 +319,24 @@ encoded integer</p>
 <pre id='method-i-method_missing-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 111</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_missing</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>)&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
+<div class='method public-instance' id='method-method-i-object_state'>
+<a name='method-i-object_state'></a>
+<div class='synopsis'>
+<span class='name'>object_state</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Yields the variables to compare for object equality</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-object_state-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 123</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-identifier">header</span>, <span class="ruby-identifier">zero_value</span>, <span class="ruby-identifier">one_value</span>, <span class="ruby-identifier">system_data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-instance' id='method-method-i-respond_to_missing-3F'>
 <a name='method-i-respond_to_missing-3F'></a>
 <div class='synopsis'>
@@ -359,25 +374,6 @@ integer joined as a bytestring</p>
 [show source]
 </a>
 <pre id='method-i-to_bytestring-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 99</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_bytestring</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  [<span class="ruby-identifier">system_data</span>, <span class="ruby-identifier">data</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">d</span>) }.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<h2>Private Instance methods</h2>
-<div class='method private-instance' id='method-method-i-object_state'>
-<a name='method-i-object_state'></a>
-<div class='synopsis'>
-<span class='name'>object_state</span><span class='arguments'>()</span>
-
-</div>
-<div class='description'>
-
-<p>Yields the variables to compare for object equality</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-object_state-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 125</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-identifier">header</span>, <span class="ruby-identifier">zero_value</span>, <span class="ruby-identifier">one_value</span>, <span class="ruby-identifier">system_data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
