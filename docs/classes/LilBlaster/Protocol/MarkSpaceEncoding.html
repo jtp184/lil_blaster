@@ -55,6 +55,7 @@ binary encoding</p>
 <ol>
 <li><a href="#method-i-binary_pad">binary_pad</a></li>
 <li><a href="#method-i-int_to_pulses">int_to_pulses</a></li>
+<li><a href="#method-i-post_bit_plen">post_bit_plen</a></li>
 </ol>
 </div>
 <div id='context'>
@@ -171,7 +172,7 @@ href="MarkSpaceEncoding/ClassMethods.html">ClassMethods</a> upon inclusion</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-binary_pad-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-binary_pad-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 84</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">binary_pad</span>(<span class="ruby-identifier">num</span>)&#x000A;  <span class="ruby-identifier">format</span>(<span class="ruby-constant">BINARY_FORMAT</span>, <span class="ruby-identifier">num</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-binary_pad-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 89</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">binary_pad</span>(<span class="ruby-identifier">num</span>)&#x000A;  <span class="ruby-identifier">format</span>(<span class="ruby-constant">BINARY_FORMAT</span>, <span class="ruby-identifier">num</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-int_to_pulses'>
@@ -191,6 +192,24 @@ tuples based on the zero and one values</p>
 [show source]
 </a>
 <pre id='method-i-int_to_pulses-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 72</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">int_to_pulses</span>(<span class="ruby-identifier">int</span>)&#x000A;  <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">int</span>).<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">ch</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/0/</span>&#x000A;      <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/1/</span>&#x000A;      <span class="ruby-identifier">one_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-post_bit_plen'>
+<a name='method-i-post_bit_plen'></a>
+<div class='synopsis'>
+<span class='name'>post_bit_plen</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Sends a post_bit, which is the mark with a gap sized space</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-post_bit_plen-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-post_bit_plen-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 84</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">post_bit_plen</span>&#x000A;  <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>.<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">zv</span><span class="ruby-operator">|</span> <span class="ruby-identifier">zv</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

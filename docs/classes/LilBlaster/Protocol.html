@@ -28,6 +28,9 @@ LilBlaster::Protocol
 </h1>
 <ol class='paths'>
 <li>
+<a href="../../files/lib/lil_blaster/protocol/manchester_rb.html">lib/lil_blaster/protocol/manchester.rb</a>
+</li>
+<li class='other'>
 <a href="../../files/lib/lil_blaster/protocol/mark_space_encoding_rb.html">lib/lil_blaster/protocol/mark_space_encoding.rb</a>
 </li>
 <li class='other'>
@@ -35,9 +38,6 @@ LilBlaster::Protocol
 </li>
 <li class='other'>
 <a href="../../files/lib/lil_blaster/protocol/protocol_rb.html">lib/lil_blaster/protocol/protocol.rb</a>
-</li>
-<li class='other'>
-<a href="../../files/lib/lil_blaster/protocol/rc5_rb.html">lib/lil_blaster/protocol/rc5.rb</a>
 </li>
 <li>
 <a class='show' href='#' onclick='this.parentNode.parentNode.className += &quot; expanded&quot;; this.parentNode.removeChild(this); return false'>show all</a>
@@ -66,8 +66,8 @@ LilBlaster::Protocol
 <ol>
 <li><a href="Protocol/MarkSpaceEncoding.html">LilBlaster::Protocol::MarkSpaceEncoding</a></li>
 <li><a href="Protocol/BaseProtocol.html">LilBlaster::Protocol::BaseProtocol</a></li>
+<li><a href="Protocol/Manchester.html">LilBlaster::Protocol::Manchester</a></li>
 <li><a href="Protocol/Morse.html">LilBlaster::Protocol::Morse</a></li>
-<li><a href="Protocol/RC5.html">LilBlaster::Protocol::RC5</a></li>
 </ol>
 </div>
 <div id='section'>
@@ -89,7 +89,7 @@ it</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-5B-5D-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-5B-5D-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 19</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-identifier">available_protocols</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span>, <span class="ruby-identifier">_pr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">sym</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> }.<span class="ruby-identifier">last</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-5B-5D-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-identifier">available_protocols</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span>, <span class="ruby-identifier">_pr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">sym</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> }.<span class="ruby-identifier">last</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-available_protocols'>
@@ -108,7 +108,7 @@ protocl hash</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-available_protocols-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-available_protocols-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 24</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">available_protocols</span>&#x000A;  <span class="ruby-constant">BaseProtocol</span>.<span class="ruby-identifier">descendants</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">cl</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">cl</span>.<span class="ruby-identifier">to_sym</span>, <span class="ruby-identifier">cl</span>] }.<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-available_protocols-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 26</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">available_protocols</span>&#x000A;  <span class="ruby-constant">BaseProtocol</span>.<span class="ruby-identifier">descendants</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">cl</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">cl</span>.<span class="ruby-identifier">to_sym</span>, <span class="ruby-identifier">cl</span>] }.<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-identify'>
@@ -127,7 +127,7 @@ representation</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-identify-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-identify-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">identify</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">available_protocols</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_s</span>, <span class="ruby-identifier">pr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pr</span>.<span class="ruby-identifier">identify</span>(<span class="ruby-identifier">transmission</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span> }&#x000A;                     .<span class="ruby-identifier">first</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-identify-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">identify</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">available_protocols</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_s</span>, <span class="ruby-identifier">pr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pr</span>.<span class="ruby-identifier">match?</span>(<span class="ruby-identifier">transmission</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span> }&#x000A;                     .<span class="ruby-identifier">first</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-identify-21'>
@@ -146,7 +146,7 @@ Protocol#identify! result</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-identify-21-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-identify-21-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 12</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">identify!</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">available_protocols</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_s</span>, <span class="ruby-identifier">pr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pr</span>.<span class="ruby-identifier">identify</span>(<span class="ruby-identifier">transmission</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span> }&#x000A;                     .<span class="ruby-identifier">last</span>&#x000A;                     .<span class="ruby-identifier">identify!</span>(<span class="ruby-identifier">transmission</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-identify-21-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 12</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">identify!</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">available_protocols</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_s</span>, <span class="ruby-identifier">pr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pr</span>.<span class="ruby-identifier">match?</span>(<span class="ruby-identifier">transmission</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span> }&#x000A;&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;Unidentifiable transmission&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">proto</span>&#x000A;&#x000A;  <span class="ruby-identifier">proto</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">decode</span>(<span class="ruby-identifier">transmission</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

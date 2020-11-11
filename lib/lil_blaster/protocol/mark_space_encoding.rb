@@ -80,6 +80,11 @@ module LilBlaster
         end
       end
 
+      # Sends a post_bit, which is the mark with a gap sized space
+      def post_bit_plen
+        zero_value.clone.tap { |zv| zv[1] = gap }
+      end
+
       # Formats a number +num+ as a 16 digit binary number
       def binary_pad(num)
         format(BINARY_FORMAT, num)

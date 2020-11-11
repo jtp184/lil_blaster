@@ -1,8 +1,8 @@
-RSpec.describe 'RC5 Protocol' do
+RSpec.describe 'Manchester Protocol' do
   before :all do
-    @klass = LilBlaster::Protocol::RC5
+    @klass = LilBlaster::Protocol::Manchester
 
-    @proto = LilBlaster::Protocol::RC5.new(
+    @proto = LilBlaster::Protocol::Manchester.new(
       header: [4501, 4509],
       gap: 47_000,
       zero_value: [520, 610],
@@ -13,21 +13,22 @@ RSpec.describe 'RC5 Protocol' do
 
     @cmd = 0x40BF
 
-    @tr = @proto.call @cmd
-    @eq = LilBlaster::Protocol::RC5.new(
+    @tr = @proto.encode @cmd
+
+    @eq = LilBlaster::Protocol::Manchester.new(
       header: [4501, 4509],
       gap: 47_000,
       zero_value: [509, 603],
       one_value: [509, 1701],
       system_data: 0xE0E0,
       post_bit: true
-    ).call(@cmd)
+    ).encode(@cmd)
   end
 
   describe 'Class functions' do
     it 'can identify properly formatted transmissions' do
-      expect(@klass.identify(@tr)).to be(true)
-      expect(@klass.identify(LilBlaster::Transmission.new(data: []))).to be(false)
+      expect(@klass.match?(@tr)).to be(true)
+      expect(@klass.match?(LilBlaster::Transmission.new(data: []))).to be(false)
     end
 
     it 'can determine system data of a transmission' do
@@ -39,9 +40,9 @@ RSpec.describe 'RC5 Protocol' do
     end
 
     it 'can return an instance based off a transmission' do
-      protocol, command = @klass.identify!(@tr)
+      protocol, command = @klass.decode(@tr)
 
-      expect(protocol).to be_a(LilBlaster::Protocol::RC5)
+      expect(protocol).to be_a(LilBlaster::Protocol::Manchester)
       expect(command).to be_a(Integer)
 
       expect(command).to eq(@cmd)
@@ -58,7 +59,7 @@ RSpec.describe 'RC5 Protocol' do
     it 'can encode various commands' do
       ex = [0x2020, 0x1234, 0xABCD, 0xDEAD, 0xBEEF]
 
-      transmissions = ex.map { |x| @proto.call(x) }
+      transmissions = ex.map { |x| @proto.encode(x) }
       bytestrings = ex.map { |x| @proto.to_bytestring(x) }
 
       expect(transmissions.map { |x| @klass.command_data(x) }).to eq(ex)

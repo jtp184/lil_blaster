@@ -3,7 +3,7 @@ require 'lil_blaster/protocol/mark_space_encoding'
 module LilBlaster
   module Protocol
     # The classic semi-proprietary remote control format
-    class RC5 < BaseProtocol
+    class Manchester < BaseProtocol
       include MarkSpaceEncoding
 
       # The preamble before the button press
@@ -13,14 +13,14 @@ module LilBlaster
 
       class << self
         # Checks that there are four distinct tuples in the +data+, and 6 datums
-        def identify(data)
+        def match?(data)
           data.tuples.uniq.length == 4 && data.data.uniq.length == 6
         end
 
         # Takes in the +data+, ensures it passes the identity check, then returns an instance
         # based on interpreting the signal, and an integer representing the specific code sent
-        def identify!(data)
-          super(data)
+        def decode(data)
+          return nil unless match?(data)
 
           proto = new(extract_values(data))
 
@@ -77,7 +77,7 @@ module LilBlaster
 
       # Takes in an integer +data+, and constructs a transmission with a header, the encoded
       # system_data, and the encoded integer
-      def call(data = 0x0000)
+      def encode(data = 0x0000)
         raise ArgumentError unless data.is_a?(Integer) && (0x0000..0xFFFF).cover?(data)
 
         pulses = []
@@ -120,11 +120,6 @@ module LilBlaster
       end
 
       private
-
-      # Sends a post_bit, which is the mark with a gap sized space
-      def post_bit_plen
-        zero_value.clone.tap { |zv| zv[1] = gap }
-      end
 
       # Yields the variables to compare for object equality
       def object_state

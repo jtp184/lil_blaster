@@ -4,15 +4,17 @@ module LilBlaster
     class << self
       # Identifies the +transmission+ and returns a symbol representation
       def identify(transmission)
-        available_protocols.find { |_s, pr| pr.identify(transmission) == true }
+        available_protocols.find { |_s, pr| pr.match?(transmission) == true }
                            .first
       end
 
       # Takes the +transmission+ and identifies it, then returns the Protocol#identify! result
       def identify!(transmission)
-        available_protocols.find { |_s, pr| pr.identify(transmission) == true }
-                           .last
-                           .identify!(transmission)
+        proto = available_protocols.find { |_s, pr| pr.match?(transmission) == true }
+
+        raise ArgumentError, 'Unidentifiable transmission' unless proto
+
+        proto.last.decode(transmission)
       end
 
       # Takes in a +sym+ for the protocol, and uses const_get to return it
@@ -34,16 +36,16 @@ module LilBlaster
 
         # To be implemented by subclasses, takes in +_data+ and returns a true if the data matches
         # the protocol. Superclass always returns true
-        def identify(_data)
+        def match?(_data)
           true
         end
 
-        # Superclass implementation returns nil unless the +data+ passes #identify.
+        # Superclass implementation returns nil unless the +data+ passes #match?.
         # Subclasses should call super first to take advantage of this, then perform
         # processing as necessary to return an instance of the protocol, and a representation
         # of the decoded data as well.
-        def identify!(data)
-          return nil unless identify(data)
+        def decode(data)
+          return nil unless match?(data)
 
           [self, data]
         end
@@ -64,11 +66,9 @@ module LilBlaster
 
       # Superclass implementation ignores the +data+ and returns a blank transmission.
       # Subclasses should process the data according to protocol, and return a real transmission
-      def call(_data)
+      def encode(_data)
         Transmission.new(data: [])
       end
-
-      alias create_transmission call
 
       # Compares self to other, returning true if their object states match
       def ==(other)

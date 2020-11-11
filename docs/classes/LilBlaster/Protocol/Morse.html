@@ -45,8 +45,8 @@ Superclass:
 <h2>Methods</h2>
 <h3>Public Class</h3>
 <ol>
-<li><a href="#method-c-identify">identify</a></li>
-<li><a href="#method-c-identify-21">identify!</a></li>
+<li><a href="#method-c-decode">decode</a></li>
+<li><a href="#method-c-match-3F">match?</a></li>
 <li><a href="#method-c-new">new</a></li>
 </ol>
 <h3>Private Class</h3>
@@ -56,9 +56,9 @@ Superclass:
 </ol>
 <h3>Public Instance</h3>
 <ol>
-<li><a href="#method-i-call">call</a></li>
 <li><a href="#method-i-code_table">code_table</a></li>
 <li><a href="#attribute-i-dot_length">dot_length</a></li>
+<li><a href="#method-i-encode">encode</a></li>
 <li><a href="#method-i-export_options">export_options</a></li>
 </ol>
 <h3>Private Instance</h3>
@@ -147,28 +147,10 @@ href="Morse.html#attribute-i-dot_length">#dot_length</a></p>
 </div>
 <div id='methods'>
 <h2>Public Class methods</h2>
-<div class='method public-class' id='method-method-c-identify'>
-<a name='method-c-identify'></a>
+<div class='method public-class' id='method-method-c-decode'>
+<a name='method-c-decode'></a>
 <div class='synopsis'>
-<span class='name'>identify</span><span class='arguments'>(data)</span>
-
-</div>
-<div class='description'>
-
-<p>Checks that there are only 3 unique pulse lengths in the <code>data</code></p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-identify-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-c-identify-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">identify</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">3</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<div class='method public-class' id='method-method-c-identify-21'>
-<a name='method-c-identify-21'></a>
-<div class='synopsis'>
-<span class='name'>identify!</span><span class='arguments'>(data)</span>
+<span class='name'>decode</span><span class='arguments'>(data)</span>
 
 </div>
 <div class='description'>
@@ -178,10 +160,28 @@ the decoded data</p>
 
 </div>
 <div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-identify-21-source&#39;); return false'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-decode-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-identify-21-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">identify!</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">dot_length</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>).<span class="ruby-identifier">min</span>&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">new</span>(<span class="ruby-value">dot_length:</span> <span class="ruby-identifier">dot_length</span>)&#x000A;&#x000A;  <span class="ruby-comment"># TODO: decode the data</span>&#x000A;  [<span class="ruby-identifier">proto</span>, <span class="ruby-identifier">data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-decode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">decode</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">dot_length</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>).<span class="ruby-identifier">min</span>&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">new</span>(<span class="ruby-value">dot_length:</span> <span class="ruby-identifier">dot_length</span>)&#x000A;&#x000A;  <span class="ruby-comment"># TODO: decode the data</span>&#x000A;  [<span class="ruby-identifier">proto</span>, <span class="ruby-identifier">data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-match-3F'>
+<a name='method-c-match-3F'></a>
+<div class='synopsis'>
+<span class='name'>match?</span><span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Checks that there are only 3 unique pulse lengths in the <code>data</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-match-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-match-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">match?</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">3</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-new'>
@@ -241,25 +241,6 @@ href="Morse.html#MORSE">MORSE</a> constant</p>
 </div>
 </div>
 <h2>Public Instance methods</h2>
-<div class='method public-instance' id='method-method-i-call'>
-<a name='method-i-call'></a>
-<div class='synopsis'>
-<span class='name'>call</span><span class='arguments'>(data = 'SOS')</span>
-
-</div>
-<div class='description'>
-
-<p>Takes in a string <code>data</code> and encodes it into a transmission of
-plens</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-call-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-i-call-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 48</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">data</span> = <span class="ruby-string">&#39;SOS&#39;</span>)&#x000A;  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">upcase</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">code_table</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">c</span>) }&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;Invalid Characters&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">cluster_to_plens</span>(<span class="ruby-identifier">string_to_cluster</span>(<span class="ruby-identifier">data</span>)).<span class="ruby-identifier">flatten</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">plens</span>, <span class="ruby-value">carrier_wave:</span> <span class="ruby-keyword">false</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
 <div class='method public-instance' id='method-method-i-code_table'>
 <a name='method-i-code_table'></a>
 <div class='synopsis'>
@@ -276,6 +257,25 @@ plens</p>
 [show source]
 </a>
 <pre id='method-i-code_table-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 61</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">code_table</span>&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">code_table</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-encode'>
+<a name='method-i-encode'></a>
+<div class='synopsis'>
+<span class='name'>encode</span><span class='arguments'>(data = 'SOS')</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in a string <code>data</code> and encodes it into a transmission of
+plens</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-encode-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/morse.rb, line 48</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">data</span> = <span class="ruby-string">&#39;SOS&#39;</span>)&#x000A;  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">upcase</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">code_table</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">c</span>) }&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;Invalid Characters&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">cluster_to_plens</span>(<span class="ruby-identifier">string_to_cluster</span>(<span class="ruby-identifier">data</span>)).<span class="ruby-identifier">flatten</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">plens</span>, <span class="ruby-value">carrier_wave:</span> <span class="ruby-keyword">false</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-export_options'>
