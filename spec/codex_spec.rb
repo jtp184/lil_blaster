@@ -58,4 +58,34 @@ RSpec.describe LilBlaster::Codex do
       expect(@codex.call(ky)).to be_a(LilBlaster::Transmission)
     end
   end
+
+  it 'can create a YAML version of itself' do
+    yml = @codex.to_yaml
+    hsh = Psych.load(yml)
+
+    expect(yml).to be_a(String)
+    expect(hsh).to be_a(Hash)
+
+    expect(hsh).to have_key(:metadata)
+    expect(hsh).to have_key(:codes)
+  end
+
+  it 'can create a new instance with a symbol, instance, or class for protocol' do
+    proto_inst = @codex.protocol
+    proto_class = proto_inst.class
+    proto_sym = proto_class.to_sym
+
+    inst_ex = LilBlaster::Codex.new(protocol: proto_inst)
+
+    class_ex = LilBlaster::Codex.new(
+      protocol: proto_class,
+      protocol_options: proto_inst.export_options
+    )
+
+    sym_ex = LilBlaster::Codex.new(protocol: proto_sym, protocol_options: proto_inst.export_options)
+
+    expect(inst_ex.protocol).to eq(@codex.protocol)
+    expect(class_ex.protocol).to be_a(proto_class)
+    expect(sym_ex.protocol.to_sym).to eq(proto_sym)
+  end
 end
