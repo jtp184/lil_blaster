@@ -13,6 +13,7 @@ module LilBlaster
 
     desc 'version', 'lil_blaster version'
 
+    # Returns gem version
     def version
       require_relative 'version'
       puts "v#{LilBlaster::VERSION}"

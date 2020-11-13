@@ -3,6 +3,7 @@
 require 'forwardable'
 
 module LilBlaster
+  # A Command runner under the CLI
   class Command
     extend Forwardable
 
