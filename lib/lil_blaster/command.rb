@@ -9,6 +9,11 @@ module LilBlaster
 
     def_delegators :command, :run
 
+    # Default initializer to provide options as an ivar
+    def initialize(options)
+      @options = options
+    end
+
     # Execute this command
     #
     # @api public
