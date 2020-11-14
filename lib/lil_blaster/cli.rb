@@ -56,5 +56,16 @@ module LilBlaster
     end
 
     map %w[--version -v] => :version
+
+    def_command(
+      cmd: 'config',
+      desc: 'Initialize, set, and get configuration options',
+      method_options: [
+        [
+          :interactive,
+          { aliases: '-i', type: :boolean, desc: 'Edit settings with an interactive prompt' }
+        ]
+      ]
+    )
   end
 end
