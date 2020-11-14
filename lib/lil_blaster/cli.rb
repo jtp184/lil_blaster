@@ -73,17 +73,11 @@ module LilBlaster
       private
 
       def config_paths
-        [
-          Dir.pwd,
-          Dir.home + '/.config/lil_blaster',
-          Dir.home
-        ]
+        [Dir.pwd, Dir.home + '/.config/lil_blaster', Dir.home]
       end
 
       def default_config_options
-        {
-          remotes_folder: Dir.home + '/.config/lil_blaster/remotes/'
-        }
+        { remotes_folder: Dir.home + '/.config/lil_blaster/remotes/' }
       end
     end
 
