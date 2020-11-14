@@ -107,6 +107,14 @@ module LilBlaster
         [
           :interactive,
           { aliases: '-i', type: :boolean, desc: 'Edit settings with an interactive prompt' }
+        ],
+        [
+          :set,
+          { aliases: '-s', type: :array, desc: 'Set a configuration value' }
+        ],
+        [
+          :get,
+          { aliases: '-g', type: :string, desc: 'Get the current value of a config setting' }
         ]
       ]
     )
