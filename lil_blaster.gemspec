@@ -26,4 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.19.0'
 
   spec.add_runtime_dependency 'strings-case', '~> 0.3.0'
+  spec.add_runtime_dependency 'thor', '~> 1.0.1'
+  spec.add_runtime_dependency 'tty-config', '~> 0.3.2'
 end

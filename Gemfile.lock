@@ -3,6 +3,8 @@ PATH
   specs:
     lil_blaster (0.1.0)
       strings-case (~> 0.3.0)
+      thor (~> 1.0.1)
+      tty-config (~> 0.3.2)
 
 GEM
   remote: https://rubygems.org/
@@ -33,6 +35,8 @@ GEM
       simplecov-html (~> 0.11)
     simplecov-html (0.12.2)
     strings-case (0.3.0)
+    thor (1.0.1)
+    tty-config (0.3.2)
 
 PLATFORMS
   ruby
