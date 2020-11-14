@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'strings-case'
 
 module LilBlaster
   # A Command runner under the CLI
