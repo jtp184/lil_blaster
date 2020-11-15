@@ -5,13 +5,20 @@ module LilBlaster
     # Initial tool setup
     class Config < LilBlaster::Command
       def execute(_input: $stdin, _output: $stdout)
-        ConfigFile.save unless ConfigFile.exist?
+        if @options.empty?
+          unless ConfigFile.exist?
+            ConfigFile.save
+            puts 'Saved new config file'
+          end
 
-        if @options.key?(:interactive)
+          puts "PATH: #{ConfigFile.path}"
+        elsif @options.key?(:interactive)
           ConfigFile.each do |key, value|
             resp = prompt.ask("#{Strings::Case.titlecase key}: ", default: value)
             ConfigFile[key] = resp
           end
+
+          ConfigFile.save
         elsif @options.key?(:get) && %w[get all].include?(@options[:get])
           ConfigFile.each do |tuple|
             puts tuple.join(' => ')
@@ -24,9 +31,9 @@ module LilBlaster
           ConfigFile[@options[:set][0]] = @options[:set][1]
 
           puts @options[:set].join(' => ')
-        end
 
-        ConfigFile.save unless @options.key?(:get)
+          ConfigFile.save
+        end
       end
     end
   end
