@@ -89,16 +89,25 @@ module LilBlaster
       # Defaults for the config
       def default_config_options
         {
-          remotes_folder: os_based_folder,
+          remotes_folder: os_based_folder('remotes'),
           default_remote: nil
         }
       end
 
-      def os_based_folder
-        {
-          'darwin' => Dir.home,
-          'linux' => Dir.home + '/.config/lil_blaster'
-        }[Gem.platforms.last.os]
+      # Returns a default folder based on operating system
+      def os_based_folder(join_path = nil)
+        pth = case LilBlaster.host_os
+              when :raspberrypi
+                Dir.home
+              when :windows, :mac
+                Dir.home + '/lil_blaster'
+              when :linux
+                Dir.home + '/.config/lil_blaster'
+              end
+
+        return Pathname.new(pth) unless join_path
+
+        Pathname.new(pth).join(join_path).to_s
       end
     end
   end

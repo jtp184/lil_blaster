@@ -15,7 +15,7 @@ module LilBlaster
       def driver
         if defined?(Pigpio)
           Pigpio
-        elsif Gem.platforms.last.os == 'linux' && File.read('/proc/cpuinfo') =~ /Raspberry Pi/
+        elsif LilBlaster.host_os == :raspberrypi
           begin
             require 'pigpio'
             Pigpio

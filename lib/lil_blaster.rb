@@ -26,5 +26,17 @@ module LilBlaster
     def reader_pin
       @reader_pin ||= 18
     end
+
+    def host_os
+      case RUBY_PLATFORM
+      when /cygwin|mswin|mingw|bccwin|wince|emx/
+        :windows
+      when /darwin/
+        :mac
+      when /linux/
+        pi = File.read('/proc/cpuinfo') =~ /Raspberry Pi/
+        pi ? :raspberrypi : :linux
+      end
+    end
   end
 end
