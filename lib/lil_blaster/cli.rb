@@ -72,6 +72,10 @@ module LilBlaster
         [
           :get,
           { aliases: '-g', type: :string, desc: 'Get the current value of a config setting' }
+        ],
+        [
+          :unset,
+          { aliases: '-u', type: :string, desc: 'Unset a configuration value' }
         ]
       ]
     )

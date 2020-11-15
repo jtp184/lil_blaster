@@ -13,27 +13,74 @@ module LilBlaster
 
           puts "PATH: #{ConfigFile.path}"
         elsif @options.key?(:interactive)
-          ConfigFile.each do |key, value|
-            resp = prompt.ask("#{Strings::Case.titlecase key}: ", default: value)
-            ConfigFile[key] = resp
-          end
-
-          ConfigFile.save
+          interactive_edit
         elsif @options.key?(:get) && %w[get all].include?(@options[:get])
-          ConfigFile.each do |tuple|
-            puts tuple.join(' => ')
-          end
+          all_keys
         elsif @options.key?(:get)
-          resp = ConfigFile[@options[:get]]
-
-          puts resp
+          single_value
         elsif @options.key?(:set)
-          ConfigFile[@options[:set][0]] = @options[:set][1]
-
-          puts @options[:set].join(' => ')
-
-          ConfigFile.save
+          set_value
+        elsif @options.key?(:unset)
+          unset_value
         end
+      end
+
+      private
+
+      # For each key in the config, runs a prompt asking for a new value with old value as default
+      def interactive_edit
+        ConfigFile.each do |key, value|
+          resp = prompt.ask("#{Strings::Case.titlecase key}: ", default: value)
+          ConfigFile[key] = resp
+        end
+
+        ConfigFile.save
+      end
+
+      # Stylizes all the keys, then prints them out
+      def all_keys
+        ConfigFile.each do |key, val|
+          str = [
+            pastel.green(key),
+            val.nil? ? pastel.black('nil') : val
+          ].join(link_arrow)
+
+          puts str
+        end
+      end
+
+      # Prints a single key value
+      def single_value
+        resp = ConfigFile[@options[:get]]
+
+        str = if resp.nil?
+                pastel.black('nil')
+              else
+                pastel.green(resp)
+              end
+
+        puts str
+      end
+
+      # Sets a value using the first and second elements in the @options[:set] array
+      def set_value
+        ConfigFile[@options[:set][0]] = @options[:set][1]
+        ConfigFile.save
+
+        puts @options[:set].join(link_arrow)
+      end
+
+      # Deletes the keys from @options[:unset]
+      def unset_value
+        ConfigFile.delete(@options[:unset])
+        puts [pastel.red(@options[:unset]), pastel.black('nil')].join(link_arrow)
+
+        ConfigFile.save
+      end
+
+      # Returns a grey arrow
+      def link_arrow
+        pastel.black(' => ')
       end
     end
   end

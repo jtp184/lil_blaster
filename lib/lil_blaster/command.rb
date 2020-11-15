@@ -70,9 +70,20 @@ module LilBlaster
     # @see http://www.rubydoc.info/gems/tty-pager
     #
     # @api public
+
     def pager(**options)
       require 'tty-pager'
       TTY::Pager.new(options)
+    end
+
+    # Colorization for text
+    #
+    # @see http://www.rubydoc.info/gems/pastel
+    #
+    # @api public
+    def pastel(**options)
+      require 'pastel'
+      Pastel.new(options)
     end
 
     # Terminal platform and OS properties
