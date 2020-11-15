@@ -67,7 +67,7 @@ module LilBlaster
         ConfigFile[@options[:set][0]] = @options[:set][1]
         ConfigFile.save
 
-        puts @options[:set].join(link_arrow)
+        puts [pastel.green(@options[:set][0]), @options[:set][1]].join(link_arrow)
       end
 
       # Deletes the keys from @options[:unset]
