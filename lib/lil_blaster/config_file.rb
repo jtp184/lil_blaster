@@ -4,6 +4,7 @@ module LilBlaster
     FILENAME = 'lil_blaster_config'.freeze
 
     class << self
+      # Exposes the underlying TTY::Config object, loading from disk when posisble
       def config
         return @config if @config
 
@@ -23,14 +24,17 @@ module LilBlaster
         @config
       end
 
-      def [](val)
-        config.fetch(val)
+      # Syntax sugar for fetching the +value+
+      def [](value)
+        config.fetch(value)
       end
 
-      def []=(key, val)
-        config.set(key, value: val)
+      # Syntax sugar for setting the +value+ of +key+
+      def []=(key, value)
+        config.set(key, value: value)
       end
 
+      # Allows +mtd+ forwarding to #config or its hash representation
       def method_missing(mtd, *args, &blk)
         cf = config.method(mtd) if config.respond_to?(mtd)
         hs = config.to_h.method(mtd) if config.to_h.respond_to?(mtd)
@@ -40,30 +44,25 @@ module LilBlaster
         (cf || hs).call(*args, &blk)
       end
 
+      # Politely respond when +mtd+ is missing
       def respond_to_missing?(mtd, *args)
         config.respond_to?(mtd) || config.to_h.respond_to?(mtd) || super
       end
 
-      def to_h
-        config.to_h
-      end
-
+      # Searches the #config_paths and returns the first found instance of this file, or nil
       def path
         files = config_paths.map do |pth|
           next [] unless Dir.exist?(pth)
 
           Dir.entries(pth)
-          .reject { |x| x =~ /^\.{1..2}$/ }
-          .map { |x| [pth, x].join('/') }
+             .reject { |x| x =~ /^\.{1..2}$/ }
+             .map { |x| [pth, x].join('/') }
         end
 
         files.flatten.find { |x| x =~ /#{FILENAME}/ }
       end
 
-      def exist?
-        !!path
-      end
-
+      # Takes an optional override +path+ and calls #write on the config
       def save(path = nil)
         arg = path ? [path, { force: true }] : [{ force: true }]
         config.write(*arg)
@@ -71,6 +70,7 @@ module LilBlaster
 
       private
 
+      # If the reader or transmitter pin options are present, override the module variable
       def pinout_config
         tp = config.fetch(:transmitter_pin)
         rp = config.fetch(:reader_pin)
@@ -81,15 +81,24 @@ module LilBlaster
         LilBlaster.reader_pin = Integer(rp) if rp
       end
 
+      # The paths to search for a file. First the working directory, then the dotfiles, then home
       def config_paths
         [Dir.pwd, Dir.home + '/.config/lil_blaster', Dir.home]
       end
 
+      # Defaults for the config
       def default_config_options
         {
-          remotes_folder: Dir.home + '/.config/lil_blaster/remotes/',
+          remotes_folder: os_based_folder,
           default_remote: nil
         }
+      end
+
+      def os_based_folder
+        {
+          'darwin' => Dir.home,
+          'linux' => Dir.home + '/.config/lil_blaster'
+        }[Gem.platforms.last.os]
       end
     end
   end
