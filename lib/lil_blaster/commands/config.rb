@@ -29,12 +29,31 @@ module LilBlaster
 
       # For each key in the config, runs a prompt asking for a new value with old value as default
       def interactive_edit
+        edit_existing
+
+        if prompt.yes?('Add new keys?')
+          loop do
+            add_new_key
+            break unless prompt.yes?('Add another key?')
+          end
+        end
+
+        puts
+        all_keys
+
+        ConfigFile.save
+      end
+
+      def edit_existing
         ConfigFile.each do |key, value|
           resp = prompt.ask("#{Strings::Case.titlecase key}: ", default: value)
           ConfigFile[key] = resp
         end
+      end
 
-        ConfigFile.save
+      def add_new_key
+        ky = prompt.ask('New key: ')
+        ConfigFile[Strings::Case.underscore(ky)] = prompt.ask("#{Strings::Case.titlecase ky}: ")
       end
 
       # Stylizes all the keys, then prints them out
