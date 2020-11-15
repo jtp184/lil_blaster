@@ -4,45 +4,29 @@ module LilBlaster
   module Commands #:nodoc:
     # Initial tool setup
     class Config < LilBlaster::Command
-      def execute(input: $stdin, output: $stdout)
-        config_file.write(force: true) unless file_exist?
+      def execute(_input: $stdin, _output: $stdout)
+        LilBlaster::ConfigFile.save unless LilBlaster::ConfigFile.exist?
 
         if @options.key?(:interactive)
-          interactive
+          LilBlaster::ConfigFile.each do |key, value|
+            resp = prompt.ask("#{Strings::Case.titlecase key}: ", default: value)
+            LilBlaster::ConfigFile[key] = resp
+          end
+        elsif @options.key?(:get) && %w[get all].include?(@options[:get])
+          LilBlaster::ConfigFile.each do |tuple|
+            puts tuple.join(' => ')
+          end
         elsif @options.key?(:get)
-          puts config_file.fetch(@options[:get])
+          resp = LilBlaster::ConfigFile[@options[:get]]
+
+          puts resp
         elsif @options.key?(:set)
-          set_config_file_option
+          LilBlaster::ConfigFile[@options[:set][0]] = @options[:set][1]
+
           puts @options[:set].join(' => ')
         end
-      end
 
-      def interactive
-        config_file.to_h.each do |key, value|
-          resp = prompt.ask("#{Strings::Case.titlecase key}: ", default: value)
-          config_file.set(key, value: resp)
-        end
-
-        config_file.write(force: true)
-      end
-
-      private
-
-      def set_config_file_option
-        config_file.set(
-          @options[:set][0],
-          value: @options[:set][1]
-        )
-
-        config_file.write(force: true)
-      end
-
-      def file_exist?
-        LilBlaster::CLI.config_file_exist?
-      end
-
-      def config_file
-        LilBlaster::CLI.config_file
+        LilBlaster::ConfigFile.save unless @options.key?(:get)
       end
     end
   end

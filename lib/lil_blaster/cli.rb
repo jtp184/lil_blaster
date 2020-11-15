@@ -36,49 +36,6 @@ module LilBlaster
           end
         end
       end
-
-      def config_file
-        return @config_file if @config_file
-
-        @config_file = TTY::Config.new
-        @config_file.filename = 'lil_blaster_config'
-
-        config_paths.each { |pth| @config_file.append_path(pth) }
-
-        begin
-          @config_file.read
-        rescue TTY::Config::ReadError
-          @config_file.merge(default_config_options)
-        end
-
-        @config_file
-      end
-
-      def config_file_path
-        files = config_paths.map do |pth|
-          next [] unless Dir.exist?(pth)
-
-          Dir.entries(pth)
-             .reject { |x| x =~ /^\.{1..2}$/ }
-             .map { |x| [pth, x].join('/') }
-        end
-
-        files.flatten.find { |x| x =~ /lil_blaster_config/ }
-      end
-
-      def config_file_exist?
-        !!config_file_path
-      end
-
-      private
-
-      def config_paths
-        [Dir.pwd, Dir.home + '/.config/lil_blaster', Dir.home]
-      end
-
-      def default_config_options
-        { remotes_folder: Dir.home + '/.config/lil_blaster/remotes/' }
-      end
     end
 
     # Error raised by this runner

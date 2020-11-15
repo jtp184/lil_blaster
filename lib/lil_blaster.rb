@@ -1,4 +1,5 @@
 require 'lil_blaster/version'
+require 'lil_blaster/config_file'
 require 'lil_blaster/gpio/gpio'
 require 'lil_blaster/protocol/protocol'
 require 'lil_blaster/protocol/manchester'
