@@ -89,8 +89,7 @@ module LilBlaster
       # Defaults for the config
       def default_config_options
         {
-          remotes_folder: os_based_folder('remotes'),
-          default_remote: nil
+          remotes_folder: os_based_folder('remotes')
         }
       end
 
@@ -105,7 +104,7 @@ module LilBlaster
                 Dir.home + '/.config/lil_blaster'
               end
 
-        return Pathname.new(pth) unless join_path
+        return pth unless join_path
 
         Pathname.new(pth).join(join_path).to_s
       end
