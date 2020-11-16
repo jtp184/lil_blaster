@@ -24,6 +24,9 @@ module LilBlaster
       # Reads the config in again
       def reload
         safe_read_config
+        pinout_config
+
+        @config
       end
 
       # Syntax sugar for fetching the +value+
