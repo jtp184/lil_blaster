@@ -21,6 +21,30 @@ RSpec.describe LilBlaster::ConfigFile do
         codexes_dir: #{@codex_dir}
       DOC
 
+      @codex_yaml = <<~DOC
+        ---
+        :metadata:
+          :remote_name: Samsung
+          :protocol: :Manchester
+          :protocol_options:
+            :gap: 10000
+            :header:
+            - 4511
+            - 4540
+            :one_value:
+            - 520
+            - 1730
+            :zero_value:
+            - 520
+            - 600
+            :system_data: 57568
+            :post_bit: true
+        :codes:
+          :power: 16575
+          :volume_up: 57375
+          :volume_down: 53295
+      DOC
+
       LilBlaster::ConfigFile.config.location_paths.clear
       LilBlaster::ConfigFile.config.append_path(@temp_dir)
     end
@@ -78,6 +102,26 @@ RSpec.describe LilBlaster::ConfigFile do
 
         expect(LilBlaster::ConfigFile[key]).to eq(val)
         expect(File.read(@config_path)).to match(/#{key}: #{val}/)
+      end
+
+      describe 'with codexes folder' do
+        it 'can autoload present codexes' do
+          fpath = "#{@codex_dir}/#{SecureRandom.alphanumeric}_codex.yml"
+          File.open(fpath, 'w+') { |f| f << @codex_yaml }
+
+          expect(LilBlaster::Codex.autoload).not_to be_empty
+        end
+
+        it 'returns a blank if no codexes are present' do
+          expect(LilBlaster::Codex.autoload).to be_empty
+        end
+
+        it 'returns a blank if no codex dir is specified' do
+          LilBlaster::ConfigFile.delete(:codexes_dir)
+
+          expect(LilBlaster::ConfigFile[:codexes_dir]).to be_nil
+          expect(LilBlaster::Codex.autoload).to be_empty
+        end
       end
     end
   end
