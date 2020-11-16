@@ -1,3 +1,5 @@
+require 'tty-config'
+
 module LilBlaster
   # Provides an interface for the config file to be accessed
   class ConfigFile
@@ -31,7 +33,7 @@ module LilBlaster
 
       # Syntax sugar for setting the +value+ of +key+
       def []=(key, value)
-        config.set(key, value: value)
+        config.set(key, value: value) && pinout_config
       end
 
       # Allows +mtd+ forwarding to #config or its hash representation
@@ -51,7 +53,7 @@ module LilBlaster
 
       # Searches the #config_paths and returns the first found instance of this file, or nil
       def path
-        files = config_paths.map do |pth|
+        files = config.location_paths.map do |pth|
           next [] unless Dir.exist?(pth)
 
           Dir.entries(pth)
