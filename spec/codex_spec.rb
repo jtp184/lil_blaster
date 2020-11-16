@@ -1,6 +1,3 @@
-require 'tempfile'
-require 'securerandom'
-
 RSpec.describe LilBlaster::Codex do
   before :all do
     @codex_yaml = <<~DOC
@@ -64,7 +61,7 @@ RSpec.describe LilBlaster::Codex do
   end
 
   it 'can generate a transmission for each symbol it knows' do
-    @codex.keys.each do |ky|
+    @codex.each_key do |ky|
       expect(@codex.call(ky)).to be_a(LilBlaster::Transmission)
     end
   end

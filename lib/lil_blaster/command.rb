@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'strings-case'
 
 module LilBlaster
   # A Command runner under the CLI
@@ -8,6 +9,11 @@ module LilBlaster
     extend Forwardable
 
     def_delegators :command, :run
+
+    # Default initializer to provide options as an ivar
+    def initialize(options)
+      @options = options
+    end
 
     # Execute this command
     #
@@ -64,9 +70,20 @@ module LilBlaster
     # @see http://www.rubydoc.info/gems/tty-pager
     #
     # @api public
+
     def pager(**options)
       require 'tty-pager'
       TTY::Pager.new(options)
+    end
+
+    # Colorization for text
+    #
+    # @see http://www.rubydoc.info/gems/pastel
+    #
+    # @api public
+    def pastel(**options)
+      require 'pastel'
+      Pastel.new(options)
     end
 
     # Terminal platform and OS properties

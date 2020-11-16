@@ -1,4 +1,5 @@
 require 'lil_blaster/version'
+require 'lil_blaster/config_file'
 require 'lil_blaster/gpio/gpio'
 require 'lil_blaster/protocol/protocol'
 require 'lil_blaster/protocol/manchester'
@@ -24,6 +25,20 @@ module LilBlaster
     # Defaults to 18
     def reader_pin
       @reader_pin ||= 18
+    end
+
+    # Examines the RUBY_PLATFORM constant to determine what OS we are running on.
+    # Returns one of :windows, :mac, :linux, or :raspberrypi
+    def host_os
+      case RUBY_PLATFORM
+      when /cygwin|mswin|mingw|bccwin|wince|emx/
+        :windows
+      when /darwin/
+        :mac
+      when /linux/
+        pi = File.read('/proc/cpuinfo') =~ /Raspberry Pi/
+        pi ? :raspberrypi : :linux
+      end
     end
   end
 end

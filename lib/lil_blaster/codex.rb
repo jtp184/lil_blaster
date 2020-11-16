@@ -15,13 +15,31 @@ module LilBlaster
     # The actual codes as a hash
     attr_reader :codes
 
-    def_delegators :@codes, :[], :[]=, :key, :key?, :value?, :keys
+    def_delegators :@codes, :[], :[]=, :key, :key?,
+                   :value?, :keys, :each_key, :each_value,
+                   :size, :include?, :fetch
 
     # Takes in a filepath +fpath+, returns a new instance if the file exists
     def self.load(fpath)
       raise LoadError, 'File not found' unless File.exist?(fpath)
 
       new(path: fpath)
+    end
+
+    # References the ConfigFile's remotes_dir key, scans all the entries in it and instantiates
+    # any that match the pattern of codex files
+    def self.autoload
+      return [] unless ConfigFile[:codexes_dir]
+
+      dir = Pathname.new(ConfigFile[:codexes_dir]).expand_path
+
+      return [] unless Dir.exist?(dir)
+
+      Dir.entries(dir)
+         .reject { |filename| filename =~ /^\.{1-2}$/ }
+         .select { |filename| filename =~ /_codex\.ya?ml$/i }
+         .map { |filename| [dir, filename].join('/') }
+         .map { |fpath| self.load(fpath) }
     end
 
     # Takes in the +yml_str+ and creates a new instance from it

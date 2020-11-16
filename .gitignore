@@ -9,3 +9,6 @@
 
 # rspec failure tracking
 .rspec_status
+
+# project specific
+lil_blaster_config.*
