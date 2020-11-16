@@ -14,7 +14,7 @@ RSpec.describe LilBlaster::ConfigFile do
 
   describe 'saving and loading' do
     before :each do
-      @temp_dir = Dir.mktmpdir("lil_blaster_test_#{Time.now}")
+      @temp_dir = Dir.mktmpdir("lil_blaster_test_#{Time.now.to_i}")
       @codex_dir = [@temp_dir, 'codexes'].join('/').tap { |dr| FileUtils.mkdir(dr) }
       @config_yaml = <<~DOC
         ---
