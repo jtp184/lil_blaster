@@ -44,6 +44,7 @@ module LilBlaster
         ConfigFile.save
       end
 
+      # Edit existing keys in the config interactively
       def edit_existing
         ConfigFile.each do |key, value|
           resp = prompt.ask("#{Strings::Case.titlecase key}: ", default: value)
@@ -51,6 +52,7 @@ module LilBlaster
         end
       end
 
+      # Interactively add a new key to the config
       def add_new_key
         ky = prompt.ask('New key: ')
         ConfigFile[Strings::Case.underscore(ky)] = prompt.ask("#{Strings::Case.titlecase ky}: ")
