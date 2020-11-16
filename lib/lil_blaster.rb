@@ -27,6 +27,8 @@ module LilBlaster
       @reader_pin ||= 18
     end
 
+    # Examines the RUBY_PLATFORM constant to determine what OS we are running on.
+    # Returns one of :windows, :mac, :linux, or :raspberrypi
     def host_os
       case RUBY_PLATFORM
       when /cygwin|mswin|mingw|bccwin|wince|emx/

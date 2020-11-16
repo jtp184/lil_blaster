@@ -3,6 +3,7 @@ require 'tty-config'
 module LilBlaster
   # Provides an interface for the config file to be accessed
   class ConfigFile
+    # The filename to use for the config
     FILENAME = 'lil_blaster_config'.freeze
 
     class << self
@@ -20,6 +21,7 @@ module LilBlaster
         @config
       end
 
+      # Reads the config in again
       def reload
         safe_read_config
       end
@@ -90,7 +92,7 @@ module LilBlaster
       def default_config_options
         {
           codexes_dir: os_based_dir('codexes')
-        }.transform_keys(&:to_s)
+        }.transform_keys(&:to_s).freeze
       end
 
       # Returns a default directory based on operating system

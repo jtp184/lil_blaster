@@ -11,6 +11,7 @@ module LilBlaster
   # @api public
   class CLI < Thor
     class << self
+      # Metaprogramming method, takes in +args+ and simplifies defining a CLI command
       def def_command(args = {})
         cmd = args.fetch(:cmd)
 
@@ -41,6 +42,7 @@ module LilBlaster
     # Error raised by this runner
     Error = Class.new(StandardError)
 
+    # Returns proper exit code
     def self.exit_on_failure?
       true
     end

@@ -31,7 +31,7 @@ module LilBlaster
 
       dir = Pathname.new(ConfigFile[:codexes_dir]).expand_path
 
-      return [] unless Dir.exist?(Pathname.new(ConfigFile[:codexes_dir]).expand_path)
+      return [] unless Dir.exist?(dir)
 
       Dir.entries(dir)
          .reject { |filename| filename =~ /^\.{1-2}$/ }
