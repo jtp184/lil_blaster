@@ -47,6 +47,8 @@ RSpec.describe LilBlaster::ConfigFile do
 
       LilBlaster::ConfigFile.config.location_paths.clear
       LilBlaster::ConfigFile.config.append_path(@temp_dir)
+
+      LilBlaster::ConfigFile.reload
     end
 
     after :each do
@@ -70,6 +72,13 @@ RSpec.describe LilBlaster::ConfigFile do
     end
 
     describe 'without an existing file' do
+      it 'loads default options' do
+        curr = LilBlaster::ConfigFile.config.instance_variable_get(:@settings)
+        default = LilBlaster::ConfigFile.send(:default_config_options)
+
+        expect(curr).to eq(default)
+      end
+
       it 'can save out successfully' do
         fp = [@temp_dir, 'lil_blaster_config.yml'].join('/')
         LilBlaster::ConfigFile.save
