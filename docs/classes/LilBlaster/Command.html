@@ -44,6 +44,10 @@ href="CLI.html">CLI</a></p>
 </div>
 <div id='method-list'>
 <h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-new">new</a></li>
+</ol>
 <h3>Public Instance</h3>
 <ol>
 <li><a href="#method-i-command">command</a></li>
@@ -53,6 +57,7 @@ href="CLI.html">CLI</a></p>
 <li><a href="#method-i-execute">execute</a></li>
 <li><a href="#method-i-generator">generator</a></li>
 <li><a href="#method-i-pager">pager</a></li>
+<li><a href="#method-i-pastel">pastel</a></li>
 <li><a href="#method-i-platform">platform</a></li>
 <li><a href="#method-i-prompt">prompt</a></li>
 <li><a href="#method-i-screen">screen</a></li>
@@ -63,11 +68,32 @@ href="CLI.html">CLI</a></p>
 </div>
 <div id='section'>
 <div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-new'>
+<a name='method-c-new'></a>
+<div class='synopsis'>
+<span class='name'>new</span>
+<span class='arguments'>(options)</span>
+
+</div>
+<div class='description'>
+
+<p>Default initializer to provide options as an ivar</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 13</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <h2>Public Instance methods</h2>
 <div class='method public-instance' id='method-method-i-command'>
 <a name='method-i-command'></a>
 <div class='synopsis'>
-<span class='name'>command</span><span class='arguments'>(**options)</span>
+<span class='name'>command</span>
+<span class='arguments'>(**options)</span>
 
 </div>
 <div class='description'>
@@ -84,13 +110,14 @@ href="http://www.rubydoc.info/gems/tty-command">www.rubydoc.info/gems/tty-comman
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-command-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-command-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 26</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">command</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-command&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Command</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-command-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 32</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">command</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-command&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Command</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-cursor'>
 <a name='method-i-cursor'></a>
 <div class='synopsis'>
-<span class='name'>cursor</span><span class='arguments'>()</span>
+<span class='name'>cursor</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -107,13 +134,14 @@ href="http://www.rubydoc.info/gems/tty-cursor">www.rubydoc.info/gems/tty-cursor<
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-cursor-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-cursor-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 36</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cursor</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-cursor&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Cursor</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-cursor-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 42</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cursor</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-cursor&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Cursor</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-editor'>
 <a name='method-i-editor'></a>
 <div class='synopsis'>
-<span class='name'>editor</span><span class='arguments'>()</span>
+<span class='name'>editor</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -130,13 +158,14 @@ href="http://www.rubydoc.info/gems/tty-editor">www.rubydoc.info/gems/tty-editor<
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-editor-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-editor-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 46</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">editor</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-editor&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Editor</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-editor-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 52</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">editor</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-editor&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Editor</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-exec_exist-3F'>
 <a name='method-i-exec_exist-3F'></a>
 <div class='synopsis'>
-<span class='name'>exec_exist?</span><span class='arguments'>(*args)</span>
+<span class='name'>exec_exist?</span>
+<span class='arguments'>(*args)</span>
 
 </div>
 <div class='description'>
@@ -153,13 +182,14 @@ href="http://www.rubydoc.info/gems/tty-which">www.rubydoc.info/gems/tty-which</a
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-exec_exist-3F-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-exec_exist-3F-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 116</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">exec_exist?</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-which&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Which</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-exec_exist-3F-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 133</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">exec_exist?</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-which&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Which</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-execute'>
 <a name='method-i-execute'></a>
 <div class='synopsis'>
-<span class='name'>execute</span><span class='arguments'>(*)</span>
+<span class='name'>execute</span>
+<span class='arguments'>(*)</span>
 
 </div>
 <div class='description'>
@@ -173,13 +203,14 @@ href="http://www.rubydoc.info/gems/tty-which">www.rubydoc.info/gems/tty-which</a
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-execute-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-execute-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">execute</span>(<span class="ruby-operator">*</span>)&#x000A;  <span class="ruby-identifier">raise</span>(&#x000A;    <span class="ruby-constant">NotImplementedError</span>,&#x000A;    <span class="ruby-node">&quot;#{self.class}##{__method__} must be implemented&quot;</span>&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-execute-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 20</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">execute</span>(<span class="ruby-operator">*</span>)&#x000A;  <span class="ruby-identifier">raise</span>(&#x000A;    <span class="ruby-constant">NotImplementedError</span>,&#x000A;    <span class="ruby-node">&quot;#{self.class}##{__method__} must be implemented&quot;</span>&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-generator'>
 <a name='method-i-generator'></a>
 <div class='synopsis'>
-<span class='name'>generator</span><span class='arguments'>()</span>
+<span class='name'>generator</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -196,13 +227,14 @@ href="http://www.rubydoc.info/gems/tty-file">www.rubydoc.info/gems/tty-file</a><
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-generator-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-generator-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 56</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generator</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-file&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">File</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-generator-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 62</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generator</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-file&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">File</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-pager'>
 <a name='method-i-pager'></a>
 <div class='synopsis'>
-<span class='name'>pager</span><span class='arguments'>(**options)</span>
+<span class='name'>pager</span>
+<span class='arguments'>(**options)</span>
 
 </div>
 <div class='description'>
@@ -219,13 +251,38 @@ href="http://www.rubydoc.info/gems/tty-pager">www.rubydoc.info/gems/tty-pager</a
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-pager-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-pager-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 66</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pager</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-pager&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Pager</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-pager-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pager</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-pager&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Pager</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-pastel'>
+<a name='method-i-pastel'></a>
+<div class='synopsis'>
+<span class='name'>pastel</span>
+<span class='arguments'>(**options)</span>
+
+</div>
+<div class='description'>
+
+<p>Colorization for text</p>
+
+<p>@see <a
+href="http://www.rubydoc.info/gems/pastel">www.rubydoc.info/gems/pastel</a></p>
+
+<p>@api public</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-pastel-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-pastel-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 83</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pastel</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;pastel&#39;</span>&#x000A;  <span class="ruby-constant">Pastel</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-platform'>
 <a name='method-i-platform'></a>
 <div class='synopsis'>
-<span class='name'>platform</span><span class='arguments'>()</span>
+<span class='name'>platform</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -242,13 +299,14 @@ href="http://www.rubydoc.info/gems/tty-pager">www.rubydoc.info/gems/tty-pager</a
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-platform-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-platform-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 76</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">platform</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-platform&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Platform</span>.<span class="ruby-identifier">new</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-platform-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 93</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">platform</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-platform&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Platform</span>.<span class="ruby-identifier">new</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-prompt'>
 <a name='method-i-prompt'></a>
 <div class='synopsis'>
-<span class='name'>prompt</span><span class='arguments'>(**options)</span>
+<span class='name'>prompt</span>
+<span class='arguments'>(**options)</span>
 
 </div>
 <div class='description'>
@@ -265,13 +323,14 @@ href="http://www.rubydoc.info/gems/tty-prompt">www.rubydoc.info/gems/tty-prompt<
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-prompt-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-prompt-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 86</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">prompt</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-prompt&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Prompt</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-prompt-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">prompt</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-prompt&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Prompt</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-screen'>
 <a name='method-i-screen'></a>
 <div class='synopsis'>
-<span class='name'>screen</span><span class='arguments'>()</span>
+<span class='name'>screen</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -288,13 +347,14 @@ href="http://www.rubydoc.info/gems/tty-screen">www.rubydoc.info/gems/tty-screen<
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-screen-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-screen-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">screen</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-screen&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Screen</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-screen-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 113</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">screen</span>&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-screen&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Screen</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-which'>
 <a name='method-i-which'></a>
 <div class='synopsis'>
-<span class='name'>which</span><span class='arguments'>(*args)</span>
+<span class='name'>which</span>
+<span class='arguments'>(*args)</span>
 
 </div>
 <div class='description'>
@@ -311,7 +371,7 @@ href="http://www.rubydoc.info/gems/tty-which">www.rubydoc.info/gems/tty-which</a
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-which-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-which-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 106</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">which</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-which&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Which</span>.<span class="ruby-identifier">which</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-which-source'><span class="ruby-comment"># File lib/lil_blaster/command.rb, line 123</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">which</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tty-which&#39;</span>&#x000A;  <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Which</span>.<span class="ruby-identifier">which</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

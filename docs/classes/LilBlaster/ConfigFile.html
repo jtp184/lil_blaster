@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>LilBlaster::ConfigFile</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='class' id='wrapper'>
+<div class='header'>
+<h1 class='name'><span class='type'>class</span>
+LilBlaster::ConfigFile
+</h1>
+<ol class='paths'>
+<li>
+<a href="../../files/lib/lil_blaster/config_file_rb.html">lib/lil_blaster/config_file.rb</a>
+</li>
+</ol>
+<div class='parent'>
+Superclass:
+<strong>Object</strong>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<p>Provides an interface for the config file to be accessed</p>
+</div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-5B-5D">[]</a></li>
+<li><a href="#method-c-5B-5D-3D">[]=</a></li>
+<li><a href="#method-c-config">config</a></li>
+<li><a href="#method-c-method_missing">method_missing</a></li>
+<li><a href="#method-c-path">path</a></li>
+<li><a href="#method-c-reload">reload</a></li>
+<li><a href="#method-c-respond_to_missing-3F">respond_to_missing?</a></li>
+<li><a href="#method-c-save">save</a></li>
+</ol>
+<h3>Private Class</h3>
+<ol>
+<li><a href="#method-c-config_paths">config_paths</a></li>
+<li><a href="#method-c-default_config_options">default_config_options</a></li>
+<li><a href="#method-c-os_based_dir">os_based_dir</a></li>
+<li><a href="#method-c-pinout_config">pinout_config</a></li>
+<li><a href="#method-c-safe_read_config">safe_read_config</a></li>
+</ol>
+</div>
+<div id='context'>
+</div>
+<div id='section'>
+<div id='constants-list'>
+<h2>Constants</h2>
+<div class='name-list'>
+<table summary='Constants'>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>FILENAME</td>
+<td>=</td>
+<td class='context-item-value'>'lil_blaster_config'.freeze</td>
+<td>&nbsp;</td>
+<td class='context-item-desc'>
+<p>The filename to use for the config</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-5B-5D'>
+<a name='method-c-5B-5D'></a>
+<div class='synopsis'>
+<span class='name'>[]</span>
+<span class='arguments'>(value)</span>
+
+</div>
+<div class='description'>
+
+<p>Syntax sugar for fetching the <code>value</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-5B-5D-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-5B-5D-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 33</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">value</span>)&#x000A;  <span class="ruby-identifier">config</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">value</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-5B-5D-3D'>
+<a name='method-c-5B-5D-3D'></a>
+<div class='synopsis'>
+<span class='name'>[]=</span>
+<span class='arguments'>(key, value)</span>
+
+</div>
+<div class='description'>
+
+<p>Syntax sugar for setting the <code>value</code> of <code>key</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-5B-5D-3D-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-5B-5D-3D-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 38</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]=</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)&#x000A;  <span class="ruby-identifier">config</span>.<span class="ruby-identifier">set</span>(<span class="ruby-identifier">key</span>, <span class="ruby-value">value:</span> <span class="ruby-identifier">value</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">pinout_config</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-config'>
+<a name='method-c-config'></a>
+<div class='synopsis'>
+<span class='name'>config</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Exposes the underlying TTY::Config object, loading from disk when posisble</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-config-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-config-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 11</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">config</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@config</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">nil?</span>&#x000A;&#x000A;  <span class="ruby-ivar">@config</span> = <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">new</span>&#x000A;  <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">filename</span> = <span class="ruby-constant">FILENAME</span>&#x000A;&#x000A;  <span class="ruby-identifier">config_paths</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">append_path</span>(<span class="ruby-identifier">pth</span>) }&#x000A;  <span class="ruby-identifier">safe_read_config</span>&#x000A;  <span class="ruby-identifier">pinout_config</span>&#x000A;&#x000A;  <span class="ruby-ivar">@config</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-method_missing'>
+<a name='method-c-method_missing'></a>
+<div class='synopsis'>
+<span class='name'>method_missing</span>
+<span class='arguments'>(mtd, *args, &blk)</span>
+
+</div>
+<div class='description'>
+
+<p>Allows <code>mtd</code> forwarding to config or its hash representation</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-method_missing-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-method_missing-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 43</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_missing</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;  <span class="ruby-identifier">cf</span> = <span class="ruby-identifier">config</span>.<span class="ruby-identifier">method</span>(<span class="ruby-identifier">mtd</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>)&#x000A;  <span class="ruby-identifier">hs</span> = <span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_h</span>.<span class="ruby-identifier">method</span>(<span class="ruby-identifier">mtd</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_h</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>)&#x000A;&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">cf</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">hs</span>&#x000A;&#x000A;  (<span class="ruby-identifier">cf</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">hs</span>).<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-path'>
+<a name='method-c-path'></a>
+<div class='synopsis'>
+<span class='name'>path</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Searches the config_paths and returns the first found instance of this
+file, or nil</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-path-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-path-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 58</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">path</span>&#x000A;  <span class="ruby-identifier">files</span> = <span class="ruby-identifier">config</span>.<span class="ruby-identifier">location_paths</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">next</span> [] <span class="ruby-keyword">unless</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">pth</span>)&#x000A;&#x000A;    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">entries</span>(<span class="ruby-identifier">pth</span>)&#x000A;       .<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\.{1..2}$/</span> }&#x000A;       .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">pth</span>, <span class="ruby-identifier">x</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;/&#39;</span>) }&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">files</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/#{FILENAME}/</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-reload'>
+<a name='method-c-reload'></a>
+<div class='synopsis'>
+<span class='name'>reload</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Reads the config in again</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-reload-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-reload-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reload</span>&#x000A;  <span class="ruby-identifier">safe_read_config</span>&#x000A;  <span class="ruby-identifier">pinout_config</span>&#x000A;&#x000A;  <span class="ruby-ivar">@config</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-respond_to_missing-3F'>
+<a name='method-c-respond_to_missing-3F'></a>
+<div class='synopsis'>
+<span class='name'>respond_to_missing?</span>
+<span class='arguments'>(mtd, *args)</span>
+
+</div>
+<div class='description'>
+
+<p>Politely respond when <code>mtd</code> is missing</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-respond_to_missing-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-respond_to_missing-3F-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 53</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">respond_to_missing?</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">config</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_h</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-save'>
+<a name='method-c-save'></a>
+<div class='synopsis'>
+<span class='name'>save</span>
+<span class='arguments'>(path = nil)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes an optional override <code>path</code> and calls write on the config</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-save-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-save-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 71</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save</span>(<span class="ruby-identifier">path</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">arg</span> = <span class="ruby-identifier">path</span> <span class="ruby-operator">?</span> [<span class="ruby-identifier">path</span>, { <span class="ruby-value">force:</span> <span class="ruby-keyword">true</span> }] <span class="ruby-operator">:</span> [{ <span class="ruby-value">force:</span> <span class="ruby-keyword">true</span> }]&#x000A;  <span class="ruby-identifier">config</span>.<span class="ruby-identifier">write</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">arg</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Private Class methods</h2>
+<div class='method private-class' id='method-method-c-config_paths'>
+<a name='method-c-config_paths'></a>
+<div class='synopsis'>
+<span class='name'>config_paths</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>The paths to search for a file. First the working directory, then the
+dotfiles, then home</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-config_paths-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-config_paths-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 90</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">config_paths</span>&#x000A;  [<span class="ruby-constant">Dir</span>.<span class="ruby-identifier">pwd</span>, <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">home</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;/.config/lil_blaster&#39;</span>, <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">home</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-default_config_options'>
+<a name='method-c-default_config_options'></a>
+<div class='synopsis'>
+<span class='name'>default_config_options</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Defaults for the config</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-default_config_options-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-default_config_options-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 95</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">default_config_options</span>&#x000A;  {&#x000A;    <span class="ruby-value">codexes_dir:</span> <span class="ruby-identifier">os_based_dir</span>(<span class="ruby-string">&#39;codexes&#39;</span>)&#x000A;  }.<span class="ruby-identifier">transform_keys</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>).<span class="ruby-identifier">freeze</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-os_based_dir'>
+<a name='method-c-os_based_dir'></a>
+<div class='synopsis'>
+<span class='name'>os_based_dir</span>
+<span class='arguments'>(join_path = nil)</span>
+
+</div>
+<div class='description'>
+
+<p>Returns a default directory based on operating system</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-os_based_dir-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-os_based_dir-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 102</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">os_based_dir</span>(<span class="ruby-identifier">join_path</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">pth</span> = <span class="ruby-keyword">case</span> <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">host_os</span>&#x000A;        <span class="ruby-keyword">when</span> <span class="ruby-value">:raspberrypi</span>&#x000A;          <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">home</span>&#x000A;        <span class="ruby-keyword">when</span> <span class="ruby-value">:windows</span>, <span class="ruby-value">:mac</span>&#x000A;          <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">home</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;/lil_blaster&#39;</span>&#x000A;        <span class="ruby-keyword">when</span> <span class="ruby-value">:linux</span>&#x000A;          <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">home</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;/.config/lil_blaster&#39;</span>&#x000A;        <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">pth</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">join_path</span>&#x000A;&#x000A;  <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">pth</span>).<span class="ruby-identifier">join</span>(<span class="ruby-identifier">join_path</span>).<span class="ruby-identifier">to_s</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-pinout_config'>
+<a name='method-c-pinout_config'></a>
+<div class='synopsis'>
+<span class='name'>pinout_config</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>If the reader or transmitter pin options are present, override the module
+variable</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pinout_config-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-pinout_config-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 79</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pinout_config</span>&#x000A;  <span class="ruby-identifier">tp</span> = <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:transmitter_pin</span>)&#x000A;  <span class="ruby-identifier">rp</span> = <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:reader_pin</span>)&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">tp</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">rp</span>&#x000A;&#x000A;  <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span> = <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">tp</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">tp</span>&#x000A;  <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">reader_pin</span> = <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">rp</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">rp</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-safe_read_config'>
+<a name='method-c-safe_read_config'></a>
+<div class='synopsis'>
+<span class='name'>safe_read_config</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Reads from the config, rescuing a readerror by merging the default options</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-safe_read_config-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-safe_read_config-source'><span class="ruby-comment"># File lib/lil_blaster/config_file.rb, line 118</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">safe_read_config</span>&#x000A;  <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">read</span>&#x000A;<span class="ruby-keyword">rescue</span> <span class="ruby-constant">TTY</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span><span class="ruby-operator">::</span><span class="ruby-constant">ReadError</span>&#x000A;  <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">default_config_options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

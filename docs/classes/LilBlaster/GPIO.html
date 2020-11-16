@@ -72,7 +72,8 @@ LilBlaster::GPIO
 <div class='method public-class' id='method-method-c-connection'>
 <a name='method-c-connection'></a>
 <div class='synopsis'>
-<span class='name'>connection</span><span class='arguments'>()</span>
+<span class='name'>connection</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -90,7 +91,8 @@ LilBlaster::GPIO
 <div class='method public-class' id='method-method-c-driver'>
 <a name='method-c-driver'></a>
 <div class='synopsis'>
-<span class='name'>driver</span><span class='arguments'>()</span>
+<span class='name'>driver</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -103,7 +105,7 @@ Pigpio. Attempts to load it if possible, but not on non-pi hardware</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-driver-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-driver-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/gpio.rb, line 15</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">driver</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-constant">Pigpio</span>)&#x000A;    <span class="ruby-constant">Pigpio</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Gem</span>.<span class="ruby-identifier">platforms</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">os</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;linux&#39;</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-string">&#39;/proc/cpuinfo&#39;</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Raspberry Pi/</span>&#x000A;    <span class="ruby-keyword">begin</span>&#x000A;      <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;pigpio&#39;</span>&#x000A;      <span class="ruby-constant">Pigpio</span>&#x000A;    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>&#x000A;      <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio is not defined, please require it.&#39;</span>&#x000A;      <span class="ruby-keyword">nil</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio driver is not available on non Raspberry Pi hardware.&#39;</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-driver-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/gpio.rb, line 15</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">driver</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-constant">Pigpio</span>)&#x000A;    <span class="ruby-constant">Pigpio</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">host_os</span> <span class="ruby-operator">==</span> <span class="ruby-value">:raspberrypi</span>&#x000A;    <span class="ruby-keyword">begin</span>&#x000A;      <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;pigpio&#39;</span>&#x000A;      <span class="ruby-constant">Pigpio</span>&#x000A;    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>&#x000A;      <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio is not defined, please require it.&#39;</span>&#x000A;      <span class="ruby-keyword">nil</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;WARN: Pigpio driver is not available on non Raspberry Pi hardware.&#39;</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
