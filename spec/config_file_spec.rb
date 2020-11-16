@@ -64,6 +64,9 @@ RSpec.describe LilBlaster::ConfigFile do
 
       LilBlaster.reader_pin = old[0]
       LilBlaster.transmitter_pin = old[1]
+
+      LilBlaster::ConfigFile.delete(:reader_pin)
+      LilBlaster::ConfigFile.delete(:transmitter_pin)
     end
 
     describe 'without an existing file' do
@@ -117,7 +120,7 @@ RSpec.describe LilBlaster::ConfigFile do
         end
 
         it 'returns a blank if no codex dir is specified' do
-          LilBlaster::ConfigFile.delete(:codexes_dir)
+          LilBlaster::ConfigFile.config.delete(:codexes_dir)
 
           expect(LilBlaster::ConfigFile[:codexes_dir]).to be_nil
           expect(LilBlaster::Codex.autoload).to be_empty
