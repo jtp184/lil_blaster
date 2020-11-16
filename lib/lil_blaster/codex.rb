@@ -15,7 +15,9 @@ module LilBlaster
     # The actual codes as a hash
     attr_reader :codes
 
-    def_delegators :@codes, :[], :[]=, :key, :key?, :value?, :keys
+    def_delegators :@codes, :[], :[]=, :key, :key?,
+                   :value?, :keys, :each_key, :each_value,
+                   :size, :include?, :fetch
 
     # Takes in a filepath +fpath+, returns a new instance if the file exists
     def self.load(fpath)
