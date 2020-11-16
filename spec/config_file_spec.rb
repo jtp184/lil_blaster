@@ -29,9 +29,32 @@ RSpec.describe LilBlaster::ConfigFile do
       FileUtils.remove_entry @temp_dir
     end
 
+    it 'can set pins with the config file' do
+      old = LilBlaster.reader_pin, LilBlaster.transmitter_pin
+
+      LilBlaster::ConfigFile[:reader_pin] = 99
+      LilBlaster::ConfigFile[:transmitter_pin] = 42
+
+      expect(LilBlaster.reader_pin).to eq(99)
+      expect(LilBlaster.transmitter_pin).to eq(42)
+
+      LilBlaster.reader_pin = old[0]
+      LilBlaster.transmitter_pin = old[1]
+    end
+
+    describe 'without an existing file' do
+      it 'can save out successfully' do
+        fp = [@temp_dir, 'lil_blaster_config.yml'].join('/')
+        LilBlaster::ConfigFile.save
+
+        expect(File.exist?(fp))
+      end
+    end
+
     describe 'with an existing file' do
       before :each do
         @config_path = [@temp_dir, 'lil_blaster_config.yml'].join('/')
+
         File.open(@config_path, 'w+') { |f| f << @config_yaml }
         LilBlaster::ConfigFile.config.read
       end
