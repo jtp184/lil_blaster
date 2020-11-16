@@ -8,22 +8,20 @@ module LilBlaster
     class << self
       # Exposes the underlying TTY::Config object, loading from disk when posisble
       def config
-        return @config if @config
+        return @config unless @config.nil?
 
         @config = TTY::Config.new
         @config.filename = FILENAME
 
         config_paths.each { |pth| @config.append_path(pth) }
-
-        begin
-          @config.read
-        rescue TTY::Config::ReadError
-          @config.merge(default_config_options)
-        end
-
+        safe_read_config
         pinout_config
 
         @config
+      end
+
+      def reload
+        safe_read_config
       end
 
       # Syntax sugar for fetching the +value+
@@ -74,8 +72,8 @@ module LilBlaster
 
       # If the reader or transmitter pin options are present, override the module variable
       def pinout_config
-        tp = config.fetch(:transmitter_pin)
-        rp = config.fetch(:reader_pin)
+        tp = @config.fetch(:transmitter_pin)
+        rp = @config.fetch(:reader_pin)
 
         return unless tp || rp
 
@@ -91,8 +89,8 @@ module LilBlaster
       # Defaults for the config
       def default_config_options
         {
-          "codexes_dir" => os_based_dir('codexes')
-        }
+          codexes_dir: os_based_dir('codexes')
+        }.transform_keys(&:to_s)
       end
 
       # Returns a default directory based on operating system
@@ -109,6 +107,13 @@ module LilBlaster
         return pth unless join_path
 
         Pathname.new(pth).join(join_path).to_s
+      end
+
+      # Reads from the config, rescuing a readerror by merging the default options
+      def safe_read_config
+        @config.read
+      rescue TTY::Config::ReadError
+        @config.merge(default_config_options)
       end
     end
   end
