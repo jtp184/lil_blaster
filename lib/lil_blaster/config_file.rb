@@ -91,7 +91,7 @@ module LilBlaster
       # Defaults for the config
       def default_config_options
         {
-          codexes_dir: os_based_dir('codexes')
+          "codexes_dir" => os_based_dir('codexes')
         }
       end
 
