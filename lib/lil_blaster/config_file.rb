@@ -89,12 +89,12 @@ module LilBlaster
       # Defaults for the config
       def default_config_options
         {
-          remotes_folder: os_based_folder('remotes')
+          remotes_dir: os_based_dir('remotes')
         }
       end
 
-      # Returns a default folder based on operating system
-      def os_based_folder(join_path = nil)
+      # Returns a default directory based on operating system
+      def os_based_dir(join_path = nil)
         pth = case LilBlaster.host_os
               when :raspberrypi
                 Dir.home
