@@ -1,6 +1,3 @@
-require 'tempfile'
-require 'securerandom'
-
 RSpec.describe LilBlaster::Codex do
   before :all do
     @codex_yaml = <<~DOC
