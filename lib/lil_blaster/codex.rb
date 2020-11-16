@@ -24,6 +24,22 @@ module LilBlaster
       new(path: fpath)
     end
 
+    # References the ConfigFile's remotes_dir key, scans all the entries in it and instantiates
+    # any that match the pattern of codex files
+    def self.autoload
+      return [] unless ConfigFile[:remotes_dir]
+
+      dir = Pathname.new(ConfigFile[:remotes_dir]).expand_path
+
+      return [] unless Dir.exist?(Pathname.new(ConfigFile[:remotes_dir]).expand_path)
+
+      Dir.entries(dir)
+         .reject { |filename| filename =~ /^\.{1-2}$/ }
+         .select { |filename| filename =~ /_codex\.ya?ml$/i }
+         .map { |filename| [dir, filename].join('/') }
+         .map { |fpath| self.load(fpath) }
+    end
+
     # Takes in the +yml_str+ and creates a new instance from it
     def self.from_yaml(yml_str)
       new(yaml: yml_str)
