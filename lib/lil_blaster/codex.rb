@@ -27,11 +27,11 @@ module LilBlaster
     # References the ConfigFile's remotes_dir key, scans all the entries in it and instantiates
     # any that match the pattern of codex files
     def self.autoload
-      return [] unless ConfigFile[:remotes_dir]
+      return [] unless ConfigFile[:codexes_dir]
 
-      dir = Pathname.new(ConfigFile[:remotes_dir]).expand_path
+      dir = Pathname.new(ConfigFile[:codexes_dir]).expand_path
 
-      return [] unless Dir.exist?(Pathname.new(ConfigFile[:remotes_dir]).expand_path)
+      return [] unless Dir.exist?(Pathname.new(ConfigFile[:codexes_dir]).expand_path)
 
       Dir.entries(dir)
          .reject { |filename| filename =~ /^\.{1-2}$/ }
