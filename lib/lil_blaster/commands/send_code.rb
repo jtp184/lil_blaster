@@ -8,57 +8,70 @@ module LilBlaster
         if @options[:raw]
           # LilBlaster::Blaster.transmit(resolved_codex.protocol.encode(numberize_raw_value))
           puts pastel.green("Sent value #{@options[:raw]} using #{resolved_codex.remote_name}")
+        elsif @argv[:symbols].empty?
+          symbs = if @options[:interactive]
+                    interactive_symbol_choice(resolved_codex.keys)
+                  elsif LilBlaster::ConfigFile[:default_code]
+                    [LilBlaster::ConfigFile[:default_code]]
+                  else
+                    abort pastel.red('No symbol provided')
+                  end
+
+          symbs.each { |sy| send_code_and_report(sy) }
         else
-          # LilBlaster::Blaster.send_code(resolved_symbol, resolved_codex)
-          puts pastel.green("Sent code #{resolved_symbol} using #{resolved_codex.remote_name}")
+          collect_symbols.each { |sym| send_code_and_report(sym) }
         end
       end
 
       private
 
+      def send_code_and_report(sym)
+        dex = resolved_codex || codex_responding_to(sym)
+
+        if dex
+          # LilBlaster::Blaster.send_code(sym, dex)
+          puts format(rept_str, sym: sym, rem: dex.remote_name)
+        else
+          puts pastel.red("No codex found which can respond to #{sym}")
+        end
+      end
+
       def interactive_codex_choice(codexes = LilBlaster::Codex.autoload)
+        abort pastel.red('No codexes exist') if codexes.empty?
+
         choice = prompt.select('Select Codex: ', codexes.map(&:remote_name))
         codexes.find { |c| c.remote_name == choice }
       end
 
       def interactive_symbol_choice(symbs)
-        prompt.select('Select a code to send: ', symbs)
+        prompt.multi_select('Select codes to send: ', symbs)
       end
 
-      def resolved_symbol
-        return @resolved_symbol if @resolved_symbol
-
-        @resolved_symbol = if @argv[:symbol]
-                             @argv[:symbol].to_sym
-                           elsif LilBlaster::ConfigFile[:default_code]
-                             LilBlaster::ConfigFile[:default_code].to_sym
-                           elsif @options[:interactive]
-                             interactive_symbol_choice(resolved_codex.keys)
-                           elsif @options[:raw]
-                             nil
-                           else
-                             abort pastel.red('No symbol or raw value provided')
-                           end
+      def collect_symbols
+        @collect_symbols ||= @argv[:symbols].map(&:to_sym)
       end
 
       def resolved_codex
-        return @resolved_codex if @resolved_codex
-
-        @resolved_codex = if @options[:codex]
-                            LilBlaster::Codex.load(@options[:codex])
-                          elsif @argv[:codex_name]
-                            LilBlaster::Codex.autoload.find do |codex|
-                              codex.remote_name.downcase == @argv[:codex_name].downcase
+        @resolved_codex ||= if @options[:codex] && File.exist?(@options[:codex])
+                              LilBlaster::Codex.load(@options[:codex])
+                            elsif @options[:codex]
+                              LilBlaster::Codex.autoload.find do |codex|
+                                codex.remote_name.downcase == @options[:codex].downcase
+                              end
+                            elsif @options[:raw] && @options[:interactive]
+                              interactive_codex_choice
+                            elsif LilBlaster::ConfigFile[:default_codex]
+                              LilBlaster::Codex.autoload.find do |codex|
+                                [
+                                  codex.remote_name,
+                                  LilBlaster::ConfigFile[:default_codex] || ''
+                                ].map(&:downcase).reduce(&:==)
+                              end
+                            elsif @options[:interactive]
+                              interactive_codex_choice
+                            else
+                              abort pastel.red('No codex provided')
                             end
-                          elsif LilBlaster::ConfigFile[:default_codex]
-                            LilBlaster::Codex.autoload.find do |codex|
-                              codex.remote_name.downcase == LilBlaster::ConfigFile[:default_codex]
-                            end
-                          elsif @options[:raw]
-                            interactive_codex_choice
-                          else
-                            codex_responding_to(resolved_symbol)
-                          end
       end
 
       def codex_responding_to(sym)
@@ -66,17 +79,31 @@ module LilBlaster
           codex.key?(sym)
         end
 
-        if fc.one?
-          fc.first
-        elsif fc.empty?
-          abort pastel.red("No codex found which can respond to #{resolved_symbol}")
+        return nil if fc.empty?
+        return fc.first if fc.one?
+
+        if @options[:interactive]
+          interactive_codex_choice(fc)
         else
-          @options[:interactive] ? interactive_codex_choice(fc) : fc.first
+          default = fc.find do |codex|
+            codex.remote_name.downcase == LilBlaster::ConfigFile[:default_codex].downcase
+          end
+
+          default || fc.first
         end
       end
 
       def numberize_raw_value
         Integer(@options[:raw])
+      end
+
+      def rept_str
+        return @rept_str if @rept_str
+
+        @rept_str = +pastel.green('Sent code ')
+        @rept_str << '%<sym>s'
+        @rept_str << pastel.green(' using ')
+        @rept_str << '%<rem>s'.freeze
       end
     end
   end
