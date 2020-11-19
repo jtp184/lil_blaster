@@ -7,7 +7,7 @@ module LilBlaster
       # Primary command runner
       def execute(_input: $stdin, _output: $stdout)
         if @options[:raw]
-          # LilBlaster::Blaster.transmit(resolved_codex.protocol.encode(numberize_raw_value))
+          LilBlaster::Blaster.transmit(resolved_codex.protocol.encode(numberize_raw_value))
           puts pastel.green("Sent value #{@options[:raw]} using #{resolved_codex.remote_name}")
         elsif @argv[:symbols].empty?
           symbs = if @options[:interactive]
@@ -32,7 +32,7 @@ module LilBlaster
         dex = resolved_codex || codex_responding_to(sym)
 
         if dex
-          # LilBlaster::Blaster.send_code(sym, dex)
+          LilBlaster::Blaster.send_code(sym, dex)
           puts format(rept_str, sym: sym, rem: dex.remote_name)
         else
           puts pastel.red("No codex found which can respond to #{sym}")
