@@ -48,6 +48,10 @@ RSpec.describe LilBlaster::ConfigFile do
       LilBlaster::ConfigFile.config.location_paths.clear
       LilBlaster::ConfigFile.config.append_path(@temp_dir)
 
+      LilBlaster::ConfigFile.config
+                            .instance_variable_get(:@settings)
+                            .clear
+
       LilBlaster::ConfigFile.reload
     end
 
@@ -74,6 +78,8 @@ RSpec.describe LilBlaster::ConfigFile do
     describe 'without an existing file' do
       it 'loads default options' do
         curr = LilBlaster::ConfigFile.config.instance_variable_get(:@settings)
+        LilBlaster::ConfigFile.reload
+
         default = LilBlaster::ConfigFile.send(:default_config_options)
 
         expect(curr).to eq(default)
@@ -117,11 +123,15 @@ RSpec.describe LilBlaster::ConfigFile do
       end
 
       describe 'with codexes folder' do
+        before :each do
+          LilBlaster::Codex.autoload!
+        end
+
         it 'can autoload present codexes' do
           fpath = "#{@codex_dir}/#{SecureRandom.alphanumeric}_codex.yml"
           File.open(fpath, 'w+') { |f| f << @codex_yaml }
 
-          expect(LilBlaster::Codex.autoload).not_to be_empty
+          expect(LilBlaster::Codex.autoload!).not_to be_empty
         end
 
         it 'returns a blank if no codexes are present' do
