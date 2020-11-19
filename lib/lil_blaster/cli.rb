@@ -48,8 +48,8 @@ module LilBlaster
     end
 
     desc 'send_code [SYMBOL] [CODEX_NAME]', 'Send a code from a codex'
-    method_option :codex, aliases: '-c', type: :boolean, desc: 'Pass a filepath for the codex'
-    method_option :raw, aliases: '-r', type: :numeric, desc: 'Provide a raw number value instead of a symbol'
+    method_option :codex, aliases: '-c', type: :string, desc: 'Pass a filepath for the codex'
+    method_option :raw, aliases: '-r', type: :string, desc: 'Provide a raw number value instead of a symbol'
     method_option :interactive, aliases: '-i', type: :boolean, desc: 'Choose what to send interactively'
 
     # Sends the code defined by the +symbol+ in a +codex+
