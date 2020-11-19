@@ -48,11 +48,12 @@ command objects</p>
 <h2>Methods</h2>
 <h3>Public Class</h3>
 <ol>
-<li><a href="#method-c-def_command">def_command</a></li>
 <li><a href="#method-c-exit_on_failure-3F">exit_on_failure?</a></li>
 </ol>
 <h3>Public Instance</h3>
 <ol>
+<li><a href="#method-i-config">config</a></li>
+<li><a href="#method-i-send_code">send_code</a></li>
 <li><a href="#method-i-version">version</a></li>
 </ol>
 </div>
@@ -77,31 +78,10 @@ command objects</p>
 </div>
 <div id='methods'>
 <h2>Public Class methods</h2>
-<div class='method public-class' id='method-method-c-def_command'>
-<a name='method-c-def_command'></a>
-<div class='synopsis'>
-<span class='name'>def_command</span>
-<span class='arguments'>(args = {})</span>
-
-</div>
-<div class='description'>
-
-<p>Metaprogramming method, takes in <code>args</code> and simplifies defining
-a <a href="CLI.html">CLI</a> command</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-def_command-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-c-def_command-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">def_command</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">cmd</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:cmd</span>)&#x000A;&#x000A;  <span class="ruby-identifier">sym</span> = <span class="ruby-identifier">cmd</span>.<span class="ruby-identifier">to_sym</span>&#x000A;  <span class="ruby-identifier">str</span> = <span class="ruby-identifier">cmd</span>.<span class="ruby-identifier">to_str</span>&#x000A;  <span class="ruby-identifier">cons</span> = <span class="ruby-constant">Strings</span><span class="ruby-operator">::</span><span class="ruby-constant">Case</span>.<span class="ruby-identifier">pascalcase</span>(<span class="ruby-identifier">str</span>).<span class="ruby-identifier">to_sym</span>&#x000A;&#x000A;  <span class="ruby-identifier">desc</span> <span class="ruby-identifier">str</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:desc</span>)&#x000A;&#x000A;  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:method_options</span>, []).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mop</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">method_option</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">mop</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">sym</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:help</span>]&#x000A;      <span class="ruby-identifier">invoke</span> <span class="ruby-value">:help</span>, [<span class="ruby-identifier">str</span>]&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-identifier">require_relative</span> <span class="ruby-node">&quot;commands/#{str}&quot;</span>&#x000A;&#x000A;      <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Commands</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">cons</span>)&#x000A;                          .<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)&#x000A;                          .<span class="ruby-identifier">execute</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
 <div class='method public-class' id='method-method-c-exit_on_failure-3F'>
 <a name='method-c-exit_on_failure-3F'></a>
 <div class='synopsis'>
-<span class='name'>exit_on_failure?</span>
-<span class='arguments'>()</span>
+<span class='name'>exit_on_failure?</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -113,15 +93,50 @@ a <a href="CLI.html">CLI</a> command</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-exit_on_failure-3F-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-exit_on_failure-3F-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 45</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">exit_on_failure?</span>&#x000A;  <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-exit_on_failure-3F-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 16</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">exit_on_failure?</span>&#x000A;  <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Public Instance methods</h2>
+<div class='method public-instance' id='method-method-i-config'>
+<a name='method-i-config'></a>
+<div class='synopsis'>
+<span class='name'>config</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Initialize, set, and get configuration options</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-config-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-config-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 39</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">config</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:help</span>]&#x000A;    <span class="ruby-identifier">invoke</span> <span class="ruby-value">:help</span>, [<span class="ruby-value">:config</span>]&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">require_relative</span> <span class="ruby-string">&#39;commands/config&#39;</span>&#x000A;&#x000A;    <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Commands</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>).<span class="ruby-identifier">execute</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-send_code'>
+<a name='method-i-send_code'></a>
+<div class='synopsis'>
+<span class='name'>send_code</span><span class='arguments'>(*symbols)</span>
+
+</div>
+<div class='description'>
+
+<p>Sends the code defined by the <code>symbol</code> in a <code>codex</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-send_code-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-send_code-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 55</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">send_code</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">symbols</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:help</span>]&#x000A;    <span class="ruby-identifier">invoke</span> <span class="ruby-value">:help</span>, [<span class="ruby-value">:send_code</span>]&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">require_relative</span> <span class="ruby-string">&#39;commands/send_code&#39;</span>&#x000A;&#x000A;    <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Commands</span><span class="ruby-operator">::</span><span class="ruby-constant">SendCode</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>, { <span class="ruby-value">symbols:</span> <span class="ruby-identifier">symbols</span> }).<span class="ruby-identifier">execute</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-instance' id='method-method-i-version'>
 <a name='method-i-version'></a>
 <div class='synopsis'>
-<span class='name'>version</span>
-<span class='arguments'>()</span>
+<span class='name'>version</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -133,7 +148,7 @@ a <a href="CLI.html">CLI</a> command</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-version-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-version-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 54</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">version</span>&#x000A;  <span class="ruby-identifier">require_relative</span> <span class="ruby-string">&#39;version&#39;</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;v#{LilBlaster::VERSION}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-version-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">version</span>&#x000A;  <span class="ruby-identifier">require_relative</span> <span class="ruby-string">&#39;version&#39;</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;v#{LilBlaster::VERSION}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

@@ -43,10 +43,6 @@ Superclass:
 </div>
 <div id='method-list'>
 <h2>Methods</h2>
-<h3>Public Instance</h3>
-<ol>
-<li><a href="#method-i-execute">execute</a></li>
-</ol>
 <h3>Private Instance</h3>
 <ol>
 <li><a href="#method-i-add_new_key">add_new_key</a></li>
@@ -63,30 +59,11 @@ Superclass:
 </div>
 <div id='section'>
 <div id='methods'>
-<h2>Public Instance methods</h2>
-<div class='method public-instance' id='method-method-i-execute'>
-<a name='method-i-execute'></a>
-<div class='synopsis'>
-<span class='name'>execute</span>
-<span class='arguments'>(_input: $stdin, _output: $stdout)</span>
-
-</div>
-<div class='description'>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-execute-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-i-execute-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 7</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">execute</span>(<span class="ruby-value">_input:</span> <span class="ruby-identifier">$stdin</span>, <span class="ruby-value">_output:</span> <span class="ruby-identifier">$stdout</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">empty?</span>&#x000A;    <span class="ruby-keyword">unless</span> <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">exist?</span>&#x000A;      <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">save</span>&#x000A;      <span class="ruby-identifier">puts</span> <span class="ruby-string">&#39;Saved new config file&#39;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;PATH: #{ConfigFile.path}&quot;</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:interactive</span>)&#x000A;    <span class="ruby-identifier">interactive_edit</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:get</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-node">%w[get all]</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:get</span>])&#x000A;    <span class="ruby-identifier">all_keys</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:get</span>)&#x000A;    <span class="ruby-identifier">single_value</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:set</span>)&#x000A;    <span class="ruby-identifier">set_value</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:unset</span>)&#x000A;    <span class="ruby-identifier">unset_value</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
 <h2>Private Instance methods</h2>
 <div class='method private-instance' id='method-method-i-add_new_key'>
 <a name='method-i-add_new_key'></a>
 <div class='synopsis'>
-<span class='name'>add_new_key</span>
-<span class='arguments'>()</span>
+<span class='name'>add_new_key</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -98,14 +75,13 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-add_new_key-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-add_new_key-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 56</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_new_key</span>&#x000A;  <span class="ruby-identifier">ky</span> = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-string">&#39;New key: &#39;</span>)&#x000A;  <span class="ruby-constant">ConfigFile</span>[<span class="ruby-constant">Strings</span><span class="ruby-operator">::</span><span class="ruby-constant">Case</span>.<span class="ruby-identifier">underscore</span>(<span class="ruby-identifier">ky</span>)] = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-node">&quot;#{Strings::Case.titlecase ky}: &quot;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-add_new_key-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 57</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_new_key</span>&#x000A;  <span class="ruby-identifier">ky</span> = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-string">&#39;New key: &#39;</span>)&#x000A;  <span class="ruby-constant">ConfigFile</span>[<span class="ruby-constant">Strings</span><span class="ruby-operator">::</span><span class="ruby-constant">Case</span>.<span class="ruby-identifier">underscore</span>(<span class="ruby-identifier">ky</span>)] = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-node">&quot;#{Strings::Case.titlecase ky}: &quot;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-all_keys'>
 <a name='method-i-all_keys'></a>
 <div class='synopsis'>
-<span class='name'>all_keys</span>
-<span class='arguments'>()</span>
+<span class='name'>all_keys</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -117,14 +93,13 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-all_keys-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-all_keys-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 62</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">all_keys</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">val</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">str</span> = [&#x000A;      <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-identifier">key</span>),&#x000A;      <span class="ruby-identifier">val</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">black</span>(<span class="ruby-string">&#39;nil&#39;</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">val</span>&#x000A;    ].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">link_arrow</span>)&#x000A;&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">str</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-all_keys-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 63</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">all_keys</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">val</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">str</span> = [&#x000A;      <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-identifier">key</span>),&#x000A;      <span class="ruby-identifier">val</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">black</span>(<span class="ruby-string">&#39;nil&#39;</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">val</span>&#x000A;    ].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">link_arrow</span>)&#x000A;&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">str</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-edit_existing'>
 <a name='method-i-edit_existing'></a>
 <div class='synopsis'>
-<span class='name'>edit_existing</span>
-<span class='arguments'>()</span>
+<span class='name'>edit_existing</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -136,14 +111,13 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-edit_existing-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-edit_existing-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 48</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">edit_existing</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">resp</span> = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-node">&quot;#{Strings::Case.titlecase key}: &quot;</span>, <span class="ruby-value">default:</span> <span class="ruby-identifier">value</span>)&#x000A;    <span class="ruby-constant">ConfigFile</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">resp</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-edit_existing-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 49</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">edit_existing</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">resp</span> = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-node">&quot;#{Strings::Case.titlecase key}: &quot;</span>, <span class="ruby-value">default:</span> <span class="ruby-identifier">value</span>)&#x000A;    <span class="ruby-constant">ConfigFile</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">resp</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-interactive_edit'>
 <a name='method-i-interactive_edit'></a>
 <div class='synopsis'>
-<span class='name'>interactive_edit</span>
-<span class='arguments'>()</span>
+<span class='name'>interactive_edit</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -156,14 +130,13 @@ value as default</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-interactive_edit-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-interactive_edit-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 31</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">interactive_edit</span>&#x000A;  <span class="ruby-identifier">edit_existing</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">yes?</span>(<span class="ruby-string">&#39;Add new keys?&#39;</span>)&#x000A;    <span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">add_new_key</span>&#x000A;      <span class="ruby-keyword">break</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">yes?</span>(<span class="ruby-string">&#39;Add another key?&#39;</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">puts</span>&#x000A;  <span class="ruby-identifier">all_keys</span>&#x000A;&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">save</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-interactive_edit-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 32</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">interactive_edit</span>&#x000A;  <span class="ruby-identifier">edit_existing</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">yes?</span>(<span class="ruby-string">&#39;Add new keys?&#39;</span>)&#x000A;    <span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">add_new_key</span>&#x000A;      <span class="ruby-keyword">break</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">yes?</span>(<span class="ruby-string">&#39;Add another key?&#39;</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">puts</span>&#x000A;  <span class="ruby-identifier">all_keys</span>&#x000A;&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">save</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-link_arrow'>
 <a name='method-i-link_arrow'></a>
 <div class='synopsis'>
-<span class='name'>link_arrow</span>
-<span class='arguments'>()</span>
+<span class='name'>link_arrow</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -175,14 +148,13 @@ value as default</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-link_arrow-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-link_arrow-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">link_arrow</span>&#x000A;  <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">black</span>(<span class="ruby-string">&#39; =&gt; &#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-link_arrow-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 104</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">link_arrow</span>&#x000A;  <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">bright_black</span>(<span class="ruby-string">&#39; =&gt; &#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-set_value'>
 <a name='method-i-set_value'></a>
 <div class='synopsis'>
-<span class='name'>set_value</span>
-<span class='arguments'>()</span>
+<span class='name'>set_value</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -195,14 +167,13 @@ href=":set">options</a> array</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-set_value-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-set_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 87</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_value</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>[<span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">0</span>]] = <span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">1</span>]&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">save</span>&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> [<span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">0</span>]), <span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">1</span>]].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">link_arrow</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-set_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 88</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_value</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>[<span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">0</span>]] = <span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">1</span>]&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">save</span>&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> [<span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">0</span>]), <span class="ruby-ivar">@options</span>[<span class="ruby-value">:set</span>][<span class="ruby-value">1</span>]].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">link_arrow</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-single_value'>
 <a name='method-i-single_value'></a>
 <div class='synopsis'>
-<span class='name'>single_value</span>
-<span class='arguments'>()</span>
+<span class='name'>single_value</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -214,14 +185,13 @@ href=":set">options</a> array</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-single_value-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-single_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">single_value</span>&#x000A;  <span class="ruby-identifier">resp</span> = <span class="ruby-constant">ConfigFile</span>[<span class="ruby-ivar">@options</span>[<span class="ruby-value">:get</span>]]&#x000A;&#x000A;  <span class="ruby-identifier">str</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">resp</span>.<span class="ruby-identifier">nil?</span>&#x000A;          <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">black</span>(<span class="ruby-string">&#39;nil&#39;</span>)&#x000A;        <span class="ruby-keyword">else</span>&#x000A;          <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-identifier">resp</span>)&#x000A;        <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">str</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-single_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 75</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">single_value</span>&#x000A;  <span class="ruby-identifier">resp</span> = <span class="ruby-constant">ConfigFile</span>[<span class="ruby-ivar">@options</span>[<span class="ruby-value">:get</span>]]&#x000A;&#x000A;  <span class="ruby-identifier">str</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">resp</span>.<span class="ruby-identifier">nil?</span>&#x000A;          <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">black</span>(<span class="ruby-string">&#39;nil&#39;</span>)&#x000A;        <span class="ruby-keyword">else</span>&#x000A;          <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-identifier">resp</span>)&#x000A;        <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">str</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-unset_value'>
 <a name='method-i-unset_value'></a>
 <div class='synopsis'>
-<span class='name'>unset_value</span>
-<span class='arguments'>()</span>
+<span class='name'>unset_value</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -233,7 +203,7 @@ href=":set">options</a> array</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-unset_value-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-unset_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 95</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unset_value</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:unset</span>])&#x000A;  <span class="ruby-identifier">puts</span> [<span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">red</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:unset</span>]), <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">black</span>(<span class="ruby-string">&#39;nil&#39;</span>)].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">link_arrow</span>)&#x000A;&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">save</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-unset_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/config.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unset_value</span>&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:unset</span>])&#x000A;  <span class="ruby-identifier">puts</span> [<span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">red</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:unset</span>]), <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">black</span>(<span class="ruby-string">&#39;nil&#39;</span>)].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">link_arrow</span>)&#x000A;&#x000A;  <span class="ruby-constant">ConfigFile</span>.<span class="ruby-identifier">save</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

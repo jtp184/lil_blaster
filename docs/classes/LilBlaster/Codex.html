@@ -46,6 +46,7 @@ Superclass:
 <h3>Public Class</h3>
 <ol>
 <li><a href="#method-c-autoload">autoload</a></li>
+<li><a href="#method-c-autoload-21">autoload!</a></li>
 <li><a href="#method-c-from_yaml">from_yaml</a></li>
 <li><a href="#method-c-load">load</a></li>
 <li><a href="#method-c-new">new</a></li>
@@ -119,8 +120,25 @@ Superclass:
 <div class='method public-class' id='method-method-c-autoload'>
 <a name='method-c-autoload'></a>
 <div class='synopsis'>
-<span class='name'>autoload</span>
-<span class='arguments'>()</span>
+<span class='name'>autoload</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Memoize the autoload! results which are unlikely to change</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-autoload-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-autoload-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 46</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">autoload</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@autoloaded</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@autoloaded</span>&#x000A;&#x000A;  <span class="ruby-identifier">autoload!</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-autoload-21'>
+<a name='method-c-autoload-21'></a>
+<div class='synopsis'>
+<span class='name'>autoload!</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -130,17 +148,16 @@ it and instantiates any that match the pattern of codex files</p>
 
 </div>
 <div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-autoload-source&#39;); return false'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-autoload-21-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-autoload-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 31</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">autoload</span>&#x000A;  <span class="ruby-keyword">return</span> [] <span class="ruby-keyword">unless</span> <span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:codexes_dir</span>]&#x000A;&#x000A;  <span class="ruby-identifier">dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:codexes_dir</span>]).<span class="ruby-identifier">expand_path</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> [] <span class="ruby-keyword">unless</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">dir</span>)&#x000A;&#x000A;  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">entries</span>(<span class="ruby-identifier">dir</span>)&#x000A;     .<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filename</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\.{1-2}$/</span> }&#x000A;     .<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filename</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/_codex\.ya?ml$/i</span> }&#x000A;     .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">dir</span>, <span class="ruby-identifier">filename</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;/&#39;</span>) }&#x000A;     .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fpath</span><span class="ruby-operator">|</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load</span>(<span class="ruby-identifier">fpath</span>) }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-autoload-21-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 31</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">autoload!</span>&#x000A;  <span class="ruby-keyword">return</span> [] <span class="ruby-keyword">unless</span> <span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:codexes_dir</span>]&#x000A;&#x000A;  <span class="ruby-identifier">dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:codexes_dir</span>]).<span class="ruby-identifier">expand_path</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> [] <span class="ruby-keyword">unless</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">dir</span>)&#x000A;&#x000A;  <span class="ruby-ivar">@autoloaded</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">entries</span>(<span class="ruby-identifier">dir</span>)&#x000A;                   .<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filename</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\.{1-2}$/</span> }&#x000A;                   .<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filename</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/_codex\.ya?ml$/i</span> }&#x000A;                   .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">dir</span>, <span class="ruby-identifier">filename</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;/&#39;</span>) }&#x000A;                   .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fpath</span><span class="ruby-operator">|</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load</span>(<span class="ruby-identifier">fpath</span>) }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-from_yaml'>
 <a name='method-c-from_yaml'></a>
 <div class='synopsis'>
-<span class='name'>from_yaml</span>
-<span class='arguments'>(yml_str)</span>
+<span class='name'>from_yaml</span><span class='arguments'>(yml_str)</span>
 
 </div>
 <div class='description'>
@@ -152,14 +169,13 @@ it and instantiates any that match the pattern of codex files</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-from_yaml-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-from_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 46</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">from_yaml</span>(<span class="ruby-identifier">yml_str</span>)&#x000A;  <span class="ruby-identifier">new</span>(<span class="ruby-value">yaml:</span> <span class="ruby-identifier">yml_str</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-from_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 53</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">from_yaml</span>(<span class="ruby-identifier">yml_str</span>)&#x000A;  <span class="ruby-identifier">new</span>(<span class="ruby-value">yaml:</span> <span class="ruby-identifier">yml_str</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-load'>
 <a name='method-c-load'></a>
 <div class='synopsis'>
-<span class='name'>load</span>
-<span class='arguments'>(fpath)</span>
+<span class='name'>load</span><span class='arguments'>(fpath)</span>
 
 </div>
 <div class='description'>
@@ -178,8 +194,7 @@ exists</p>
 <div class='method public-class' id='method-method-c-new'>
 <a name='method-c-new'></a>
 <div class='synopsis'>
-<span class='name'>new</span>
-<span class='arguments'>(args = {})</span>
+<span class='name'>new</span><span class='arguments'>(args = {})</span>
 
 </div>
 <div class='description'>
@@ -192,15 +207,14 @@ tries to load from it first</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 51</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-ivar">@path</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:path</span>, <span class="ruby-keyword">nil</span>)&#x000A;&#x000A;  <span class="ruby-identifier">load_yml</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:yaml</span>)&#x000A;               <span class="ruby-constant">Psych</span>.<span class="ruby-identifier">load</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:yaml</span>]&#x000A;             <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">nil?</span>&#x000A;               <span class="ruby-keyword">nil</span>&#x000A;             <span class="ruby-keyword">elsif</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-ivar">@path</span>)&#x000A;               <span class="ruby-constant">Psych</span>.<span class="ruby-identifier">load</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-ivar">@path</span>)&#x000A;             <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">load_from_existing_yaml</span>(<span class="ruby-identifier">load_yml</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">load_yml</span>&#x000A;&#x000A;  <span class="ruby-ivar">@remote_name</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:remote_name</span>, <span class="ruby-string">&#39;Remote&#39;</span>)&#x000A;  <span class="ruby-ivar">@path</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;./#{@remote_name}_codex.txt&quot;</span>&#x000A;  <span class="ruby-ivar">@codes</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:codes</span>, {})&#x000A;  <span class="ruby-ivar">@protocol</span> = <span class="ruby-identifier">interpret_protocol_arg</span>(<span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 58</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-ivar">@path</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:path</span>, <span class="ruby-keyword">nil</span>)&#x000A;&#x000A;  <span class="ruby-identifier">load_yml</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:yaml</span>)&#x000A;               <span class="ruby-constant">Psych</span>.<span class="ruby-identifier">load</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:yaml</span>]&#x000A;             <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">nil?</span>&#x000A;               <span class="ruby-keyword">nil</span>&#x000A;             <span class="ruby-keyword">elsif</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-ivar">@path</span>)&#x000A;               <span class="ruby-constant">Psych</span>.<span class="ruby-identifier">load</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-ivar">@path</span>)&#x000A;             <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">load_from_existing_yaml</span>(<span class="ruby-identifier">load_yml</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">load_yml</span>&#x000A;&#x000A;  <span class="ruby-ivar">@remote_name</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:remote_name</span>, <span class="ruby-string">&#39;Remote&#39;</span>)&#x000A;  <span class="ruby-ivar">@path</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;./#{@remote_name}_codex.txt&quot;</span>&#x000A;  <span class="ruby-ivar">@codes</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:codes</span>, {})&#x000A;  <span class="ruby-ivar">@protocol</span> = <span class="ruby-identifier">interpret_protocol_arg</span>(<span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Public Instance methods</h2>
 <div class='method public-instance' id='method-method-i-call'>
 <a name='method-i-call'></a>
 <div class='synopsis'>
-<span class='name'>call</span>
-<span class='arguments'>(key_sym)</span>
+<span class='name'>call</span><span class='arguments'>(key_sym)</span>
 
 </div>
 <div class='description'>
@@ -213,14 +227,13 @@ code identified by <code>key_sym</code></p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-call-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-call-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 71</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">key_sym</span>)&#x000A;  <span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">encode</span> <span class="ruby-keyword">self</span>[<span class="ruby-identifier">key_sym</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-call-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 78</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">key_sym</span>)&#x000A;  <span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">encode</span> <span class="ruby-keyword">self</span>[<span class="ruby-identifier">key_sym</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-save_file'>
 <a name='method-i-save_file'></a>
 <div class='synopsis'>
-<span class='name'>save_file</span>
-<span class='arguments'>(fpath = nil)</span>
+<span class='name'>save_file</span><span class='arguments'>(fpath = nil)</span>
 
 </div>
 <div class='description'>
@@ -233,14 +246,13 @@ yaml version</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-save_file-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-save_file-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 81</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_file</span>(<span class="ruby-identifier">fpath</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">fpath</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@path</span>, <span class="ruby-string">&#39;w+&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">to_yaml</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-save_file-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 88</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_file</span>(<span class="ruby-identifier">fpath</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">fpath</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@path</span>, <span class="ruby-string">&#39;w+&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">to_yaml</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-to_yaml'>
 <a name='method-i-to_yaml'></a>
 <div class='synopsis'>
-<span class='name'>to_yaml</span>
-<span class='arguments'>()</span>
+<span class='name'>to_yaml</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -252,15 +264,14 @@ yaml version</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-to_yaml-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-to_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 76</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_yaml</span>&#x000A;  <span class="ruby-constant">Psych</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-identifier">export_yaml</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-to_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 83</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_yaml</span>&#x000A;  <span class="ruby-constant">Psych</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-identifier">export_yaml</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Instance methods</h2>
 <div class='method private-instance' id='method-method-i-export_yaml'>
 <a name='method-i-export_yaml'></a>
 <div class='synopsis'>
-<span class='name'>export_yaml</span>
-<span class='arguments'>()</span>
+<span class='name'>export_yaml</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -272,14 +283,13 @@ yaml version</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-export_yaml-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-export_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 98</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_yaml</span>&#x000A;  <span class="ruby-identifier">file</span> = {}&#x000A;&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>] = {}&#x000A;&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:remote_name</span>] = <span class="ruby-identifier">remote_name</span>&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol</span>] = <span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">to_sym</span>&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol_options</span>] = <span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">export_options</span>&#x000A;&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:codes</span>] = <span class="ruby-identifier">codes</span>&#x000A;&#x000A;  <span class="ruby-identifier">file</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-export_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 105</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_yaml</span>&#x000A;  <span class="ruby-identifier">file</span> = {}&#x000A;&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>] = {}&#x000A;&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:remote_name</span>] = <span class="ruby-identifier">remote_name</span>&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol</span>] = <span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">to_sym</span>&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol_options</span>] = <span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">export_options</span>&#x000A;&#x000A;  <span class="ruby-identifier">file</span>[<span class="ruby-value">:codes</span>] = <span class="ruby-identifier">codes</span>&#x000A;&#x000A;  <span class="ruby-identifier">file</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-interpret_protocol_arg'>
 <a name='method-i-interpret_protocol_arg'></a>
 <div class='synopsis'>
-<span class='name'>interpret_protocol_arg</span>
-<span class='arguments'>(args)</span>
+<span class='name'>interpret_protocol_arg</span><span class='arguments'>(args)</span>
 
 </div>
 <div class='description'>
@@ -292,14 +302,13 @@ object</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-interpret_protocol_arg-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-interpret_protocol_arg-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 123</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">interpret_protocol_arg</span>(<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:protocol</span>, <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">proto_opts</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:protocol_options</span>, {})&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">proto</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>)&#x000A;    <span class="ruby-constant">Protocol</span>[<span class="ruby-identifier">proto</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">proto_opts</span>)&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">proto</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Class</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Protocol</span><span class="ruby-operator">::</span><span class="ruby-constant">BaseProtocol</span>.<span class="ruby-identifier">descendants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">proto</span>)&#x000A;    <span class="ruby-identifier">proto</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">proto_opts</span>)&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Protocol</span><span class="ruby-operator">::</span><span class="ruby-constant">BaseProtocol</span>.<span class="ruby-identifier">descendants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">proto</span>.<span class="ruby-identifier">class</span>)&#x000A;    <span class="ruby-identifier">proto</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-interpret_protocol_arg-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 130</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">interpret_protocol_arg</span>(<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:protocol</span>, <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">proto_opts</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:protocol_options</span>, {})&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">proto</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>)&#x000A;    <span class="ruby-constant">Protocol</span>[<span class="ruby-identifier">proto</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">proto_opts</span>)&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">proto</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Class</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Protocol</span><span class="ruby-operator">::</span><span class="ruby-constant">BaseProtocol</span>.<span class="ruby-identifier">descendants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">proto</span>)&#x000A;    <span class="ruby-identifier">proto</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">proto_opts</span>)&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Protocol</span><span class="ruby-operator">::</span><span class="ruby-constant">BaseProtocol</span>.<span class="ruby-identifier">descendants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">proto</span>.<span class="ruby-identifier">class</span>)&#x000A;    <span class="ruby-identifier">proto</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-load_from_existing_yaml'>
 <a name='method-i-load_from_existing_yaml'></a>
 <div class='synopsis'>
-<span class='name'>load_from_existing_yaml</span>
-<span class='arguments'>(yaml = nil)</span>
+<span class='name'>load_from_existing_yaml</span><span class='arguments'>(yaml = nil)</span>
 
 </div>
 <div class='description'>
@@ -312,14 +321,13 @@ href="Codex.html#attribute-i-path">path</a> and sets instance variables</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-load_from_existing_yaml-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-load_from_existing_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 88</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_from_existing_yaml</span>(<span class="ruby-identifier">yaml</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">yml</span> = <span class="ruby-identifier">parse_yaml</span>(<span class="ruby-identifier">yaml</span>)&#x000A;&#x000A;  <span class="ruby-ivar">@remote_name</span> = <span class="ruby-identifier">yml</span>[<span class="ruby-value">:remote_name</span>]&#x000A;  <span class="ruby-ivar">@path</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;./#{@remote_name}_codex.txt&quot;</span>&#x000A;  <span class="ruby-ivar">@protocol</span> = <span class="ruby-identifier">yml</span>[<span class="ruby-value">:protocol</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">yml</span>[<span class="ruby-value">:protocol_options</span>])&#x000A;  <span class="ruby-ivar">@codes</span> = <span class="ruby-identifier">yml</span>[<span class="ruby-value">:codes</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-load_from_existing_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 95</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_from_existing_yaml</span>(<span class="ruby-identifier">yaml</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">yml</span> = <span class="ruby-identifier">parse_yaml</span>(<span class="ruby-identifier">yaml</span>)&#x000A;&#x000A;  <span class="ruby-ivar">@remote_name</span> = <span class="ruby-identifier">yml</span>[<span class="ruby-value">:remote_name</span>]&#x000A;  <span class="ruby-ivar">@path</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;./#{@remote_name}_codex.txt&quot;</span>&#x000A;  <span class="ruby-ivar">@protocol</span> = <span class="ruby-identifier">yml</span>[<span class="ruby-value">:protocol</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">yml</span>[<span class="ruby-value">:protocol_options</span>])&#x000A;  <span class="ruby-ivar">@codes</span> = <span class="ruby-identifier">yml</span>[<span class="ruby-value">:codes</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-parse_yaml'>
 <a name='method-i-parse_yaml'></a>
 <div class='synopsis'>
-<span class='name'>parse_yaml</span>
-<span class='arguments'>(yaml)</span>
+<span class='name'>parse_yaml</span><span class='arguments'>(yaml)</span>
 
 </div>
 <div class='description'>
@@ -331,7 +339,7 @@ href="Codex.html#attribute-i-path">path</a> and sets instance variables</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-parse_yaml-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-parse_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 113</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_yaml</span>(<span class="ruby-identifier">yaml</span>)&#x000A;  {&#x000A;    <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">yaml</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:remote_name</span>],&#x000A;    <span class="ruby-value">protocol:</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Protocol</span>[<span class="ruby-identifier">yaml</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol</span>]],&#x000A;    <span class="ruby-value">protocol_options:</span> <span class="ruby-identifier">yaml</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol_options</span>],&#x000A;    <span class="ruby-value">codes:</span> <span class="ruby-identifier">yaml</span>[<span class="ruby-value">:codes</span>]&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-parse_yaml-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 120</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_yaml</span>(<span class="ruby-identifier">yaml</span>)&#x000A;  {&#x000A;    <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">yaml</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:remote_name</span>],&#x000A;    <span class="ruby-value">protocol:</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Protocol</span>[<span class="ruby-identifier">yaml</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol</span>]],&#x000A;    <span class="ruby-value">protocol_options:</span> <span class="ruby-identifier">yaml</span>[<span class="ruby-value">:metadata</span>][<span class="ruby-value">:protocol_options</span>],&#x000A;    <span class="ruby-value">codes:</span> <span class="ruby-identifier">yaml</span>[<span class="ruby-value">:codes</span>]&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
