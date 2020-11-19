@@ -4,7 +4,8 @@ module LilBlaster
   module Commands #:nodoc:
     # Initial tool setup
     class Config < LilBlaster::Command
-      def execute(_input: $stdin, _output: $stdout)
+      # Primary command runner
+      def execute(_input: $stdin, _output: $stdout) #:nodoc:
         if @options.empty?
           unless ConfigFile.exist?
             ConfigFile.save

@@ -4,6 +4,7 @@ module LilBlaster
   module Commands #:nodoc:
     # Easy interface for sending pre-defined codes
     class SendCode < LilBlaster::Command
+      # Primary command runner
       def execute(_input: $stdin, _output: $stdout)
         if @options[:raw]
           # LilBlaster::Blaster.transmit(resolved_codex.protocol.encode(numberize_raw_value))
@@ -25,6 +26,8 @@ module LilBlaster
 
       private
 
+      # Tries to find a codex that can respond to +sym+, and sends that code if found.
+      # Prints a report if successful, a failure message if not
       def send_code_and_report(sym)
         dex = resolved_codex || codex_responding_to(sym)
 
@@ -36,6 +39,7 @@ module LilBlaster
         end
       end
 
+      # Prompts for a choice between +codexes+
       def interactive_codex_choice(codexes = LilBlaster::Codex.autoload)
         abort pastel.red('No codexes exist') if codexes.empty?
 
@@ -43,14 +47,17 @@ module LilBlaster
         codexes.find { |c| c.remote_name == choice }
       end
 
+      # A multi_select for the +symbs+
       def interactive_symbol_choice(symbs)
         prompt.multi_select('Select codes to send: ', symbs)
       end
 
+      # Maps the cli args passed in as args to symbols
       def collect_symbols
         @collect_symbols ||= @argv[:symbols].map(&:to_sym)
       end
 
+      # Memoizes a codex based on the codex flag
       def resolved_codex
         @resolved_codex ||= if @options[:codex] && File.exist?(@options[:codex])
                               LilBlaster::Codex.load(@options[:codex])
@@ -74,6 +81,7 @@ module LilBlaster
                             end
       end
 
+      # Finds a codex which responds to +sym+, nil if none found
       def codex_responding_to(sym)
         fc = LilBlaster::Codex.autoload.find_all do |codex|
           codex.key?(sym)
@@ -93,10 +101,12 @@ module LilBlaster
         end
       end
 
+      # Convert the value passed in as the raw flag to an integer
       def numberize_raw_value
         Integer(@options[:raw])
       end
 
+      # Memoizes a report string
       def rept_str
         return @rept_str if @rept_str
 
