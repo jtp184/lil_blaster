@@ -101,7 +101,7 @@ module LilBlaster
 
       # Returns a grey arrow
       def link_arrow
-        pastel.black(' => ')
+        pastel.bright_black(' => ')
       end
     end
   end
