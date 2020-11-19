@@ -13,7 +13,7 @@ module LilBlaster
           symbs = if @options[:interactive]
                     interactive_symbol_choice(resolved_codex.keys)
                   elsif LilBlaster::ConfigFile[:default_code]
-                    [LilBlaster::ConfigFile[:default_code]]
+                    [LilBlaster::ConfigFile[:default_code].to_sym]
                   else
                     abort pastel.red('No symbol provided')
                   end
@@ -76,8 +76,6 @@ module LilBlaster
                               end
                             elsif @options[:interactive]
                               interactive_codex_choice
-                            else
-                              abort pastel.red('No codex provided')
                             end
       end
 
