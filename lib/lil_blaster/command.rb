@@ -11,7 +11,7 @@ module LilBlaster
     def_delegators :command, :run
 
     # Default initializer to provide options as an ivar
-    def initialize(options, argv)
+    def initialize(options = {}, argv = {})
       @options = options
       @argv = argv
     end
