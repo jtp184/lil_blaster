@@ -46,5 +46,26 @@ module LilBlaster
         LilBlaster::Commands::Config.new(options).execute
       end
     end
+
+    desc 'send_code [SYMBOL] [CODEX_NAME]', 'Send a code from a codex'
+    method_option :codex, aliases: '-c', type: :boolean, desc: 'Pass a filepath for the codex'
+    method_option :raw, aliases: '-r', type: :numeric, desc: 'Provide a raw number value instead of a symbol'
+    method_option :interactive, aliases: '-i', type: :boolean, desc: 'Choose what to send interactively'
+
+    # Sends the code defined by the +symbol+ in a +codex+
+    def send_code(symbol = nil, codex_name = nil)
+      if options[:help]
+        invoke :help, [:send_code]
+      else
+        require_relative 'commands/send_code'
+
+        argv = {
+          symbol: symbol,
+          codex_name: codex_name
+        }
+
+        LilBlaster::Commands::SendCode.new(options, argv).execute
+      end
+    end
   end
 end
