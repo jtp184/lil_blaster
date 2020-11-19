@@ -88,7 +88,7 @@ module LilBlaster
 
       # The paths to search for a file. First the working directory, then the dotfiles, then home
       def config_paths
-        [Dir.pwd, Dir.home + '/.config/lil_blaster', Dir.home]
+        [Dir.pwd, "#{Dir.home}/.config/lil_blaster", Dir.home]
       end
 
       # Defaults for the config
@@ -104,9 +104,9 @@ module LilBlaster
               when :raspberrypi
                 Dir.home
               when :windows, :mac
-                Dir.home + '/lil_blaster'
+                "#{Dir.home}/lil_blaster"
               when :linux
-                Dir.home + '/.config/lil_blaster'
+                "#{Dir.home}/.config/lil_blaster"
               end
 
         return pth unless join_path
