@@ -6,6 +6,8 @@ module LilBlaster
     class SendCode < LilBlaster::Command
       # Primary command runner
       def execute(_input: $stdin, _output: $stdout)
+        multi = @options[:times] || 1
+
         if @options[:raw]
           LilBlaster::Blaster.transmit(resolved_codex.protocol.encode(numberize_raw_value))
           puts pastel.green("Sent value #{@options[:raw]} using #{resolved_codex.remote_name}")
@@ -18,9 +20,9 @@ module LilBlaster
                     abort pastel.red('No symbol provided')
                   end
 
-          symbs.each { |sy| send_code_and_report(sy) }
+          multi.times { symbs.each { |sy| send_code_and_report(sy) } }
         else
-          collect_symbols.each { |sym| send_code_and_report(sym) }
+          multi.times { collect_symbols.each { |sym| send_code_and_report(sym) } }
         end
       end
 
