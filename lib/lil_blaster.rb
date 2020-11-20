@@ -1,3 +1,4 @@
+require 'strings-case'
 require 'lil_blaster/version'
 require 'lil_blaster/config_file'
 require 'lil_blaster/gpio/gpio'
