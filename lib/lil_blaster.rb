@@ -1,3 +1,4 @@
+require 'strings-case'
 require 'lil_blaster/version'
 require 'lil_blaster/config_file'
 require 'lil_blaster/gpio/gpio'
@@ -6,6 +7,7 @@ require 'lil_blaster/protocol/manchester'
 require 'lil_blaster/protocol/morse'
 require 'lil_blaster/transmission'
 require 'lil_blaster/codex'
+require 'lil_blaster/lirc_conf_reader'
 require 'lil_blaster/blaster'
 require 'lil_blaster/reader'
 

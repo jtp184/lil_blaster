@@ -35,11 +35,12 @@ module LilBlaster
 
       return [] unless Dir.exist?(dir)
 
-      @autoloaded = Dir.entries(dir)
-                       .reject { |filename| filename =~ /^\.{1-2}$/ }
-                       .select { |filename| filename =~ /_codex\.ya?ml$/i }
-                       .map { |filename| [dir, filename].join('/') }
-                       .map { |fpath| self.load(fpath) }
+      entries = Dir.entries(dir)
+                   .reject { |filename| filename =~ /^\.{1-2}$/ }
+                   .map { |filename| [dir, filename].join('/') }
+
+      @autoloaded = standard_codexes(entries)
+      @autoloaded += lirc_confs(entries)
     end
 
     # Memoize the autoload! results which are unlikely to change
@@ -69,7 +70,7 @@ module LilBlaster
       load_from_existing_yaml(load_yml) && return if load_yml
 
       @remote_name = args.fetch(:remote_name, 'Remote')
-      @path ||= "./#{@remote_name}_codex.txt"
+      @path ||= "./#{@remote_name}_codex.yaml"
       @codes = args.fetch(:codes, {})
       @protocol = interpret_protocol_arg(args)
     end
@@ -96,7 +97,7 @@ module LilBlaster
       yml = parse_yaml(yaml)
 
       @remote_name = yml[:remote_name]
-      @path ||= "./#{@remote_name}_codex.txt"
+      @path ||= "./#{@remote_name}_codex.yaml"
       @protocol = yml[:protocol].new(yml[:protocol_options])
       @codes = yml[:codes]
     end
@@ -137,6 +138,22 @@ module LilBlaster
         proto.new(proto_opts)
       elsif Protocol::BaseProtocol.descendants.include?(proto.class)
         proto
+      end
+    end
+
+    class << self
+      private
+
+      # Scan +files+ for valid codexes and load them
+      def standard_codexes(files)
+        files.select { |filename| filename =~ /_codex\.ya?ml$/i }
+             .map { |fpath| self.load(fpath) }
+      end
+
+      # Scan +files+ for valid lirc confs and loads them as Codexes
+      def lirc_confs(files)
+        files.select { |filename| filename =~ /\.lircd\.conf$/i }
+             .map { |fpath| LircConfReader.call(File.read(fpath)) }
       end
     end
   end
