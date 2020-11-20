@@ -69,7 +69,7 @@ module LilBlaster
       load_from_existing_yaml(load_yml) && return if load_yml
 
       @remote_name = args.fetch(:remote_name, 'Remote')
-      @path ||= "./#{@remote_name}_codex.txt"
+      @path ||= "./#{@remote_name}_codex.yaml"
       @codes = args.fetch(:codes, {})
       @protocol = interpret_protocol_arg(args)
     end
@@ -96,7 +96,7 @@ module LilBlaster
       yml = parse_yaml(yaml)
 
       @remote_name = yml[:remote_name]
-      @path ||= "./#{@remote_name}_codex.txt"
+      @path ||= "./#{@remote_name}_codex.yaml"
       @protocol = yml[:protocol].new(yml[:protocol_options])
       @codes = yml[:codes]
     end
