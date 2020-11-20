@@ -83,12 +83,12 @@ RSpec.describe 'LIRC File parsing' do
     before :each do
       @temp_dir = Dir.mktmpdir("lil_blaster_test_#{Time.now.to_i}")
       @codex_dir = [@temp_dir, 'codexes'].join('/').tap { |dr| FileUtils.mkdir(dr) }
+      @lirc_file_path = [@codex_dir, 'example.lircd.conf'].join('/')
+      @config_path = [@temp_dir, 'lil_blaster_config.yml'].join('/')
       @config_yaml = <<~DOC
         ---
         codexes_dir: #{@codex_dir}
       DOC
-      @config_path = [@temp_dir, 'lil_blaster_config.yml'].join('/')
-      @lirc_file_path = [@codex_dir, 'example.lircd.conf'].join('/')
 
       File.open(@config_path, 'w+') { |f| f << @config_yaml }
       File.open(@lirc_file_path, 'w+') { |f| f << @lirc_conf }
