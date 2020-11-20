@@ -50,6 +50,7 @@ Superclass:
 </ol>
 <h3>Private Class</h3>
 <ol>
+<li><a href="#method-c-default_codex">default_codex</a></li>
 <li><a href="#method-c-pin">pin</a></li>
 </ol>
 </div>
@@ -61,7 +62,7 @@ Superclass:
 <div class='method public-class' id='method-method-c-send_code'>
 <a name='method-c-send_code'></a>
 <div class='synopsis'>
-<span class='name'>send_code</span><span class='arguments'>(sym, codex)</span>
+<span class='name'>send_code</span><span class='arguments'>(sym, codex = nil)</span>
 
 </div>
 <div class='description'>
@@ -75,7 +76,7 @@ on the result</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-send_code-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-send_code-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">send_code</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-identifier">codex</span>)&#x000A;  <span class="ruby-identifier">transmit</span> <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">sym</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-send_code-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">send_code</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-identifier">codex</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">dex</span> = <span class="ruby-identifier">codex</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">default_codex</span>&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-string">&#39;No codex provided&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dex</span>&#x000A;&#x000A;  <span class="ruby-identifier">transmit</span> <span class="ruby-identifier">dex</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">sym</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-transmit'>
@@ -95,10 +96,29 @@ is set, and returns true if successful.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmit-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-transmit-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 20</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmit</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">_pin</span> = <span class="ruby-identifier">pin</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pin</span>&#x000A;  <span class="ruby-identifier">mtd</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:blocking</span>, <span class="ruby-keyword">true</span>) <span class="ruby-operator">?</span> <span class="ruby-value">:transmit!</span> <span class="ruby-operator">:</span> <span class="ruby-value">:transmit</span>&#x000A;&#x000A;  <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Wave</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-transmit-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 23</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmit</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">_pin</span> = <span class="ruby-identifier">pin</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pin</span>&#x000A;  <span class="ruby-identifier">mtd</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:blocking</span>, <span class="ruby-keyword">true</span>) <span class="ruby-operator">?</span> <span class="ruby-value">:transmit!</span> <span class="ruby-operator">:</span> <span class="ruby-value">:transmit</span>&#x000A;&#x000A;  <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Wave</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Class methods</h2>
+<div class='method private-class' id='method-method-c-default_codex'>
+<a name='method-c-default_codex'></a>
+<div class='synopsis'>
+<span class='name'>default_codex</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>If the <a href="Blaster.html#method-c-default_codex">::default_codex</a> is
+set in the config file, returns it</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-default_codex-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-default_codex-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 33</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">default_codex</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:default_codex</span>]&#x000A;&#x000A;  <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">remote_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:default_codex</span>].<span class="ruby-identifier">downcase</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method private-class' id='method-method-c-pin'>
 <a name='method-c-pin'></a>
 <div class='synopsis'>
@@ -115,7 +135,7 @@ href="../LilBlaster.html#method-c-transmitter_pin">LilBlaster.transmitter_pin</a
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pin-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-pin-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pin</span>&#x000A;  <span class="ruby-ivar">@pin</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Pin</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span>, <span class="ruby-value">:output</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-pin-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 42</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pin</span>&#x000A;  <span class="ruby-ivar">@pin</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Pin</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">transmitter_pin</span>, <span class="ruby-value">:output</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
