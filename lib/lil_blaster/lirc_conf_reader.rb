@@ -15,11 +15,11 @@ module LilBlaster
       # Scans the +text+ for the essential values to create the protocol
       def extract_protocol_options(text)
         {
-          header: text.match(/header\s+(\d+)\s+(\d+)/i).captures.map(&:to_i),
-          zero_value: text.match(/zero\s+(\d+)\s+(\d+)/i).captures.map(&:to_i),
-          one_value: text.match(/one\s+(\d+)\s+(\d+)/i).captures.map(&:to_i),
+          header: text.match(/header\s+(\d+)\s+(\d+)/i)[1..2].map(&:to_i),
+          zero_value: text.match(/zero\s+(\d+)\s+(\d+)/i)[1..2].map(&:to_i),
+          one_value: text.match(/one\s+(\d+)\s+(\d+)/i)[1..2].map(&:to_i),
           system_data: Integer(text.match(/pre_data\s+(0x[0-9a-f]+)/i)[1]),
-          gap: text.match(/gap\s+(\d+)/i).captures.map(&:to_i).first,
+          gap: text.match(/gap\s+(\d+)/i)[1].to_i,
           post_bit: text.match?(/ptrail/)
         }
       end
