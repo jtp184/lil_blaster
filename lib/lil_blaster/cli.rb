@@ -51,6 +51,7 @@ module LilBlaster
     method_option :codex, aliases: '-c', type: :string, desc: 'Pass a codex name or filepath for the codex'
     method_option :raw, aliases: '-r', type: :string, desc: 'Provide a raw number value instead of a symbol'
     method_option :interactive, aliases: '-i', type: :boolean, desc: 'Choose what to send interactively'
+    method_option :times, aliases: '-t', type: :numeric, desc: 'Send the provided symbols multiple times'
 
     # Sends the code defined by the +symbol+ in a +codex+
     def send_code(*symbols)
