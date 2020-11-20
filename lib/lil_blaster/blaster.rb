@@ -11,8 +11,11 @@ module LilBlaster
       end
 
       # Sends Codex#call to the +codex+ with the +sym+ argument, then runs #transmit on the result
-      def send_code(sym, codex)
-        transmit codex.call(sym)
+      def send_code(sym, codex = nil)
+        dex = codex || default_codex
+        raise ArgumentError 'No codex provided' unless dex
+
+        transmit dex.call(sym)
       end
 
       # Takes in a Transmission +data+, and constructs and transmits waves. Uses blocking form
@@ -25,6 +28,15 @@ module LilBlaster
       end
 
       private
+
+      # If the default_codex is set in the config file, returns it
+      def default_codex
+        return unless LilBlaster::ConfigFile[:default_codex]
+
+        LilBlaster::Codex.autoload.find do |codex|
+          codex.remote_name.downcase == LilBlaster::ConfigFile[:default_codex].downcase
+        end
+      end
 
       # The underlying GPIO pin, id determined by LilBlaster.transmitter_pin
       def pin
