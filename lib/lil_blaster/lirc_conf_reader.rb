@@ -37,9 +37,10 @@ module LilBlaster
         start_at = text.index('begin codes') + 'begin codes'.length
         end_at = text.index('end codes') + 'end codes'.length
 
-        text[start_at..end_at].scan(/(\w+)\s+(0x[0-9a-f]+)/i)
+        text[start_at..end_at].scan(/([\w-]+)\s+(0x[0-9a-f]+)/i)
                               .to_h
                               .transform_keys(&:downcase)
+                              .transform_keys { |s| Strings::Case.snakecase(s) }
                               .transform_keys(&:to_sym)
                               .transform_values { |v| Integer(v) }
       end
