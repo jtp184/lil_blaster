@@ -64,6 +64,9 @@ LilBlaster
 <a href="../files/lib/lil_blaster/gpio/wave_rb.html">lib/lil_blaster/gpio/wave.rb</a>
 </li>
 <li class='other'>
+<a href="../files/lib/lil_blaster/lirc_conf_reader_rb.html">lib/lil_blaster/lirc_conf_reader.rb</a>
+</li>
+<li class='other'>
 <a href="../files/lib/lil_blaster/protocol/manchester_rb.html">lib/lil_blaster/protocol/manchester.rb</a>
 </li>
 <li class='other'>
@@ -118,6 +121,7 @@ LilBlaster
 <li><a href="LilBlaster/Codex.html">LilBlaster::Codex</a></li>
 <li><a href="LilBlaster/Command.html">LilBlaster::Command</a></li>
 <li><a href="LilBlaster/ConfigFile.html">LilBlaster::ConfigFile</a></li>
+<li><a href="LilBlaster/LircConfReader.html">LilBlaster::LircConfReader</a></li>
 <li><a href="LilBlaster/NoiseReducer.html">LilBlaster::NoiseReducer</a></li>
 <li><a href="LilBlaster/Reader.html">LilBlaster::Reader</a></li>
 <li><a href="LilBlaster/Transmission.html">LilBlaster::Transmission</a></li>
@@ -167,7 +171,7 @@ Returns one of :windows, :mac, :linux, or :raspberrypi</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-host_os-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-host_os-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 32</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">host_os</span>&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-constant">RUBY_PLATFORM</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/cygwin|mswin|mingw|bccwin|wince|emx/</span>&#x000A;    <span class="ruby-value">:windows</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/darwin/</span>&#x000A;    <span class="ruby-value">:mac</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/linux/</span>&#x000A;    <span class="ruby-identifier">pi</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-string">&#39;/proc/cpuinfo&#39;</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Raspberry Pi/</span>&#x000A;    <span class="ruby-identifier">pi</span> <span class="ruby-operator">?</span> <span class="ruby-value">:raspberrypi</span> <span class="ruby-operator">:</span> <span class="ruby-value">:linux</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-host_os-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 34</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">host_os</span>&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-constant">RUBY_PLATFORM</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/cygwin|mswin|mingw|bccwin|wince|emx/</span>&#x000A;    <span class="ruby-value">:windows</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/darwin/</span>&#x000A;    <span class="ruby-value">:mac</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/linux/</span>&#x000A;    <span class="ruby-identifier">pi</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-string">&#39;/proc/cpuinfo&#39;</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Raspberry Pi/</span>&#x000A;    <span class="ruby-identifier">pi</span> <span class="ruby-operator">?</span> <span class="ruby-value">:raspberrypi</span> <span class="ruby-operator">:</span> <span class="ruby-value">:linux</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-reader_pin'>
@@ -185,7 +189,7 @@ Returns one of :windows, :mac, :linux, or :raspberrypi</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-reader_pin-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-reader_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 26</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reader_pin</span>&#x000A;  <span class="ruby-ivar">@reader_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">18</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-reader_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 28</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reader_pin</span>&#x000A;  <span class="ruby-ivar">@reader_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">18</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-transmitter_pin'>
@@ -203,7 +207,7 @@ Returns one of :windows, :mac, :linux, or :raspberrypi</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmitter_pin-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-transmitter_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmitter_pin</span>&#x000A;  <span class="ruby-ivar">@transmitter_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">17</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-transmitter_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 23</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmitter_pin</span>&#x000A;  <span class="ruby-ivar">@transmitter_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">17</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
