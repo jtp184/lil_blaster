@@ -5,6 +5,9 @@ module LilBlaster
       # The basic methods available from the pin
       %i[on? off?].each { |symbol| define_method(symbol) { pin.send(symbol) } }
 
+      MIN_GAP = 15_000
+      MIN_CODE = 100
+
       # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
       def record!(args = {})
         raw_data = record(args)
@@ -23,28 +26,53 @@ module LilBlaster
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record(args = {})
-        last_tick = nil
-        buffer = []
-
-        pin.start_callback(args.fetch(:callback_edge, :either)) do |tick, _level|
-          last_tick ||= tick
-
-          edge = tick - last_tick
-          buffer << edge
-
-          last_tick = tick
-        end
+        offset = @transmission_buffer.length - 1
+        pin.start_callback(args.fetch(:callback_edge, :either), &pin_callback)
 
         start = Time.now
         nil until Time.now - start > args.fetch(:seconds, 3.0)
 
         pin.stop_callback
-        buffer.shift
+        @transmission_buffer[offset..-1]
+      end
 
-        buffer
+      def pulse_buffer
+        @pulse_buffer ||= []
+      end
+
+      def transmission_buffer
+        @transmission_buffer ||= []
       end
 
       private
+
+      def accum_pulses
+        @transmission_buffer += detect_transmission_gaps.map { |rn| @pulse_buffer[rn] }
+                                                        .map { |dbf| Transmission.new(data: dbf) }
+
+        @pulse_buffer.clear
+      end
+
+      def detect_transmission_gaps
+        start_at = @pulse_buffer.index { |x| x > MIN_CODE }
+        splits = @pulse_buffer.map.with_index { |n, x| n > MIN_GAP ? x : nil }.compact
+
+        splits.unshift(start_at)
+
+        splits.map.with_index { |n, x| n..(splits[x + 1] || -1) }
+      end
+
+      def pin_callback(tick, _level)
+        @last_tick ||= tick
+
+        edge = tick - @last_tick
+
+        @pulse_buffer << edge
+
+        accum_pulses if edge > MIN_GAP
+
+        @last_tick = tick
+      end
 
       # The underlying GPIO pin, id determined by LilBlaster.transmitter_pin
       def pin
