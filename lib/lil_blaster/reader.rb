@@ -40,14 +40,14 @@ module LilBlaster
       private
 
       def accum_pulses
-        trs = detect_transmission_gaps.map { |rn| pulse_buffer[rn] }
-                                      .map { |dbf| Transmission.new(data: NoiseReducer.call(dbf)) }
+        tr = transmission_bound.map { |rn| pulse_buffer[rn] }
+                               .map { |dbf| Transmission.new(data: NoiseReducer.call(dbf, {})) }
 
-        @transmission_buffer += trs
         pulse_buffer.clear
+        transmission_buffer.concat(tr)
       end
 
-      def detect_transmission_gaps
+      def transmission_bound
         start_at = @pulse_buffer.index { |x| x > MIN_CODE }
         splits = @pulse_buffer.map.with_index { |n, x| n > MIN_GAP ? x : nil }.compact
 
