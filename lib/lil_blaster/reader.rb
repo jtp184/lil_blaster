@@ -27,9 +27,11 @@ module LilBlaster
         dex = args.fetch(:codex, nil) || Codex.default
         raise ArgumentError, 'No Codex Provided' unless dex
 
-        record(args).map do |trns|
+        codes = record(args).map do |trns|
           dex.key(dex.protocol.decode(trns).last)
         end
+
+        args.fetch(:uniq, false) ? codes.uniq : codes
       end
 
       def pulse_buffer
