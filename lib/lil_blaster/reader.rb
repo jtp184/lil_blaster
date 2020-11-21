@@ -11,16 +11,15 @@ module LilBlaster
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record(args = {})
         offset = [transmission_buffer.length - 1, 0].max
-        pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
-
         start = Time.now
 
-        loop do
-          break if Time.now - start > args.fetch(:seconds, 3.0)
-          break if args.fetch(:first, false) && (transmission_buffer.length - offset).positive?
+        reading_block(args) do
+          loop do
+            break if Time.now - start > args.fetch(:seconds, 3.0)
+            break if args.fetch(:first, false) && (transmission_buffer.length - offset).positive?
+          end
         end
 
-        pin.stop_callback
         transmission_buffer[offset..-1]
       end
 
@@ -42,6 +41,12 @@ module LilBlaster
       end
 
       private
+
+      def reading_block(args = {}, &blk)
+        pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
+        blk.call
+        pin.stop_callback
+      end
 
       def accum_pulses
         tr = transmission_bound.map { |rn| pulse_buffer[rn] }
