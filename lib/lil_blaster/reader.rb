@@ -26,7 +26,7 @@ module LilBlaster
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record(args = {})
-        offset = transmission_buffer.length - 1
+        offset = [transmission_buffer.length - 1, 0].max
         pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
 
         start = Time.now
@@ -59,7 +59,7 @@ module LilBlaster
 
         splits.unshift(start_at)
 
-        splits.map.with_index { |n, x| n..(splits[x + 1] || -1) }
+        splits[0..-2].map.with_index { |n, x| n..splits[x + 1] }
       end
 
       def pin_callback(tick, _level, _pin, _val)
