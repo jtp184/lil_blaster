@@ -40,11 +40,11 @@ module LilBlaster
       private
 
       def accum_pulses
-        trs = detect_transmission_gaps.map { |rn| @pulse_buffer[rn] }
+        trs = detect_transmission_gaps.map { |rn| pulse_buffer[rn] }
                                       .map { |dbf| Transmission.new(data: NoiseReducer.call(dbf)) }
 
         @transmission_buffer += trs
-        @pulse_buffer.clear
+        pulse_buffer.clear
       end
 
       def detect_transmission_gaps
