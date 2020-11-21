@@ -14,7 +14,11 @@ module LilBlaster
         pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
 
         start = Time.now
-        nil until Time.now - start > args.fetch(:seconds, 3.0)
+
+        loop do
+          break if Time.now - start > args.fetch(:seconds, 3.0)
+          break if args.fetch(:single, false) || (transmission_buffer.length - offset).positive?
+        end
 
         pin.stop_callback
         transmission_buffer[offset..-1]
