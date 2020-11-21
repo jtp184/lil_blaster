@@ -17,7 +17,7 @@ module LilBlaster
 
         loop do
           break if Time.now - start > args.fetch(:seconds, 3.0)
-          break if args.fetch(:single, false) || (transmission_buffer.length - offset).positive?
+          break if args.fetch(:single, false) && (transmission_buffer.length - offset).positive?
         end
 
         pin.stop_callback
