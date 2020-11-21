@@ -15,7 +15,10 @@ module LilBlaster
 
         reading_block(args) do
           loop do
-            break if Time.now - start > args.fetch(:seconds, 3.0)
+            secs = args.fetch(:seconds, 3.0)
+            time_limit = secs.finite && secs.positive?
+
+            break if Time.now - start > time_limit
             break if args.fetch(:first, false) && (transmission_buffer.length - offset).positive?
           end
         end
