@@ -27,7 +27,7 @@ module LilBlaster
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record(args = {})
         offset = transmission_buffer.length - 1
-        pin.start_callback(args.fetch(:callback_edge, :either), &method(pin_callback))
+        pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
 
         start = Time.now
         nil until Time.now - start > args.fetch(:seconds, 3.0)
