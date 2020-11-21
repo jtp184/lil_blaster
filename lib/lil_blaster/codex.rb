@@ -50,6 +50,14 @@ module LilBlaster
       autoload!
     end
 
+    def self.default
+      return nil unless ConfigFile[:default_codex]
+
+      autoload.find do |codex|
+        codex.remote_name.downcase == ConfigFile[:default_codex].downcase
+      end
+    end
+
     # Takes in the +yml_str+ and creates a new instance from it
     def self.from_yaml(yml_str)
       new(yaml: yml_str)

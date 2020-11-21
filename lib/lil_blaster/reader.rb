@@ -8,22 +8,6 @@ module LilBlaster
       MIN_GAP = 15_000
       MIN_CODE = 100
 
-      # Takes in +args+ for seconds, and tolerance values for cleanup and returns a transmission
-      def record!(args = {})
-        raw_data = record(args)
-
-        blips = if args.fetch(:clean_up, true)
-                  NoiseReducer.call(raw_data, args)
-                else
-                  raw_data
-                end
-
-        start_code = blips.index { |x| x > args.fetch(:min_length, 100) }
-        stop_code = blips.index { |x| x > args.fetch(:max_length, 15_000) }
-
-        Transmission.new(data: blips[start_code..stop_code])
-      end
-
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record(args = {})
         offset = [transmission_buffer.length - 1, 0].max
@@ -34,6 +18,15 @@ module LilBlaster
 
         pin.stop_callback
         transmission_buffer[offset..-1]
+      end
+
+      def decode_transmissions(codex = nil)
+        dex = codex || Codex.default
+        raise ArgumentError 'No Codex Provided' unless dex
+
+        transmission_buffer.map do |trns|
+          dex.key(dex.protocol.decode(trns).last)
+        end
       end
 
       def pulse_buffer
@@ -47,9 +40,10 @@ module LilBlaster
       private
 
       def accum_pulses
-        @transmission_buffer += detect_transmission_gaps.map { |rn| @pulse_buffer[rn] }
-                                                        .map { |dbf| Transmission.new(data: dbf) }
+        trs = detect_transmission_gaps.map { |rn| @pulse_buffer[rn] }
+                                      .map { |dbf| Transmission.new(data: NoiseReducer.call(dbf)) }
 
+        @transmission_buffer += trs
         @pulse_buffer.clear
       end
 
