@@ -22,7 +22,7 @@ module LilBlaster
 
       def decode_transmissions(codex = nil)
         dex = codex || Codex.default
-        raise ArgumentError 'No Codex Provided' unless dex
+        raise ArgumentError, 'No Codex Provided' unless dex
 
         transmission_buffer.map do |trns|
           dex.key(dex.protocol.decode(trns).last)
