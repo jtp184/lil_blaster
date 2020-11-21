@@ -23,11 +23,11 @@ module LilBlaster
         transmission_buffer[offset..-1]
       end
 
-      def decode_transmissions(codex = nil)
-        dex = codex || Codex.default
+      def decode_transmissions(args = {})
+        dex = args.fetch(:codex, nil) || Codex.default
         raise ArgumentError, 'No Codex Provided' unless dex
 
-        transmission_buffer.map do |trns|
+        record(args).map do |trns|
           dex.key(dex.protocol.decode(trns).last)
         end
       end
