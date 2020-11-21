@@ -62,12 +62,12 @@ module LilBlaster
         splits.map.with_index { |n, x| n..(splits[x + 1] || -1) }
       end
 
-      def pin_callback(tick, _level)
+      def pin_callback(tick, _level, _pin, _val)
         @last_tick ||= tick
 
         edge = tick - @last_tick
 
-        @pulse_buffer << edge
+        pulse_buffer << edge
 
         accum_pulses if edge > MIN_GAP
 
