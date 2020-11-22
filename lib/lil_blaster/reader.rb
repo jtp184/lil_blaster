@@ -10,20 +10,17 @@ module LilBlaster
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record(args = {})
-        offset = [transmission_buffer.length - 1, 0].max
-        start = Time.now
+        lock_offset
+        start_timer
 
         reading_block(args) do
           loop do
-            secs = args.fetch(:seconds, 3.0)
-            time_limit = secs.finite && secs.positive?
-
-            break if Time.now - start > time_limit
-            break if args.fetch(:first, false) && (transmission_buffer.length - offset).positive?
+            break if timer_reached?(args)
+            break if args.fetch(:first, false) && buffer_offset.positive?
           end
         end
 
-        transmission_buffer[offset..-1]
+        transmission_buffer.last(buffer_offset)
       end
 
       def decode_transmissions(args = {})
@@ -46,6 +43,25 @@ module LilBlaster
       end
 
       private
+
+      def lock_offset
+        @offset = [transmission_buffer.length - 1, 0].max
+      end
+
+      def start_timer
+        @start_time = Time.now
+      end
+
+      def buffer_offset
+        transmission_buffer.length - @offset
+      end
+
+      def timer_reached?(args = {})
+        secs = args.fetch(:seconds, 3.0)
+        limit = secs.finite && secs.positive?
+
+        limit && Time.now - @start_time > secs
+      end
 
       def reading_block(args = {}, &blk)
         pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
