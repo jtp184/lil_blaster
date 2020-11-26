@@ -116,6 +116,7 @@ module LilBlaster
         dex = args.fetch(:codex, nil) || Codex.default
         raise ArgumentError, 'No Codex provided' unless dex
 
+        @observe_codes = dex
         collect_observers(args.fetch(:observers))
       end
 
