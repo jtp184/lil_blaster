@@ -29,6 +29,8 @@ module LilBlaster
         transmission_buffer.last(buffer_offset)
       end
 
+      # Starts continuously recording in another thread. If passed observe arguments,
+      # will pass them on to the relevant add_*_observers method
       def continuous_scan(args = {})
         pin.start_callback(
           args.fetch(:callback_edge, :either),
@@ -42,6 +44,7 @@ module LilBlaster
         end
       end
 
+      # Cancels a continuous scan
       def stop_scan
         pin.stop_callback
         @observe_transmissions = @observe_codes = nil
@@ -112,19 +115,24 @@ module LilBlaster
         pin.stop_callback
       end
 
+      # Takes in a hash, with +args+ for codex and observers
       def add_code_observers(args)
-        dex = args.fetch(:codex, nil) || Codex.default
-        raise ArgumentError, 'No Codex provided' unless dex
+        one_dex = args.fetch(:codex, nil) || Codex.default
+
+        raise ArgumentError, 'No Codex provided' unless one_dex
 
         @observe_codes = dex
         collect_observers(args.fetch(:observers))
       end
 
+      # Takes in an array of +args+ which are observers
       def add_transmission_observers(args)
         @observe_transmissions = true
         collect_observers(args)
       end
 
+      # Given an array of +args+, adds them as observers. Passing a Method
+      # object sets the receiver and method name, update is the default
       def collect_observers(args)
         args.each do |o|
           if o.is_a?(Method)
@@ -135,29 +143,31 @@ module LilBlaster
         end
       end
 
-      def handle_notify_observers(count)
+      # Takes in a +transmission+ yielded by accum_pulses, and if we are observing
+      # processes the data and notifies observers
+      def handle_notify_observers(transmission)
         return unless @observe_transmissions || @observe_codes
 
         changed
 
         notif = if @observe_transmissions
-                  transmission_buffer.last(count)
+                  transmission
                 elsif @observe_codes
-                  map_to_codes(transmission_buffer.last(count))
+                  observe_map_to_code(transmission)
                 end
 
         notify_observers(notif)
       end
 
-      def map_to_codes(transmissions)
+      # Using the codex in observe_codex or the default, decodes the transmission
+      # and returns its key from the Codex
+      def observe_map_to_code(transmission)
         dex = @observe_codes || Codex.default
+        dc = dex.protocol.decode(transmission)
 
-        transmissions.map do |tr|
-          dc = dex.protocol.decode(tr)
-          next unless dc
+        return unless dc
 
-          dex.key(dc.last)
-        end.compact
+        dex.key(dc.last)
       end
 
       # Using the ranges from +transmission_bound+, converts the pulses in the +pulse_buffer+
@@ -168,8 +178,18 @@ module LilBlaster
 
         pulse_buffer.clear
         transmission_buffer.concat(tr)
+        granulate_notifications(tr.length)
+      end
 
-        handle_notify_observers(tr.length)
+      # Given a length, individually calls notification for each transmission
+      def granulate_notifications(len)
+        if len == 1
+          handle_notify_observers(transmission_buffer.last)
+        elsif len.length > 1
+          len.times do |i|
+            handle_notify_observers(transmission_buffer[-(i + 1)])
+          end
+        end
       end
 
       # Scans the +pulse_buffer+ and splits it into discreet transmissions using the +MIN_GAP+
