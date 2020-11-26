@@ -121,14 +121,29 @@ module LilBlaster
 
         raise ArgumentError, 'No Codex provided' unless one_dex
 
-        @observe_codes = dex
-        collect_observers(args.fetch(:observers))
+        @observe_codes = one_dex
+
+        obs = args.find { |x, _y| x.to_s =~ /observers?/ }
+
+        return unless obs
+
+        collect_observers(Array(obs.last))
       end
 
       # Takes in an array of +args+ which are observers
       def add_transmission_observers(args)
         @observe_transmissions = true
-        collect_observers(args)
+
+        if args.is_a?(Array)
+          collect_observers(args)
+        elsif args.is_a?(Hash)
+          obs = args.find { |x, _y| x.to_s =~ /observers?/ }
+          raise ArgumentError, 'No provided observers' unless obs
+
+          collect_observers(Array(obs.last))
+        else
+          collect_observers(Array(args))
+        end
       end
 
       # Given an array of +args+, adds them as observers. Passing a Method
