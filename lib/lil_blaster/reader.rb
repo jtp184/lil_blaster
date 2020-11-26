@@ -58,7 +58,7 @@ module LilBlaster
 
       def timer_reached?(args = {})
         secs = args.fetch(:seconds, 3.0)
-        limit = secs.finite && secs.positive?
+        limit = secs.finite? && secs.positive?
 
         limit && Time.now - @start_time > secs
       end
