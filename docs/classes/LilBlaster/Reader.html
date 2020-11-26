@@ -45,23 +45,113 @@ Superclass:
 <h2>Methods</h2>
 <h3>Public Class</h3>
 <ol>
+<li><a href="#method-c-continuous_scan">continuous_scan</a></li>
+<li><a href="#method-c-decode_transmissions">decode_transmissions</a></li>
 <li><a href="#method-c-record">record</a></li>
-<li><a href="#method-c-record-21">record!</a></li>
+<li><a href="#method-c-stop_scan">stop_scan</a></li>
+<li><a href="#method-c-transmission_buffer">transmission_buffer</a></li>
 </ol>
 <h3>Private Class</h3>
 <ol>
+<li><a href="#method-c-accum_pulses">accum_pulses</a></li>
+<li><a href="#method-c-add_code_observers">add_code_observers</a></li>
+<li><a href="#method-c-add_transmission_observers">add_transmission_observers</a></li>
+<li><a href="#method-c-collect_observers">collect_observers</a></li>
+<li><a href="#method-c-freeze_for_reading">freeze_for_reading</a></li>
+<li><a href="#method-c-granulate_notifications">granulate_notifications</a></li>
+<li><a href="#method-c-handle_notify_observers">handle_notify_observers</a></li>
+<li><a href="#method-c-observe_map_to_code">observe_map_to_code</a></li>
 <li><a href="#method-c-pin">pin</a></li>
+<li><a href="#method-c-pin_callback">pin_callback</a></li>
+<li><a href="#method-c-pulse_buffer">pulse_buffer</a></li>
+<li><a href="#method-c-read_limit">read_limit</a></li>
+<li><a href="#method-c-reading_block">reading_block</a></li>
+<li><a href="#method-c-timer_reached-3F">timer_reached?</a></li>
+<li><a href="#method-c-transmission_bound">transmission_bound</a></li>
 </ol>
 </div>
 <div id='context'>
+<div id='includes'>
+<h2>Included modules</h2>
+<ol>
+<li>Observable</li>
+</ol>
+</div>
 </div>
 <div id='section'>
+<div id='constants-list'>
+<h2>Constants</h2>
+<div class='name-list'>
+<table summary='Constants'>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>MIN_CODE</td>
+<td>=</td>
+<td class='context-item-value'>100</td>
+<td>&nbsp;</td>
+<td class='context-item-desc'>
+<p>Minimum bound for length of a code</p>
+</td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>MIN_GAP</td>
+<td>=</td>
+<td class='context-item-value'>15_000</td>
+<td>&nbsp;</td>
+<td class='context-item-desc'>
+<p>Minimum bound for length of a gap</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
 <div id='methods'>
 <h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-continuous_scan'>
+<a name='method-c-continuous_scan'></a>
+<div class='synopsis'>
+<span class='name'>continuous_scan</span>
+<span class='arguments'>(args = {})</span>
+
+</div>
+<div class='description'>
+
+<p>Starts continuously recording in another thread. If passed observe
+arguments, will pass them on to the relevant add_*_observers method</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-continuous_scan-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-continuous_scan-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 31</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">continuous_scan</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">pin</span>.<span class="ruby-identifier">start_callback</span>(&#x000A;    <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:callback_edge</span>, <span class="ruby-value">:either</span>),&#x000A;    <span class="ruby-operator">&amp;</span><span class="ruby-identifier">method</span>(<span class="ruby-value">:pin_callback</span>)&#x000A;  )&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:observe_transmissions</span>]&#x000A;    <span class="ruby-identifier">add_transmission_observers</span>(<span class="ruby-identifier">args</span>[<span class="ruby-value">:observe_transmissions</span>])&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:observe_codes</span>]&#x000A;    <span class="ruby-identifier">add_code_observers</span>(<span class="ruby-identifier">args</span>[<span class="ruby-value">:observe_codes</span>])&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-decode_transmissions'>
+<a name='method-c-decode_transmissions'></a>
+<div class='synopsis'>
+<span class='name'>decode_transmissions</span>
+<span class='arguments'>(args = {})</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in <code>args</code> and uses them to decode the transmissions in the
+<code>transmission_buffer</code>, using a provided or default <a
+href="Codex.html">Codex</a></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-decode_transmissions-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-decode_transmissions-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 52</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">decode_transmissions</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">dex</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:codex</span>, <span class="ruby-keyword">nil</span>) <span class="ruby-operator">||</span> <span class="ruby-constant">Codex</span>.<span class="ruby-identifier">default</span>&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;No Codex Provided&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dex</span>&#x000A;&#x000A;  <span class="ruby-identifier">codes</span> = <span class="ruby-identifier">record</span>(<span class="ruby-identifier">args</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">trns</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">dex</span>.<span class="ruby-identifier">key</span>(<span class="ruby-identifier">dex</span>.<span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">decode</span>(<span class="ruby-identifier">trns</span>).<span class="ruby-identifier">last</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:uniq</span>, <span class="ruby-keyword">false</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">codes</span>.<span class="ruby-identifier">uniq</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">codes</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-class' id='method-method-c-record'>
 <a name='method-c-record'></a>
 <div class='synopsis'>
-<span class='name'>record</span><span class='arguments'>(args = {})</span>
+<span class='name'>record</span>
+<span class='arguments'>(args = {})</span>
 
 </div>
 <div class='description'>
@@ -74,33 +164,211 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-record-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-record-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">last_tick</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-identifier">buffer</span> = []&#x000A;&#x000A;  <span class="ruby-identifier">pin</span>.<span class="ruby-identifier">start_callback</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:callback_edge</span>, <span class="ruby-value">:either</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tick</span>, <span class="ruby-identifier">_level</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">last_tick</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">tick</span>&#x000A;&#x000A;    <span class="ruby-identifier">edge</span> = <span class="ruby-identifier">tick</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">last_tick</span>&#x000A;    <span class="ruby-identifier">buffer</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">edge</span>&#x000A;&#x000A;    <span class="ruby-identifier">last_tick</span> = <span class="ruby-identifier">tick</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">start</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>&#x000A;  <span class="ruby-keyword">nil</span> <span class="ruby-keyword">until</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">start</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:seconds</span>, <span class="ruby-value">3.0</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pin</span>.<span class="ruby-identifier">stop_callback</span>&#x000A;  <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">shift</span>&#x000A;&#x000A;  <span class="ruby-identifier">buffer</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-record-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 18</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">reading_block</span>(<span class="ruby-identifier">args</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">timer_reached?</span>(<span class="ruby-identifier">args</span>)&#x000A;      <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">read_limit</span>(<span class="ruby-identifier">args</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">transmission_buffer</span>.<span class="ruby-identifier">last</span>(<span class="ruby-identifier">buffer_offset</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
-<div class='method public-class' id='method-method-c-record-21'>
-<a name='method-c-record-21'></a>
+<div class='method public-class' id='method-method-c-stop_scan'>
+<a name='method-c-stop_scan'></a>
 <div class='synopsis'>
-<span class='name'>record!</span><span class='arguments'>(args = {})</span>
+<span class='name'>stop_scan</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
 
-<p>Takes in <code>args</code> for seconds, and tolerance values for cleanup
-and returns a transmission</p>
+<p>Cancels a continuous scan</p>
 
 </div>
 <div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-record-21-source&#39;); return false'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-stop_scan-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-record-21-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 9</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record!</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">raw_data</span> = <span class="ruby-identifier">record</span>(<span class="ruby-identifier">args</span>)&#x000A;&#x000A;  <span class="ruby-identifier">blips</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:clean_up</span>, <span class="ruby-keyword">true</span>)&#x000A;            <span class="ruby-constant">NoiseReducer</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">raw_data</span>, <span class="ruby-identifier">args</span>)&#x000A;          <span class="ruby-keyword">else</span>&#x000A;            <span class="ruby-identifier">raw_data</span>&#x000A;          <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">start_code</span> = <span class="ruby-identifier">blips</span>.<span class="ruby-identifier">index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:min_length</span>, <span class="ruby-value">100</span>) }&#x000A;  <span class="ruby-identifier">stop_code</span> = <span class="ruby-identifier">blips</span>.<span class="ruby-identifier">index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:max_length</span>, <span class="ruby-value">15_000</span>) }&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">blips</span>[<span class="ruby-identifier">start_code</span><span class="ruby-operator">..</span><span class="ruby-identifier">stop_code</span>])&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-stop_scan-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 45</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stop_scan</span>&#x000A;  <span class="ruby-identifier">pin</span>.<span class="ruby-identifier">stop_callback</span>&#x000A;  <span class="ruby-ivar">@observe_transmissions</span> = <span class="ruby-ivar">@observe_codes</span> = <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-transmission_buffer'>
+<a name='method-c-transmission_buffer'></a>
+<div class='synopsis'>
+<span class='name'>transmission_buffer</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>A buffer of recorded transmissions</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmission_buffer-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-transmission_buffer-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmission_buffer</span>&#x000A;  <span class="ruby-ivar">@transmission_buffer</span> <span class="ruby-operator">||=</span> []&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Class methods</h2>
+<div class='method private-class' id='method-method-c-accum_pulses'>
+<a name='method-c-accum_pulses'></a>
+<div class='synopsis'>
+<span class='name'>accum_pulses</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Using the ranges from <code>transmission_bound</code>, converts the pulses
+in the <code>pulse_buffer</code> to Transmissions in the
+<code>transmission_buffer</code>, then clears the <code>pulse_buffer</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-accum_pulses-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-accum_pulses-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 177</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accum_pulses</span>&#x000A;  <span class="ruby-identifier">tr</span> = <span class="ruby-identifier">transmission_bound</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pulse_buffer</span>[<span class="ruby-identifier">rn</span>] }&#x000A;                         .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dbf</span><span class="ruby-operator">|</span> <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-constant">NoiseReducer</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">dbf</span>, {})) }&#x000A;&#x000A;  <span class="ruby-identifier">pulse_buffer</span>.<span class="ruby-identifier">clear</span>&#x000A;  <span class="ruby-identifier">transmission_buffer</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">tr</span>)&#x000A;  <span class="ruby-identifier">granulate_notifications</span>(<span class="ruby-identifier">tr</span>.<span class="ruby-identifier">length</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-add_code_observers'>
+<a name='method-c-add_code_observers'></a>
+<div class='synopsis'>
+<span class='name'>add_code_observers</span>
+<span class='arguments'>(args)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in a hash, with <code>args</code> for codex and observers</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-add_code_observers-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-add_code_observers-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 108</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_code_observers</span>(<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">one_dex</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:codex</span>, <span class="ruby-keyword">nil</span>) <span class="ruby-operator">||</span> <span class="ruby-constant">Codex</span>.<span class="ruby-identifier">default</span>&#x000A;&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;No Codex provided&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">one_dex</span>&#x000A;&#x000A;  <span class="ruby-ivar">@observe_codes</span> = <span class="ruby-identifier">one_dex</span>&#x000A;&#x000A;  <span class="ruby-identifier">obs</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span>, <span class="ruby-identifier">_y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/observers?/</span> }&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">obs</span>&#x000A;&#x000A;  <span class="ruby-identifier">collect_observers</span>(<span class="ruby-constant">Array</span>(<span class="ruby-identifier">obs</span>.<span class="ruby-identifier">last</span>))&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-add_transmission_observers'>
+<a name='method-c-add_transmission_observers'></a>
+<div class='synopsis'>
+<span class='name'>add_transmission_observers</span>
+<span class='arguments'>(args)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in an array of <code>args</code> which are observers</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-add_transmission_observers-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-add_transmission_observers-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 123</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_transmission_observers</span>(<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-ivar">@observe_transmissions</span> = <span class="ruby-keyword">true</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;    <span class="ruby-identifier">obs</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span>, <span class="ruby-identifier">_y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/observers?/</span> }&#x000A;    <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">obs</span>&#x000A;&#x000A;    <span class="ruby-identifier">collect_observers</span>(<span class="ruby-constant">Array</span>(<span class="ruby-identifier">obs</span>.<span class="ruby-identifier">last</span>))&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">collect_observers</span>(<span class="ruby-constant">Array</span>(<span class="ruby-identifier">args</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-collect_observers'>
+<a name='method-c-collect_observers'></a>
+<div class='synopsis'>
+<span class='name'>collect_observers</span>
+<span class='arguments'>(args)</span>
+
+</div>
+<div class='description'>
+
+<p>Given an array of <code>args</code>, adds them as observers. Passing a
+Method object sets the receiver and method name, update is the default</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-collect_observers-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-collect_observers-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 138</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">collect_observers</span>(<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">o</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">o</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Method</span>)&#x000A;      <span class="ruby-identifier">add_observer</span>(<span class="ruby-identifier">o</span>.<span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">o</span>.<span class="ruby-identifier">name</span>)&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-identifier">add_observer</span>(<span class="ruby-identifier">o</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-freeze_for_reading'>
+<a name='method-c-freeze_for_reading'></a>
+<div class='synopsis'>
+<span class='name'>freeze_for_reading</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Store the length of the <code>transmission_buffer</code> for computation</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-freeze_for_reading-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-freeze_for_reading-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 71</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">freeze_for_reading</span>&#x000A;  <span class="ruby-ivar">@offset</span> = [<span class="ruby-identifier">transmission_buffer</span>.<span class="ruby-identifier">length</span>, <span class="ruby-value">0</span>].<span class="ruby-identifier">max</span>&#x000A;  <span class="ruby-ivar">@start_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-granulate_notifications'>
+<a name='method-c-granulate_notifications'></a>
+<div class='synopsis'>
+<span class='name'>granulate_notifications</span>
+<span class='arguments'>(len)</span>
+
+</div>
+<div class='description'>
+
+<p>Given a length, individually calls notification for each transmission</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-granulate_notifications-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-granulate_notifications-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 187</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">granulate_notifications</span>(<span class="ruby-identifier">len</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">len</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;    <span class="ruby-identifier">handle_notify_observers</span>(<span class="ruby-identifier">transmission_buffer</span>.<span class="ruby-identifier">last</span>)&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">len</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>&#x000A;    <span class="ruby-identifier">len</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">handle_notify_observers</span>(<span class="ruby-identifier">transmission_buffer</span>[<span class="ruby-operator">-</span>(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)])&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-handle_notify_observers'>
+<a name='method-c-handle_notify_observers'></a>
+<div class='synopsis'>
+<span class='name'>handle_notify_observers</span>
+<span class='arguments'>(transmission)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in a <code>transmission</code> yielded by <a
+href="Reader.html#method-c-accum_pulses">::accum_pulses</a>, and if we are
+observing processes the data and notifies observers</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-handle_notify_observers-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-handle_notify_observers-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 150</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_notify_observers</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@observe_transmissions</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@observe_codes</span>&#x000A;&#x000A;  <span class="ruby-identifier">changed</span>&#x000A;&#x000A;  <span class="ruby-identifier">notif</span> = <span class="ruby-keyword">if</span> <span class="ruby-ivar">@observe_transmissions</span>&#x000A;            <span class="ruby-identifier">transmission</span>&#x000A;          <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@observe_codes</span>&#x000A;            <span class="ruby-identifier">observe_map_to_code</span>(<span class="ruby-identifier">transmission</span>)&#x000A;          <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">notify_observers</span>(<span class="ruby-identifier">notif</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-observe_map_to_code'>
+<a name='method-c-observe_map_to_code'></a>
+<div class='synopsis'>
+<span class='name'>observe_map_to_code</span>
+<span class='arguments'>(transmission)</span>
+
+</div>
+<div class='description'>
+
+<p>Using the codex in observe_codex or the default, decodes the transmission
+and returns its key from the <a href="Codex.html">Codex</a></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-observe_map_to_code-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-observe_map_to_code-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 166</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">observe_map_to_code</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">dex</span> = <span class="ruby-ivar">@observe_codes</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Codex</span>.<span class="ruby-identifier">default</span>&#x000A;  <span class="ruby-identifier">dc</span> = <span class="ruby-identifier">dex</span>.<span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">decode</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dc</span>&#x000A;&#x000A;  <span class="ruby-identifier">dex</span>.<span class="ruby-identifier">key</span>(<span class="ruby-identifier">dc</span>.<span class="ruby-identifier">last</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method private-class' id='method-method-c-pin'>
 <a name='method-c-pin'></a>
 <div class='synopsis'>
-<span class='name'>pin</span><span class='arguments'>()</span>
+<span class='name'>pin</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -113,7 +381,130 @@ href="../LilBlaster.html#method-c-transmitter_pin">LilBlaster.transmitter_pin</a
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pin-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-pin-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 50</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pin</span>&#x000A;  <span class="ruby-ivar">@pin</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Pin</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">reader_pin</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-pin-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 228</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pin</span>&#x000A;  <span class="ruby-ivar">@pin</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">GPIO</span><span class="ruby-operator">::</span><span class="ruby-constant">Pin</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">LilBlaster</span>.<span class="ruby-identifier">reader_pin</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-pin_callback'>
+<a name='method-c-pin_callback'></a>
+<div class='synopsis'>
+<span class='name'>pin_callback</span>
+<span class='arguments'>(tick, _level, _pin, _val)</span>
+
+</div>
+<div class='description'>
+
+<p>The function to run as pin callback, which compares the current and last
+<code>tick</code> to each other and adds it to the
+<code>pulse_buffer</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pin_callback-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-pin_callback-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 215</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pin_callback</span>(<span class="ruby-identifier">tick</span>, <span class="ruby-identifier">_level</span>, <span class="ruby-identifier">_pin</span>, <span class="ruby-identifier">_val</span>)&#x000A;  <span class="ruby-ivar">@last_tick</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">tick</span>&#x000A;&#x000A;  <span class="ruby-identifier">edge</span> = <span class="ruby-identifier">tick</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@last_tick</span>&#x000A;&#x000A;  <span class="ruby-identifier">pulse_buffer</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">edge</span>&#x000A;&#x000A;  <span class="ruby-identifier">accum_pulses</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">edge</span> <span class="ruby-operator">&gt;</span> <span class="ruby-constant">MIN_GAP</span>&#x000A;&#x000A;  <span class="ruby-ivar">@last_tick</span> = <span class="ruby-identifier">tick</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-pulse_buffer'>
+<a name='method-c-pulse_buffer'></a>
+<div class='synopsis'>
+<span class='name'>pulse_buffer</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Buffer of pulses for low level use in <code>pin_callback</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pulse_buffer-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-pulse_buffer-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 209</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulse_buffer</span>&#x000A;  <span class="ruby-ivar">@pulse_buffer</span> <span class="ruby-operator">||=</span> []&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-read_limit'>
+<a name='method-c-read_limit'></a>
+<div class='synopsis'>
+<span class='name'>read_limit</span>
+<span class='arguments'>(args = {})</span>
+
+</div>
+<div class='description'>
+
+<p>Handle passing in <code>args</code> to limit the number of transmissions
+recorded</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-read_limit-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-read_limit-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 77</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">read_limit</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:first</span>)&#x000A;&#x000A;  <span class="ruby-identifier">limit</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:first</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>)&#x000A;            <span class="ruby-identifier">args</span>[<span class="ruby-value">:first</span>]&#x000A;          <span class="ruby-keyword">else</span>&#x000A;            <span class="ruby-value">1</span>&#x000A;          <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">transmission_buffer</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@offset</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">limit</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-reading_block'>
+<a name='method-c-reading_block'></a>
+<div class='synopsis'>
+<span class='name'>reading_block</span>
+<span class='arguments'>(args = {}, &blk)</span>
+
+</div>
+<div class='description'>
+
+<p>Syntax sugar. Calls Pin#start_callback passing a potential
+<code>callback_edge</code> argument, and the <code>pin_callback</code>
+method as the code, runs the block, then calls Pin#stop_callback</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-reading_block-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-reading_block-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 100</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reading_block</span>(<span class="ruby-identifier">args</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;  <span class="ruby-identifier">pin</span>.<span class="ruby-identifier">start_callback</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:callback_edge</span>, <span class="ruby-value">:either</span>), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">method</span>(<span class="ruby-value">:pin_callback</span>))&#x000A;  <span class="ruby-identifier">freeze_for_reading</span>&#x000A;  <span class="ruby-identifier">blk</span>.<span class="ruby-identifier">call</span>&#x000A;  <span class="ruby-identifier">pin</span>.<span class="ruby-identifier">stop_callback</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-timer_reached-3F'>
+<a name='method-c-timer_reached-3F'></a>
+<div class='synopsis'>
+<span class='name'>timer_reached?</span>
+<span class='arguments'>(args = {})</span>
+
+</div>
+<div class='description'>
+
+<p>Taking in <code>args</code> for :seconds, returns a boolean based on
+whether the value is positive and finite, and more time has ellapsed than
+it</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-timer_reached-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-timer_reached-3F-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 91</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timer_reached?</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">secs</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:seconds</span>, <span class="ruby-value">3.0</span>)&#x000A;  <span class="ruby-identifier">limit</span> = <span class="ruby-identifier">secs</span>.<span class="ruby-identifier">finite?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">secs</span>.<span class="ruby-identifier">positive?</span>&#x000A;&#x000A;  <span class="ruby-identifier">limit</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@start_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">secs</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-transmission_bound'>
+<a name='method-c-transmission_bound'></a>
+<div class='synopsis'>
+<span class='name'>transmission_bound</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Scans the <code>pulse_buffer</code> and splits it into discreet
+transmissions using the <code>MIN_GAP</code> to determine the boundaries.
+Returns an array of range objects for segmenting</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-transmission_bound-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-transmission_bound-source'><span class="ruby-comment"># File lib/lil_blaster/reader.rb, line 199</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmission_bound</span>&#x000A;  <span class="ruby-identifier">start_at</span> = <span class="ruby-identifier">pulse_buffer</span>.<span class="ruby-identifier">index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">&gt;</span> <span class="ruby-constant">MIN_CODE</span> }&#x000A;  <span class="ruby-identifier">splits</span> = <span class="ruby-identifier">pulse_buffer</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>, <span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;</span> <span class="ruby-constant">MIN_GAP</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span> }.<span class="ruby-identifier">compact</span>&#x000A;&#x000A;  <span class="ruby-identifier">splits</span>.<span class="ruby-identifier">unshift</span>(<span class="ruby-identifier">start_at</span>)&#x000A;&#x000A;  <span class="ruby-identifier">splits</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span>].<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>, <span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span><span class="ruby-operator">..</span><span class="ruby-identifier">splits</span>[<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>] }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
