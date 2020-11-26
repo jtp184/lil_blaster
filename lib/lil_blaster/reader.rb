@@ -45,7 +45,7 @@ module LilBlaster
       private
 
       def lock_offset
-        @offset = [transmission_buffer.length - 1, 0].max
+        @offset = [transmission_buffer.length, 0].max
       end
 
       def start_timer
