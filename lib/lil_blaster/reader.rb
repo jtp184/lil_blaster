@@ -153,8 +153,11 @@ module LilBlaster
         dex = @observe_codes || Codex.default
 
         transmissions.map do |tr|
-          dex.key(dex.protocol.decode(tr).last)
-        end
+          dc = dex.protocol.decode(tr)
+          next unless dc
+
+          dex.key(dc.last)
+        end.compact
       end
 
       # Using the ranges from +transmission_bound+, converts the pulses in the +pulse_buffer+
