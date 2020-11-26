@@ -16,7 +16,7 @@ module LilBlaster
         reading_block(args) do
           loop do
             break if timer_reached?(args)
-            break if args.fetch(:first, false) && buffer_offset.positive?
+            break if read_limit(args)
           end
         end
 
@@ -43,6 +43,18 @@ module LilBlaster
       end
 
       private
+
+      def read_limit(args = {})
+        return false unless args.key?(:first)
+
+        limit = if args[:first].is_a?(Integer)
+                  args[:first]
+                else
+                  1
+                end
+
+        buffer_offset >= limit
+      end
 
       def lock_offset
         @offset = [transmission_buffer.length, 0].max

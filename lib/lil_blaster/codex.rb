@@ -91,8 +91,7 @@ module LilBlaster
     # Takes in +args+ to append either data or decoded transmissions to the codex
     def append(args = {})
       code_val = if args.key?(:transmission)
-                   _proto, cvl = protocol.decode(args[:transmission])
-                   cvl
+                   protocol_from_transmission(args)
                  elsif args.key?(:data)
                    args[:data]
                  else
@@ -149,6 +148,15 @@ module LilBlaster
     end
 
     private
+
+    def protocol_from_transmission(args)
+      return nil unless args.key?(:transmission)
+
+      proto, code = LilBlaster::Protocol.identify!(args[:transmission])
+      self.protocol = proto if protocol.nil? || args.key?(:replace_protocol)
+
+      code
+    end
 
     # Runs +parse_yaml+ on the file at #path and sets instance variables
     def load_from_existing_yaml(yaml = nil)
