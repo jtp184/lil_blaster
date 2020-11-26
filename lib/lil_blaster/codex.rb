@@ -88,6 +88,39 @@ module LilBlaster
       protocol.encode self[key_sym]
     end
 
+    # Takes in +args+ to append either data or decoded transmissions to the codex
+    def append(args = {})
+      code_val = if args.key?(:transmission)
+                   _proto, cvl = protocol.decode(args[:transmission])
+                   cvl
+                 elsif args.key?(:data)
+                   args[:data]
+                 else
+                   raise ArgumentError, 'No transmission or data provided'
+                 end
+
+      ids = %i[as name key]
+      raise ArgumentError, 'No provided identifier' unless ids.any? { |s| args.key?(s) }
+
+      id = Strings::Case.snakecase(ids.map { |i| args[i] }.compact.first.to_s).to_sym
+      codes[id] = code_val
+
+      self
+    end
+
+    # Adds the code content of +other+ and returns a new codex, preserving the other
+    # attributes of this codex
+    def +(other)
+      raise TypeError, 'Not a codex' unless other.class == self.class
+
+      self.class.new(
+        remote_name: remote_name,
+        protocol: protocol,
+        path: path,
+        codes: codes.merge(other.codes)
+      )
+    end
+
     # Exports the codex to a YAML representation and returns that string
     def to_yaml
       Psych.dump(export_yaml)
@@ -96,6 +129,23 @@ module LilBlaster
     # Takes in an optional override +fpath+ and saves a copy of the yaml version
     def save_file(fpath = nil)
       File.open(fpath || @path, 'w+') { |f| f << to_yaml }
+    end
+
+    # Compares self to other, returning true if their object states match
+    def ==(other)
+      other.class == self.class && other.object_state == object_state
+    end
+
+    alias eql? ==
+
+    # Uses the object_state's hash
+    def hash
+      object_state.hash
+    end
+
+    # Superclass implementation. Subclasses should put their identifying attributes
+    def object_state
+      [codes, protocol]
     end
 
     private
