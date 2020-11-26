@@ -1,7 +1,11 @@
+require 'observer'
+
 module LilBlaster
   # The IR Transmitter module
   class Reader
     class << self
+      include Observable
+
       # The basic methods available from the pin
       %i[on? off?].each { |symbol| define_method(symbol) { pin.send(symbol) } }
 
@@ -23,6 +27,24 @@ module LilBlaster
         end
 
         transmission_buffer.last(buffer_offset)
+      end
+
+      def continuous_scan(args = {})
+        pin.start_callback(
+          args.fetch(:callback_edge, :either),
+          &method(:pin_callback)
+        )
+
+        if args[:observe_transmissions]
+          add_transmission_observers(args[:observe_transmissions])
+        elsif args[:observe_codes]
+          add_code_observers(args[:observe_codes])
+        end
+      end
+
+      def stop_scan
+        pin.stop_callback
+        @observe_transmissions = @observe_codes = nil
       end
 
       # Takes in +args+ and uses them to decode the transmissions in the +transmission_buffer+,
@@ -90,6 +112,50 @@ module LilBlaster
         pin.stop_callback
       end
 
+      def add_code_observers(args)
+        dex = args.fetch(:codex, nil) || Codex.default
+        raise ArgumentError, 'No Codex provided' unless dex
+
+        collect_observers(args)
+      end
+
+      def add_transmission_observers(args)
+        @observe_transmissions = true
+        collect_observers(args)
+      end
+
+      def collect_observers(args)
+        args.each do |o|
+          if o.is_a?(Method)
+            add_observer(o.receiver, o.name)
+          else
+            add_observer(o)
+          end
+        end
+      end
+
+      def handle_notify_observers(count)
+        return unless @observe_transmissions || @observe_codes
+
+        changed
+
+        notif = if @observe_transmissions
+                  transmission_buffer.last(count)
+                elsif @observe_codes
+                  map_to_codes(transmission_buffer.last(count))
+                end
+
+        notify_observers(notif)
+      end
+
+      def map_to_codes(transmissions)
+        dex = @observe_codes || Codex.default
+
+        transmissions.map do |tr|
+          dex.key(dex.protocol.decode(tr).last)
+        end
+      end
+
       # Using the ranges from +transmission_bound+, converts the pulses in the +pulse_buffer+
       # to Transmissions in the +transmission_buffer+, then clears the +pulse_buffer+
       def accum_pulses
@@ -98,6 +164,8 @@ module LilBlaster
 
         pulse_buffer.clear
         transmission_buffer.concat(tr)
+
+        handle_notify_observers(tr.length)
       end
 
       # Scans the +pulse_buffer+ and splits it into discreet transmissions using the +MIN_GAP+
