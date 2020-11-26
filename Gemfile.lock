@@ -6,6 +6,7 @@ PATH
       strings-case (~> 0.3.0)
       thor (~> 1.0.1)
       tty-config (~> 0.3.2)
+      tty-prompt (~> 0.22.0)
 
 GEM
   remote: https://rubygems.org/
@@ -41,6 +42,16 @@ GEM
     thor (1.0.1)
     tty-color (0.6.0)
     tty-config (0.3.2)
+    tty-cursor (0.7.1)
+    tty-prompt (0.22.0)
+      pastel (~> 0.8)
+      tty-reader (~> 0.8)
+    tty-reader (0.8.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      wisper (~> 2.0)
+    tty-screen (0.8.1)
+    wisper (2.0.1)
 
 PLATFORMS
   ruby

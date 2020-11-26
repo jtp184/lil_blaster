@@ -16,9 +16,6 @@ module LilBlaster
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
       def record(args = {})
-        lock_offset
-        start_timer
-
         reading_block(args) do
           loop do
             break if timer_reached?(args)
@@ -70,6 +67,12 @@ module LilBlaster
 
       private
 
+      # Store the length of the +transmission_buffer+ for computation
+      def freeze_for_reading
+        @offset = [transmission_buffer.length, 0].max
+        @start_time = Time.now
+      end
+
       # Handle passing in +args+ to limit the number of transmissions recorded
       def read_limit(args = {})
         return false unless args.key?(:first)
@@ -80,22 +83,7 @@ module LilBlaster
                   1
                 end
 
-        buffer_offset >= limit
-      end
-
-      # Store the length of the +transmission_buffer+ for computation
-      def lock_offset
-        @offset = [transmission_buffer.length, 0].max
-      end
-
-      # Memoize a Time variable
-      def start_timer
-        @start_time = Time.now
-      end
-
-      # Subtracts the locked offset from the current transmission_buffer length
-      def buffer_offset
-        transmission_buffer.length - @offset
+        transmission_buffer.length - @offset >= limit
       end
 
       # Taking in +args+ for :seconds, returns a boolean based on whether the value
@@ -111,6 +99,7 @@ module LilBlaster
       # and the +pin_callback+ method as the code, runs the block, then calls Pin#stop_callback
       def reading_block(args = {}, &blk)
         pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
+        freeze_for_reading
         blk.call
         pin.stop_callback
       end
@@ -134,11 +123,9 @@ module LilBlaster
       def add_transmission_observers(args)
         @observe_transmissions = true
 
-        if args.is_a?(Array)
-          collect_observers(args)
-        elsif args.is_a?(Hash)
+        if args.is_a?(Hash)
           obs = args.find { |x, _y| x.to_s =~ /observers?/ }
-          raise ArgumentError, 'No provided observers' unless obs
+          return unless obs
 
           collect_observers(Array(obs.last))
         else
