@@ -5,7 +5,9 @@ module LilBlaster
       # The basic methods available from the pin
       %i[on? off?].each { |symbol| define_method(symbol) { pin.send(symbol) } }
 
+      # Minimum bound for length of a gap
       MIN_GAP = 15_000
+      # Minimum bound for length of a code
       MIN_CODE = 100
 
       # Blocks for a number of +seconds+, and returns blips. Takes in +args+ to pass down
@@ -23,6 +25,8 @@ module LilBlaster
         transmission_buffer.last(buffer_offset)
       end
 
+      # Takes in +args+ and uses them to decode the transmissions in the +transmission_buffer+,
+      # using a provided or default Codex
       def decode_transmissions(args = {})
         dex = args.fetch(:codex, nil) || Codex.default
         raise ArgumentError, 'No Codex Provided' unless dex
@@ -34,16 +38,14 @@ module LilBlaster
         args.fetch(:uniq, false) ? codes.uniq : codes
       end
 
-      def pulse_buffer
-        @pulse_buffer ||= []
-      end
-
+      # A buffer of recorded transmissions
       def transmission_buffer
         @transmission_buffer ||= []
       end
 
       private
 
+      # Handle passing in +args+ to limit the number of transmissions recorded
       def read_limit(args = {})
         return false unless args.key?(:first)
 
@@ -56,18 +58,23 @@ module LilBlaster
         buffer_offset >= limit
       end
 
+      # Store the length of the +transmission_buffer+ for computation
       def lock_offset
         @offset = [transmission_buffer.length, 0].max
       end
 
+      # Memoize a Time variable
       def start_timer
         @start_time = Time.now
       end
 
+      # Subtracts the locked offset from the current transmission_buffer length
       def buffer_offset
         transmission_buffer.length - @offset
       end
 
+      # Taking in +args+ for :seconds, returns a boolean based on whether the value
+      # is positive and finite, and more time has ellapsed than it
       def timer_reached?(args = {})
         secs = args.fetch(:seconds, 3.0)
         limit = secs.finite? && secs.positive?
@@ -75,12 +82,16 @@ module LilBlaster
         limit && Time.now - @start_time > secs
       end
 
+      # Syntax sugar. Calls Pin#start_callback passing a potential +callback_edge+ argument,
+      # and the +pin_callback+ method as the code, runs the block, then calls Pin#stop_callback
       def reading_block(args = {}, &blk)
         pin.start_callback(args.fetch(:callback_edge, :either), &method(:pin_callback))
         blk.call
         pin.stop_callback
       end
 
+      # Using the ranges from +transmission_bound+, converts the pulses in the +pulse_buffer+
+      # to Transmissions in the +transmission_buffer+, then clears the +pulse_buffer+
       def accum_pulses
         tr = transmission_bound.map { |rn| pulse_buffer[rn] }
                                .map { |dbf| Transmission.new(data: NoiseReducer.call(dbf, {})) }
@@ -89,15 +100,24 @@ module LilBlaster
         transmission_buffer.concat(tr)
       end
 
+      # Scans the +pulse_buffer+ and splits it into discreet transmissions using the +MIN_GAP+
+      # to determine the boundaries. Returns an array of range objects for segmenting
       def transmission_bound
-        start_at = @pulse_buffer.index { |x| x > MIN_CODE }
-        splits = @pulse_buffer.map.with_index { |n, x| n > MIN_GAP ? x : nil }.compact
+        start_at = pulse_buffer.index { |x| x > MIN_CODE }
+        splits = pulse_buffer.map.with_index { |n, x| n > MIN_GAP ? x : nil }.compact
 
         splits.unshift(start_at)
 
         splits[0..-2].map.with_index { |n, x| n..splits[x + 1] }
       end
 
+      # Buffer of pulses for low level use in +pin_callback+
+      def pulse_buffer
+        @pulse_buffer ||= []
+      end
+
+      # The function to run as pin callback, which compares the current and
+      # last +tick+ to each other and adds it to the +pulse_buffer+
       def pin_callback(tick, _level, _pin, _val)
         @last_tick ||= tick
 
