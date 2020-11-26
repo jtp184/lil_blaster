@@ -89,6 +89,15 @@ binary encoding</p>
 <p>How to format hex numbers for readability</p>
 </td>
 </tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>MAXIMUM_GAP</td>
+<td>=</td>
+<td class='context-item-value'>120_000</td>
+<td>&nbsp;</td>
+<td class='context-item-desc'>
+<p>Max the gap out so that we don&#39;t end up with egregious results</p>
+</td>
+</tr>
 </table>
 </div>
 </div>
@@ -140,7 +149,8 @@ binary encoding</p>
 <div class='method public-class' id='method-method-c-included'>
 <a name='method-c-included'></a>
 <div class='synopsis'>
-<span class='name'>included</span><span class='arguments'>(base_class)</span>
+<span class='name'>included</span>
+<span class='arguments'>(base_class)</span>
 
 </div>
 <div class='description'>
@@ -153,14 +163,15 @@ href="MarkSpaceEncoding/ClassMethods.html">ClassMethods</a> upon inclusion</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-included-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-included-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">included</span>(<span class="ruby-identifier">base_class</span>)&#x000A;  <span class="ruby-identifier">base_class</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">ClassMethods</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-included-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 66</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">included</span>(<span class="ruby-identifier">base_class</span>)&#x000A;  <span class="ruby-identifier">base_class</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">ClassMethods</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Instance methods</h2>
 <div class='method private-instance' id='method-method-i-binary_pad'>
 <a name='method-i-binary_pad'></a>
 <div class='synopsis'>
-<span class='name'>binary_pad</span><span class='arguments'>(num)</span>
+<span class='name'>binary_pad</span>
+<span class='arguments'>(num)</span>
 
 </div>
 <div class='description'>
@@ -172,13 +183,14 @@ href="MarkSpaceEncoding/ClassMethods.html">ClassMethods</a> upon inclusion</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-binary_pad-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-binary_pad-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 89</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">binary_pad</span>(<span class="ruby-identifier">num</span>)&#x000A;  <span class="ruby-identifier">format</span>(<span class="ruby-constant">BINARY_FORMAT</span>, <span class="ruby-identifier">num</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-binary_pad-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 91</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">binary_pad</span>(<span class="ruby-identifier">num</span>)&#x000A;  <span class="ruby-identifier">format</span>(<span class="ruby-constant">BINARY_FORMAT</span>, <span class="ruby-identifier">num</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-int_to_pulses'>
 <a name='method-i-int_to_pulses'></a>
 <div class='synopsis'>
-<span class='name'>int_to_pulses</span><span class='arguments'>(int)</span>
+<span class='name'>int_to_pulses</span>
+<span class='arguments'>(int)</span>
 
 </div>
 <div class='description'>
@@ -191,13 +203,14 @@ tuples based on the zero and one values</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-int_to_pulses-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-int_to_pulses-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 72</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">int_to_pulses</span>(<span class="ruby-identifier">int</span>)&#x000A;  <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">int</span>).<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">ch</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/0/</span>&#x000A;      <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/1/</span>&#x000A;      <span class="ruby-identifier">one_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-int_to_pulses-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">int_to_pulses</span>(<span class="ruby-identifier">int</span>)&#x000A;  <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">int</span>).<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">ch</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/0/</span>&#x000A;      <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/1/</span>&#x000A;      <span class="ruby-identifier">one_value</span>.<span class="ruby-identifier">clone</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-post_bit_plen'>
 <a name='method-i-post_bit_plen'></a>
 <div class='synopsis'>
-<span class='name'>post_bit_plen</span><span class='arguments'>()</span>
+<span class='name'>post_bit_plen</span>
+<span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -209,7 +222,7 @@ tuples based on the zero and one values</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-post_bit_plen-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-post_bit_plen-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 84</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">post_bit_plen</span>&#x000A;  <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>.<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">zv</span><span class="ruby-operator">|</span> <span class="ruby-identifier">zv</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-post_bit_plen-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 86</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">post_bit_plen</span>&#x000A;  <span class="ruby-identifier">zero_value</span>.<span class="ruby-identifier">clone</span>.<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">zv</span><span class="ruby-operator">|</span> <span class="ruby-identifier">zv</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
