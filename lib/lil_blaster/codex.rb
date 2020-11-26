@@ -50,6 +50,7 @@ module LilBlaster
       autoload!
     end
 
+    # Returns the default codex if one is defined by the ConfigFile
     def self.default
       return nil unless ConfigFile[:default_codex]
 
@@ -149,6 +150,8 @@ module LilBlaster
 
     private
 
+    # Operates on the +args+, identifies the protocol in the provided transmission and sets it to
+    # be the protocol for this instance if there is none, or if :replace_protocol is passed
     def protocol_from_transmission(args)
       return nil unless args.key?(:transmission)
 
