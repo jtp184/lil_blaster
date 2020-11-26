@@ -15,6 +15,8 @@ module LilBlaster
       HEX_FORMAT = '%#.4x'.freeze
       # How to format binary numbers for length and readability
       BINARY_FORMAT = '%.16b'.freeze
+      # Max the gap out so that we don't end up with egregious results
+      MAXIMUM_GAP = 120_000
 
       # The methods to extend onto the base class when included
       module ClassMethods
@@ -37,7 +39,7 @@ module LilBlaster
 
           init_args = {
             header: plens.max { |a, b| a[0] <=> b[0] },
-            gap: plens.max { |_a, b| b[1] }[1],
+            gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min,
             zero_value: plens.min
           }
 
