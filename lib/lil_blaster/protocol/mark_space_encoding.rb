@@ -10,6 +10,8 @@ module LilBlaster
       attr_reader :one_value
       # Trailing space length
       attr_reader :gap
+      # Repeat code if utilized
+      attr_reader :repeat_value
 
       # How to format hex numbers for readability
       HEX_FORMAT = '%#.4x'.freeze
