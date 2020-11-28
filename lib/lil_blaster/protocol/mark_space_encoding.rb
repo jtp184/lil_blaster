@@ -11,7 +11,7 @@ module LilBlaster
       # Trailing space length
       attr_reader :gap
       # Repeat code if utilized
-      attr_reader :repeat_value
+      attr_accessor :repeat_value
 
       # How to format hex numbers for readability
       HEX_FORMAT = '%#.4x'.freeze
@@ -22,6 +22,21 @@ module LilBlaster
 
       # The methods to extend onto the base class when included
       module ClassMethods
+        # Compares +tr_one+ and +tr_two+ as bytestrings for equality. Can be used to compare
+        # Transmissions with inexact pulse lengths for the same underlying data
+        def same_data?(tr_one, tr_two)
+          raise ArgumentError unless [tr_one, tr_two].all? { |t| t.is_a?(Transmission) }
+
+          bytestring_for(tr_one) == bytestring_for(tr_two)
+        end
+
+        # Given a +transmission+, extracts the values from it and creates a bytestring
+        def bytestring_for(transmission)
+          ident = extract_mark_values(transmission)
+
+          transmission.tuples[1..-2].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
+        end
+
         # Takes in tuples +plens+ and converts them into a binary string first,
         # then to an integer based on the zero and one values
         def pulses_to_int(plens, zero, one)

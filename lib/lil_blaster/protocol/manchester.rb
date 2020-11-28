@@ -27,21 +27,6 @@ module LilBlaster
           [proto, command_data(data)]
         end
 
-        # Compares +tr_one+ and +tr_two+ as bytestrings for equality. Can be used to compare
-        # Transmissions with inexact pulse lengths for the same underlying data
-        def same_data?(tr_one, tr_two)
-          raise ArgumentError unless [tr_one, tr_two].all? { |t| t.is_a?(Transmission) }
-
-          bytestring_for(tr_one) == bytestring_for(tr_two)
-        end
-
-        # Given a +transmission+, extracts the values from it and creates a bytestring
-        def bytestring_for(transmission)
-          ident = extract_mark_values(transmission)
-
-          transmission.tuples[1..-2].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
-        end
-
         # Returns an integer representing the command_data in the +transmission+
         def command_data(transmission)
           data_range(transmission, 17..-2)
@@ -120,7 +105,7 @@ module LilBlaster
 
       # Yields the variables to compare for object equality
       def object_state
-        [header, zero_value, one_value, system_data]
+        [system_data, repeat_value, header, zero_value, one_value]
       end
 
       private
