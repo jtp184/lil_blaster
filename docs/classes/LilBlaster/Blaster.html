@@ -63,7 +63,7 @@ Superclass:
 <a name='method-c-send_code'></a>
 <div class='synopsis'>
 <span class='name'>send_code</span>
-<span class='arguments'>(sym, codex = nil)</span>
+<span class='arguments'>(sym, args = {})</span>
 
 </div>
 <div class='description'>
@@ -77,7 +77,7 @@ on the result</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-send_code-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-send_code-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">send_code</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-identifier">codex</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">dex</span> = <span class="ruby-identifier">codex</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">default_codex</span>&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-string">&#39;No codex provided&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dex</span>&#x000A;&#x000A;  <span class="ruby-identifier">transmit</span> <span class="ruby-identifier">dex</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">sym</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-send_code-source'><span class="ruby-comment"># File lib/lil_blaster/blaster.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">send_code</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">dex</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:codex</span>, <span class="ruby-keyword">nil</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">default_codex</span>&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-string">&#39;No codex provided&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dex</span>&#x000A;&#x000A;  <span class="ruby-identifier">transmit</span> <span class="ruby-identifier">dex</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:repetitions</span>, <span class="ruby-value">1</span>))&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-transmit'>

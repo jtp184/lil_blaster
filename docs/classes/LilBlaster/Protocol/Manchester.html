@@ -45,12 +45,11 @@ Superclass:
 <h2>Methods</h2>
 <h3>Public Class</h3>
 <ol>
-<li><a href="#method-c-bytestring_for">bytestring_for</a></li>
 <li><a href="#method-c-command_data">command_data</a></li>
 <li><a href="#method-c-decode">decode</a></li>
+<li><a href="#method-c-export_options">export_options</a></li>
 <li><a href="#method-c-match-3F">match?</a></li>
 <li><a href="#method-c-new">new</a></li>
-<li><a href="#method-c-same_data-3F">same_data?</a></li>
 <li><a href="#method-c-system_data">system_data</a></li>
 </ol>
 <h3>Private Class</h3>
@@ -60,13 +59,17 @@ Superclass:
 <h3>Public Instance</h3>
 <ol>
 <li><a href="#method-i-encode">encode</a></li>
-<li><a href="#method-i-export_options">export_options</a></li>
 <li><a href="#method-i-method_missing">method_missing</a></li>
 <li><a href="#method-i-object_state">object_state</a></li>
 <li><a href="#attribute-i-post_bit">post_bit</a></li>
 <li><a href="#method-i-respond_to_missing-3F">respond_to_missing?</a></li>
 <li><a href="#attribute-i-system_data">system_data</a></li>
 <li><a href="#method-i-to_bytestring">to_bytestring</a></li>
+</ol>
+<h3>Private Instance</h3>
+<ol>
+<li><a href="#method-i-data_transmission">data_transmission</a></li>
+<li><a href="#method-i-repeat_transmission">repeat_transmission</a></li>
 </ol>
 </div>
 <div id='context'>
@@ -105,26 +108,6 @@ Superclass:
 </div>
 <div id='methods'>
 <h2>Public Class methods</h2>
-<div class='method public-class' id='method-method-c-bytestring_for'>
-<a name='method-c-bytestring_for'></a>
-<div class='synopsis'>
-<span class='name'>bytestring_for</span>
-<span class='arguments'>(transmission)</span>
-
-</div>
-<div class='description'>
-
-<p>Given a <code>transmission</code>, extracts the values from it and creates
-a bytestring</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-bytestring_for-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-c-bytestring_for-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 39</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bytestring_for</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">ident</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">plen</span><span class="ruby-operator">|</span> <span class="ruby-identifier">plen</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">ident</span>[<span class="ruby-value">:zero_value</span>] <span class="ruby-operator">?</span> <span class="ruby-string">&#39;0&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;1&#39;</span> }.<span class="ruby-identifier">join</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
 <div class='method public-class' id='method-method-c-command_data'>
 <a name='method-c-command_data'></a>
 <div class='synopsis'>
@@ -143,7 +126,7 @@ href="Manchester.html#method-c-command_data">::command_data</a> in the
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-command_data-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-command_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 46</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">command_data</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-value">17</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-command_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 31</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">command_data</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-value">17</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-decode'>
@@ -165,6 +148,25 @@ representing the specific code sent</p>
 [show source]
 </a>
 <pre id='method-c-decode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 22</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">decode</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">match?</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">extract_values</span>(<span class="ruby-identifier">data</span>))&#x000A;&#x000A;  [<span class="ruby-identifier">proto</span>, <span class="ruby-identifier">command_data</span>(<span class="ruby-identifier">data</span>)]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-export_options'>
+<a name='method-c-export_options'></a>
+<div class='synopsis'>
+<span class='name'>export_options</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Returns an array of the instance values to inspect</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-export_options-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 41</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;&#x000A;  <span class="ruby-ivar">@export_options</span> <span class="ruby-operator">+=</span> <span class="ruby-node">%i[system_data post_bit]</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-match-3F'>
@@ -203,28 +205,7 @@ datums</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 70</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-keyword">super</span>()&#x000A;&#x000A;  <span class="ruby-node">%i[header zero_value one_value system_data post_bit gap]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sym</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-value">:&quot;@#{sym}&quot;</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">sym</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<div class='method public-class' id='method-method-c-same_data-3F'>
-<a name='method-c-same_data-3F'></a>
-<div class='synopsis'>
-<span class='name'>same_data?</span>
-<span class='arguments'>(tr_one, tr_two)</span>
-
-</div>
-<div class='description'>
-
-<p>Compares <code>tr_one</code> and <code>tr_two</code> as bytestrings for
-equality. Can be used to compare Transmissions with inexact pulse lengths
-for the same underlying data</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-same_data-3F-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-c-same_data-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 32</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">same_data?</span>(<span class="ruby-identifier">tr_one</span>, <span class="ruby-identifier">tr_two</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword">unless</span> [<span class="ruby-identifier">tr_one</span>, <span class="ruby-identifier">tr_two</span>].<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Transmission</span>) }&#x000A;&#x000A;  <span class="ruby-identifier">bytestring_for</span>(<span class="ruby-identifier">tr_one</span>) <span class="ruby-operator">==</span> <span class="ruby-identifier">bytestring_for</span>(<span class="ruby-identifier">tr_two</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 62</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-keyword">super</span>()&#x000A;&#x000A;  <span class="ruby-node">%i[header zero_value one_value system_data post_bit gap repeat_value]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sym</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-value">:&quot;@#{sym}&quot;</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-keyword">nil</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-system_data'>
@@ -245,7 +226,7 @@ href="Manchester.html#method-c-system_data">::system_data</a> in the
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-system_data-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-system_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 51</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">system_data</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">16</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-system_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 36</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">system_data</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">16</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Class methods</h2>
@@ -266,7 +247,7 @@ identifying the attributes</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-extract_values-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-extract_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 58</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">uniq</span>&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:system_data</span>] = <span class="ruby-identifier">data_range</span>(<span class="ruby-identifier">data</span>, <span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">16</span>, <span class="ruby-identifier">init_args</span>)&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:post_bit</span>] = <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pl</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span> }&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-extract_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 50</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">uniq</span>&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:system_data</span>] = <span class="ruby-identifier">data_range</span>(<span class="ruby-identifier">data</span>, <span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">16</span>, <span class="ruby-identifier">init_args</span>)&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:post_bit</span>] = <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pl</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span> }&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Public Instance methods</h2>
@@ -274,7 +255,7 @@ identifying the attributes</p>
 <a name='method-i-encode'></a>
 <div class='synopsis'>
 <span class='name'>encode</span>
-<span class='arguments'>(data = 0x0000)</span>
+<span class='arguments'>(data = 0x0000, repititions = 1)</span>
 
 </div>
 <div class='description'>
@@ -282,33 +263,14 @@ identifying the attributes</p>
 <p>Takes in an integer <code>data</code>, and constructs a transmission with a
 header, the encoded <a
 href="Manchester.html#method-c-system_data">::system_data</a>, and the
-encoded integer</p>
+encoded integer. Optionally specify the number of <code>repititions</code></p>
 
 </div>
 <div class='source'>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-encode-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 80</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-value">0x0000</span><span class="ruby-operator">..</span><span class="ruby-value">0xFFFF</span>).<span class="ruby-identifier">cover?</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses</span> = []&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">header</span>.<span class="ruby-identifier">clone</span>&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_pulses</span>(<span class="ruby-identifier">system_data</span>)&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_pulses</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">post_bit</span>&#x000A;    <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">post_bit_plen</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">pulses</span>[<span class="ruby-value">-1</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">pulses</span>.<span class="ruby-identifier">flatten</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<div class='method public-instance' id='method-method-i-export_options'>
-<a name='method-i-export_options'></a>
-<div class='synopsis'>
-<span class='name'>export_options</span>
-<span class='arguments'>()</span>
-
-</div>
-<div class='description'>
-
-<p>Returns a hash of the instance values for use elsewhere</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-export_options-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 104</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-node">%i[gap header one_value zero_value system_data post_bit]</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sy</span><span class="ruby-operator">|</span>&#x000A;    [<span class="ruby-identifier">sy</span>, <span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">sy</span>)]&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 72</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>, <span class="ruby-identifier">repititions</span> = <span class="ruby-value">1</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-string">&#39;data is not an integer&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">IndexError</span>, <span class="ruby-string">&#39;data is out of bounds&#39;</span> <span class="ruby-keyword">unless</span> (<span class="ruby-value">0x0000</span><span class="ruby-operator">..</span><span class="ruby-value">0xFFFF</span>).<span class="ruby-identifier">cover?</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">data_transmission</span>(<span class="ruby-identifier">data</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">repititions</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;&#x000A;  <span class="ruby-identifier">tr</span> = [<span class="ruby-identifier">data_transmission</span>(<span class="ruby-identifier">data</span>)]&#x000A;&#x000A;  <span class="ruby-identifier">tr</span> <span class="ruby-operator">+=</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">repeat_value</span>&#x000A;          <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">repititions</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>) { <span class="ruby-identifier">repeat_transmission</span> }&#x000A;        <span class="ruby-keyword">else</span>&#x000A;          <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">repititions</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>) { <span class="ruby-identifier">data_transmission</span>(<span class="ruby-identifier">data</span>) }&#x000A;        <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">tr</span>.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-method_missing'>
@@ -327,7 +289,7 @@ encoded integer</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-method_missing-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-method_missing-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 111</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_missing</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>)&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-method_missing-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_missing</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>)&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-object_state'>
@@ -346,7 +308,7 @@ encoded integer</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-object_state-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 123</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-identifier">header</span>, <span class="ruby-identifier">zero_value</span>, <span class="ruby-identifier">one_value</span>, <span class="ruby-identifier">system_data</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 108</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-identifier">system_data</span>, <span class="ruby-identifier">repeat_value</span>, <span class="ruby-identifier">header</span>, <span class="ruby-identifier">zero_value</span>, <span class="ruby-identifier">one_value</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-respond_to_missing-3F'>
@@ -366,7 +328,7 @@ href="Manchester.html#method-i-method_missing">#method_missing</a></p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-respond_to_missing-3F-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-respond_to_missing-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 118</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">respond_to_missing?</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span>)&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-respond_to_missing-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">respond_to_missing?</span>(<span class="ruby-identifier">mtd</span>, <span class="ruby-operator">*</span>)&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">mtd</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-to_bytestring'>
@@ -387,7 +349,47 @@ integer joined as a bytestring</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-to_bytestring-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-to_bytestring-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 99</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_bytestring</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  [<span class="ruby-identifier">system_data</span>, <span class="ruby-identifier">data</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">d</span>) }.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-to_bytestring-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 91</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_bytestring</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0000</span>)&#x000A;  [<span class="ruby-identifier">system_data</span>, <span class="ruby-identifier">data</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binary_pad</span>(<span class="ruby-identifier">d</span>) }.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Private Instance methods</h2>
+<div class='method private-instance' id='method-method-i-data_transmission'>
+<a name='method-i-data_transmission'></a>
+<div class='synopsis'>
+<span class='name'>data_transmission</span>
+<span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Provided <code>data</code> to encode, creates a transmission doing so</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-data_transmission-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-data_transmission-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 115</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">data_transmission</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">pulses</span> = []&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">header</span>.<span class="ruby-identifier">clone</span>&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_pulses</span>(<span class="ruby-identifier">system_data</span>)&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_pulses</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">post_bit</span>&#x000A;    <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">post_bit_plen</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">pulses</span>[<span class="ruby-value">-1</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">pulses</span>.<span class="ruby-identifier">flatten</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-repeat_transmission'>
+<a name='method-i-repeat_transmission'></a>
+<div class='synopsis'>
+<span class='name'>repeat_transmission</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Uses the <code>repeat_value</code> to produce a transmission with the
+repeat code</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-repeat_transmission-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-repeat_transmission-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/manchester.rb, line 131</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">repeat_transmission</span>&#x000A;  <span class="ruby-identifier">pulses</span> = <span class="ruby-identifier">repeat_value</span>.<span class="ruby-identifier">dup</span>&#x000A;&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">post_bit</span>&#x000A;              <span class="ruby-identifier">post_bit_plen</span>&#x000A;            <span class="ruby-keyword">else</span>&#x000A;              [<span class="ruby-value">1</span>, <span class="ruby-identifier">gap</span>.<span class="ruby-identifier">dup</span>]&#x000A;            <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">pulses</span>.<span class="ruby-identifier">flatten</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
