@@ -20,6 +20,8 @@ module LilBlaster
         ).flatten
       end
 
+      # Given a +buffer+ and +args+ to pass down, returns a hash which can be used to replace
+      # the values in the buffer with grouped averages
       def replacement_matrix(buffer, args = {})
         if args.fetch(:pairs, true)
           buffer.partition
