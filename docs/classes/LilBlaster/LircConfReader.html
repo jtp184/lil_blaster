@@ -52,6 +52,9 @@ Superclass:
 <li><a href="#method-c-extract_codes">extract_codes</a></li>
 <li><a href="#method-c-extract_metadata">extract_metadata</a></li>
 <li><a href="#method-c-extract_protocol_options">extract_protocol_options</a></li>
+<li><a href="#method-c-formatters">formatters</a></li>
+<li><a href="#method-c-matchers">matchers</a></li>
+<li><a href="#method-c-substring_range">substring_range</a></li>
 </ol>
 </div>
 <div id='context'>
@@ -76,7 +79,7 @@ version</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-call-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-call-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">text</span>)&#x000A;  <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Codex</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">extract_metadata</span>(<span class="ruby-identifier">text</span>).<span class="ruby-identifier">merge</span>(<span class="ruby-value">codes:</span> <span class="ruby-identifier">extract_codes</span>(<span class="ruby-identifier">text</span>)))&#x000A;  <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">protocol</span> = <span class="ruby-constant">Protocol</span><span class="ruby-operator">::</span><span class="ruby-constant">Manchester</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">extract_protocol_options</span>(<span class="ruby-identifier">text</span>))&#x000A;&#x000A;  <span class="ruby-identifier">ret</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-call-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-identifier">text</span>)&#x000A;  <span class="ruby-identifier">ctext</span> = <span class="ruby-identifier">text</span>[<span class="ruby-identifier">substring_range</span>(<span class="ruby-identifier">text</span>, <span class="ruby-string">&#39;begin remote&#39;</span>, <span class="ruby-string">&#39;end remote&#39;</span>)]&#x000A;  <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Codex</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">extract_metadata</span>(<span class="ruby-identifier">ctext</span>).<span class="ruby-identifier">merge</span>(<span class="ruby-value">codes:</span> <span class="ruby-identifier">extract_codes</span>(<span class="ruby-identifier">ctext</span>)))&#x000A;  <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">protocol</span> = <span class="ruby-constant">Protocol</span><span class="ruby-operator">::</span><span class="ruby-constant">Manchester</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">extract_protocol_options</span>(<span class="ruby-identifier">ctext</span>))&#x000A;&#x000A;  <span class="ruby-identifier">ret</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Private Class methods</h2>
@@ -97,7 +100,7 @@ version</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-extract_codes-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-extract_codes-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 36</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_codes</span>(<span class="ruby-identifier">text</span>)&#x000A;  <span class="ruby-identifier">start_at</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;begin codes&#39;</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&#39;begin codes&#39;</span>.<span class="ruby-identifier">length</span>&#x000A;  <span class="ruby-identifier">end_at</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;end codes&#39;</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&#39;end codes&#39;</span>.<span class="ruby-identifier">length</span>&#x000A;&#x000A;  <span class="ruby-identifier">text</span>[<span class="ruby-identifier">start_at</span><span class="ruby-operator">..</span><span class="ruby-identifier">end_at</span>].<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/([\w-]+)\s+(0x[0-9a-f]+)/i</span>)&#x000A;                        .<span class="ruby-identifier">to_h</span>&#x000A;                        .<span class="ruby-identifier">transform_keys</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:downcase</span>)&#x000A;                        .<span class="ruby-identifier">transform_keys</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-constant">Strings</span><span class="ruby-operator">::</span><span class="ruby-constant">Case</span>.<span class="ruby-identifier">snakecase</span>(<span class="ruby-identifier">s</span>) }&#x000A;                        .<span class="ruby-identifier">transform_keys</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_sym</span>)&#x000A;                        .<span class="ruby-identifier">transform_values</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">v</span>) }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-extract_codes-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_codes</span>(<span class="ruby-identifier">text</span>)&#x000A;  <span class="ruby-identifier">code_rng</span> = <span class="ruby-identifier">substring_range</span>(<span class="ruby-identifier">text</span>, <span class="ruby-string">&#39;begin codes&#39;</span>, <span class="ruby-string">&#39;end codes&#39;</span>)&#x000A;  <span class="ruby-identifier">text</span>[<span class="ruby-identifier">code_rng</span>].<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/([\w-]+)\s+(0x[0-9a-f]+)/i</span>)&#x000A;                .<span class="ruby-identifier">to_h</span>&#x000A;                .<span class="ruby-identifier">transform_keys</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:downcase</span>)&#x000A;                .<span class="ruby-identifier">transform_keys</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-constant">Strings</span><span class="ruby-operator">::</span><span class="ruby-constant">Case</span>.<span class="ruby-identifier">snakecase</span>(<span class="ruby-identifier">s</span>) }&#x000A;                .<span class="ruby-identifier">transform_keys</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_sym</span>)&#x000A;                .<span class="ruby-identifier">transform_values</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">v</span>) }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-extract_metadata'>
@@ -116,7 +119,7 @@ version</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-extract_metadata-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-extract_metadata-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 28</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_metadata</span>(<span class="ruby-identifier">text</span>)&#x000A;  {&#x000A;    <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/name ([^\s]+)/i</span>).<span class="ruby-identifier">captures</span>.<span class="ruby-identifier">first</span>&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-extract_metadata-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 56</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_metadata</span>(<span class="ruby-identifier">text</span>)&#x000A;  {&#x000A;    <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/name\s+([^\s]+)/i</span>).<span class="ruby-identifier">captures</span>.<span class="ruby-identifier">first</span>&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-class' id='method-method-c-extract_protocol_options'>
@@ -135,7 +138,66 @@ version</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-extract_protocol_options-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-extract_protocol_options-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 16</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_protocol_options</span>(<span class="ruby-identifier">text</span>)&#x000A;  {&#x000A;    <span class="ruby-value">header:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/header\s+(\d+)\s+(\d+)/i</span>)[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>),&#x000A;    <span class="ruby-value">zero_value:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/zero\s+(\d+)\s+(\d+)/i</span>)[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>),&#x000A;    <span class="ruby-value">one_value:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/one\s+(\d+)\s+(\d+)/i</span>)[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>),&#x000A;    <span class="ruby-value">system_data:</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/pre_data\s+(0x[0-9a-f]+)/i</span>)[<span class="ruby-value">1</span>]),&#x000A;    <span class="ruby-value">gap:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/gap\s+(\d+)/i</span>)[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>,&#x000A;    <span class="ruby-value">post_bit:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match?</span>(<span class="ruby-regexp">/ptrail/</span>)&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-extract_protocol_options-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 17</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_protocol_options</span>(<span class="ruby-identifier">text</span>)&#x000A;  <span class="ruby-identifier">opts</span> = {}&#x000A;&#x000A;  <span class="ruby-identifier">matchers</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">regex</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">match?</span>(<span class="ruby-identifier">regex</span>)&#x000A;&#x000A;    <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">formatters</span>[<span class="ruby-identifier">key</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">text</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">regex</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">opts</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-formatters'>
+<a name='method-c-formatters'></a>
+<div class='synopsis'>
+<span class='name'>formatters</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Provide procs to use for formatting the values</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-formatters-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-formatters-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 43</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">formatters</span>&#x000A;  {&#x000A;    <span class="ruby-value">header:</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">m</span>) { <span class="ruby-identifier">m</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>) },&#x000A;    <span class="ruby-value">zero_value:</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">m</span>) { <span class="ruby-identifier">m</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>) },&#x000A;    <span class="ruby-value">one_value:</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">m</span>) { <span class="ruby-identifier">m</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>) },&#x000A;    <span class="ruby-value">system_data:</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">m</span>) { <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">m</span>[<span class="ruby-value">1</span>]) },&#x000A;    <span class="ruby-value">gap:</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">m</span>) { <span class="ruby-identifier">m</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span> },&#x000A;    <span class="ruby-value">repeat_value:</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">m</span>) { <span class="ruby-identifier">m</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>) },&#x000A;    <span class="ruby-value">post_bit:</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">m</span>) { <span class="ruby-operator">!</span><span class="ruby-identifier">m</span>.<span class="ruby-identifier">nil?</span> }&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-matchers'>
+<a name='method-c-matchers'></a>
+<div class='synopsis'>
+<span class='name'>matchers</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Provides regex patterns to match against</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-matchers-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-matchers-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">matchers</span>&#x000A;  {&#x000A;    <span class="ruby-value">header:</span> <span class="ruby-regexp">/header\s+(\d+)\s+(\d+)/i</span>,&#x000A;    <span class="ruby-value">zero_value:</span> <span class="ruby-regexp">/zero\s+(\d+)\s+(\d+)/i</span>,&#x000A;    <span class="ruby-value">one_value:</span> <span class="ruby-regexp">/one\s+(\d+)\s+(\d+)/i</span>,&#x000A;    <span class="ruby-value">system_data:</span> <span class="ruby-regexp">/pre_data\s+(0x[0-9a-f]+)/i</span>,&#x000A;    <span class="ruby-value">gap:</span> <span class="ruby-regexp">/gap\s+(\d+)/i</span>,&#x000A;    <span class="ruby-value">repeat_value:</span> <span class="ruby-regexp">/repeat\s+(\d+)\s+(\d+)/i</span>,&#x000A;    <span class="ruby-value">post_bit:</span> <span class="ruby-regexp">/ptrail/</span>&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-class' id='method-method-c-substring_range'>
+<a name='method-c-substring_range'></a>
+<div class='synopsis'>
+<span class='name'>substring_range</span>
+<span class='arguments'>(text, start_str, end_str)</span>
+
+</div>
+<div class='description'>
+
+<p>Given a string <code>text</code> and a <code>start_str</code> and
+<code>end_str</code> to search between, returns a range which will capture
+the substring</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-substring_range-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-substring_range-source'><span class="ruby-comment"># File lib/lil_blaster/lirc_conf_reader.rb, line 76</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">substring_range</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">start_str</span>, <span class="ruby-identifier">end_str</span>)&#x000A;  (<span class="ruby-identifier">text</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">start_str</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">start_str</span>.<span class="ruby-identifier">length</span>)<span class="ruby-operator">..</span>(<span class="ruby-identifier">text</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">end_str</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">end_str</span>.<span class="ruby-identifier">length</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
