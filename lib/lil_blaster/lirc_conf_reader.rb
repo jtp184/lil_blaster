@@ -20,6 +20,7 @@ module LilBlaster
           one_value: text.match(/one\s+(\d+)\s+(\d+)/i)[1..2].map(&:to_i),
           system_data: Integer(text.match(/pre_data\s+(0x[0-9a-f]+)/i)[1]),
           gap: text.match(/gap\s+(\d+)/i)[1].to_i,
+          repeat_value: text.match(/repeat\s+(\d+)\s+(\d+)/i)[1..2].map(&:to_i),
           post_bit: text.match?(/ptrail/)
         }
       end
@@ -27,7 +28,7 @@ module LilBlaster
       # Extracts the +remote_name+ out of the text
       def extract_metadata(text)
         {
-          remote_name: text.match(/name ([^\s]+)/i).captures.first
+          remote_name: text.match(/name\s+([^\s]+)/i).captures.first
         }
       end
 
