@@ -81,15 +81,18 @@ RSpec.describe LilBlaster::Codex do
     proto_inst = @codex.protocol
     proto_class = proto_inst.class
     proto_sym = proto_class.to_sym
+    proto_opts = proto_inst.export_options.map do |eop|
+      [eop, proto_inst.send(eop)]
+    end.to_h
 
     inst_ex = LilBlaster::Codex.new(protocol: proto_inst)
 
     class_ex = LilBlaster::Codex.new(
       protocol: proto_class,
-      protocol_options: proto_inst.export_options
+      protocol_options: proto_opts
     )
 
-    sym_ex = LilBlaster::Codex.new(protocol: proto_sym, protocol_options: proto_inst.export_options)
+    sym_ex = LilBlaster::Codex.new(protocol: proto_sym, protocol_options: proto_opts)
 
     expect(inst_ex.protocol).to eq(@codex.protocol)
     expect(class_ex.protocol).to be_a(proto_class)
