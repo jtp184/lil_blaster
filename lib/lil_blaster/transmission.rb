@@ -40,12 +40,20 @@ module LilBlaster
 
     # Returns a new transmission which repeats this data a number of times
     def *(other)
-      raise ArgumentError, 'Must multiply by amount' unless other.is_a?(Numeric)
+      raise TypeError, 'Must multiply by amount' unless other.is_a?(Numeric)
 
       self.class.new(
         data: Array.new(other, data).flatten,
         carrier_wave: carrier_wave_options.clone
       )
+    end
+
+    def %(other)
+      raise TypeError, 'Needs to be a numeric hash' unless other.is_a?(Hash)
+
+      data.each_with_index do |dta, ix|
+        data[ix] = other[x % 2][dta]
+      end
     end
   end
 end
