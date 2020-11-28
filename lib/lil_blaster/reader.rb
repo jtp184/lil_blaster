@@ -23,7 +23,7 @@ module LilBlaster
           end
         end
 
-        transmission_buffer.last(buffer_offset)
+        transmission_buffer.last(transmission_buffer.length - @offset)
       end
 
       # Starts continuously recording in another thread. If passed observe arguments,
