@@ -20,6 +20,12 @@ module LilBlaster
                               end
     end
 
+    # Uses the +original+ to duplicate attributes for the copy
+    def initialize_copy(original)
+      @data = original.data.dup
+      @carrier_wave_options = original.carrier_wave_options.dup
+    end
+
     # Returns the data as 2-tuples containing a mark and space
     def tuples
       data.each_slice(2).to_a
@@ -48,12 +54,21 @@ module LilBlaster
       )
     end
 
+    # Uses the +other+ object, a hash tuple as returned from NoiseReducer.replacement_matrix,
+    # to create a new transmission that has been recalculated with it
     def %(other)
-      raise TypeError, 'Needs to be a numeric hash' unless other.is_a?(Hash)
-
-      data.each_with_index do |dta, ix|
-        data[ix] = other[x % 2][dta]
+      unless other.is_a?(Array) && other.all? { |i| i.is_a?(Hash) } && other.length == 2
+        raise TypeError, 'Needs to be a hash tuple'
       end
+
+      pulses = data.map.with_index do |dta, ix|
+        other[ix % 2][dta]
+      end
+
+      self.class.new(
+        data: pulses,
+        carrier_wave: carrier_wave_options.clone
+      )
     end
   end
 end
