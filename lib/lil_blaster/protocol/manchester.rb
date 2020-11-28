@@ -37,6 +37,13 @@ module LilBlaster
           data_range(transmission, 1..16)
         end
 
+        # Returns an array of the instance values to inspect
+        def export_options
+          super
+
+          @export_options += %i[system_data post_bit]
+        end
+
         private
 
         # Does the work of scanning the tuples within the +data+ and identifying the attributes
@@ -83,13 +90,6 @@ module LilBlaster
       # and encoded integer joined as a bytestring
       def to_bytestring(data = 0x0000)
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
-      end
-
-      # Returns a hash of the instance values for use elsewhere
-      def export_options
-        %i[gap header one_value zero_value system_data post_bit].map do |sy|
-          [sy, public_send(sy)]
-        end.to_h
       end
 
       # Allows for calling +mtd+ on the class if it exists

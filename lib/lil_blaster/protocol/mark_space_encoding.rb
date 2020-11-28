@@ -79,6 +79,13 @@ module LilBlaster
 
           pulses_to_int(transmission.tuples[range], args[:zero_value], args[:one_value])
         end
+
+        # Returns an array of the instance values to export
+        def export_options
+          super
+
+          @export_options += %i[gap header one_value repeat_value zero_value]
+        end
       end
 
       # Extends the +base_class+ with the ClassMethods upon inclusion

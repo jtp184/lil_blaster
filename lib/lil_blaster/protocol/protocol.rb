@@ -54,6 +54,11 @@ module LilBlaster
         def to_sym
           name.split('::').last.to_sym
         end
+
+        # An empty array to start with
+        def export_options
+          @export_options ||= Set.new
+        end
       end
 
       # Callback method, when +subclass+ is created adds it to an internal array
@@ -96,9 +101,9 @@ module LilBlaster
             .to_sym
       end
 
-      # Export the object state by default
+      # Accessible on the instance
       def export_options
-        object_state
+        self.class.export_options
       end
     end
   end

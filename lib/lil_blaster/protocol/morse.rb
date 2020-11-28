@@ -47,6 +47,13 @@ module LilBlaster
         [proto, decode_dotdash_str(pulses_to_dotdash_str(data))]
       end
 
+      # Exports the dot_length as an option
+      def self.export_options
+        super
+
+        @export_options += %i[dot_length]
+      end
+
       # Takes in +args+ for dot length
       def initialize(args = {})
         super()
@@ -70,11 +77,6 @@ module LilBlaster
       # Access the class-level code table on the instance
       def code_table
         self.class.code_table
-      end
-
-      # Exports the dot_length as an option
-      def export_options
-        %i[dot_length].map { |sy| [sy, public_send(sy)] }.to_h
       end
 
       private

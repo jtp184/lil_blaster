@@ -89,6 +89,11 @@ module LilBlaster
       protocol.encode(self[key_sym], repetitions)
     end
 
+    # Given a +transmission+, decodes it using our protocol and returns the corresponding key
+    def decode(transmission)
+      key(protocol.decode(transmission)[1])
+    end
+
     # Takes in +args+ to append either data or decoded transmissions to the codex
     def append(args = {})
       code_val = if args.key?(:transmission)
@@ -179,7 +184,9 @@ module LilBlaster
 
       file[:metadata][:remote_name] = remote_name
       file[:metadata][:protocol] = protocol.to_sym
-      file[:metadata][:protocol_options] = protocol.export_options
+      file[:metadata][:protocol_options] = protocol.export_options.map do |eop|
+        [eop, protocol.send(eop)]
+      end.to_h
 
       file[:codes] = codes
 
