@@ -63,7 +63,8 @@ module LilBlaster
       # Takes in an integer +data+, and constructs a transmission with a header, the encoded
       # system_data, and the encoded integer. Optionally specify the number of +repititions+
       def encode(data = 0x0000, repititions = 1)
-        raise ArgumentError unless data.is_a?(Integer) && (0x0000..0xFFFF).cover?(data)
+        raise TypeError, 'data is not an integer' unless data.is_a?(Integer)
+        raise IndexError, 'data is out of bounds' unless (0x0000..0xFFFF).cover?(data)
 
         return data_transmission(data) if repititions == 1
 

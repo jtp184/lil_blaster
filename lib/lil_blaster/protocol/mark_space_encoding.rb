@@ -25,7 +25,9 @@ module LilBlaster
         # Compares +tr_one+ and +tr_two+ as bytestrings for equality. Can be used to compare
         # Transmissions with inexact pulse lengths for the same underlying data
         def same_data?(tr_one, tr_two)
-          raise ArgumentError unless [tr_one, tr_two].all? { |t| t.is_a?(Transmission) }
+          unless [tr_one, tr_two].all? { |t| t.is_a?(Transmission) }
+            raise TypeError, 'Not transmissions'
+          end
 
           bytestring_for(tr_one) == bytestring_for(tr_two)
         end
