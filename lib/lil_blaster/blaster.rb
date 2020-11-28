@@ -11,11 +11,11 @@ module LilBlaster
       end
 
       # Sends Codex#call to the +codex+ with the +sym+ argument, then runs #transmit on the result
-      def send_code(sym, codex = nil)
-        dex = codex || default_codex
+      def send_code(sym, args = {})
+        dex = args.fetch(:codex, nil) || default_codex
         raise ArgumentError 'No codex provided' unless dex
 
-        transmit dex.call(sym)
+        transmit dex.call(sym, args.fetch(:repetitions, 1))
       end
 
       # Takes in a Transmission +data+, and constructs and transmits waves. Uses blocking form

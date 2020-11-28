@@ -27,21 +27,6 @@ module LilBlaster
           [proto, command_data(data)]
         end
 
-        # Compares +tr_one+ and +tr_two+ as bytestrings for equality. Can be used to compare
-        # Transmissions with inexact pulse lengths for the same underlying data
-        def same_data?(tr_one, tr_two)
-          raise ArgumentError unless [tr_one, tr_two].all? { |t| t.is_a?(Transmission) }
-
-          bytestring_for(tr_one) == bytestring_for(tr_two)
-        end
-
-        # Given a +transmission+, extracts the values from it and creates a bytestring
-        def bytestring_for(transmission)
-          ident = extract_mark_values(transmission)
-
-          transmission.tuples[1..-2].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
-        end
-
         # Returns an integer representing the command_data in the +transmission+
         def command_data(transmission)
           data_range(transmission, 17..-2)
@@ -50,6 +35,13 @@ module LilBlaster
         # Returns an integer representing the system_data in the +transmission+
         def system_data(transmission)
           data_range(transmission, 1..16)
+        end
+
+        # Returns an array of the instance values to inspect
+        def export_options
+          super
+
+          @export_options += %i[system_data post_bit]
         end
 
         private
@@ -70,41 +62,34 @@ module LilBlaster
       def initialize(args = {})
         super()
 
-        %i[header zero_value one_value system_data post_bit gap].each do |sym|
-          instance_variable_set(:"@#{sym}", args.fetch(sym))
+        %i[header zero_value one_value system_data post_bit gap repeat_value].each do |sym|
+          instance_variable_set(:"@#{sym}", args.fetch(sym, nil))
         end
       end
 
       # Takes in an integer +data+, and constructs a transmission with a header, the encoded
-      # system_data, and the encoded integer
-      def encode(data = 0x0000)
-        raise ArgumentError unless data.is_a?(Integer) && (0x0000..0xFFFF).cover?(data)
+      # system_data, and the encoded integer. Optionally specify the number of +repititions+
+      def encode(data = 0x0000, repititions = 1)
+        raise TypeError, 'data is not an integer' unless data.is_a?(Integer)
+        raise IndexError, 'data is out of bounds' unless (0x0000..0xFFFF).cover?(data)
 
-        pulses = []
-        pulses += header.clone
-        pulses += int_to_pulses(system_data)
-        pulses += int_to_pulses(data)
+        return data_transmission(data) if repititions == 1
 
-        if post_bit
-          pulses += post_bit_plen
-        else
-          pulses[-1][1] = gap
-        end
+        tr = [data_transmission(data)]
 
-        Transmission.new(data: pulses.flatten)
+        tr += if repeat_value
+                Array.new(repititions - 1) { repeat_transmission }
+              else
+                Array.new(repititions - 1) { data_transmission(data) }
+              end
+
+        tr.reduce(&:+)
       end
 
       # Takes in an integer +data+ and outputs the system_data
       # and encoded integer joined as a bytestring
       def to_bytestring(data = 0x0000)
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
-      end
-
-      # Returns a hash of the instance values for use elsewhere
-      def export_options
-        %i[gap header one_value zero_value system_data post_bit].map do |sy|
-          [sy, public_send(sy)]
-        end.to_h
       end
 
       # Allows for calling +mtd+ on the class if it exists
@@ -121,7 +106,38 @@ module LilBlaster
 
       # Yields the variables to compare for object equality
       def object_state
-        [header, zero_value, one_value, system_data]
+        [system_data, repeat_value, header, zero_value, one_value]
+      end
+
+      private
+
+      # Provided +data+ to encode, creates a transmission doing so
+      def data_transmission(data)
+        pulses = []
+        pulses += header.clone
+        pulses += int_to_pulses(system_data)
+        pulses += int_to_pulses(data)
+
+        if post_bit
+          pulses += post_bit_plen
+        else
+          pulses[-1][1] = gap
+        end
+
+        Transmission.new(data: pulses.flatten)
+      end
+
+      # Uses the +repeat_value+ to produce a transmission with the repeat code
+      def repeat_transmission
+        pulses = repeat_value.dup
+
+        pulses += if post_bit
+                    post_bit_plen
+                  else
+                    [1, gap.dup]
+                  end
+
+        Transmission.new(data: pulses.flatten)
       end
     end
   end

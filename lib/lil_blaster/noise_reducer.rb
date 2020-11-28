@@ -3,23 +3,33 @@ module LilBlaster
   class NoiseReducer
     class << self
       # Takes the code +buffer+ and does math to smooth out the transmission passing +args+ down
-      def call(buffer, args)
+      def call(buffer, args = {})
         return perform_on_pairs(buffer, args) if args.fetch(:pairs, true)
 
-        repl = average_values(buffer, args)
+        repl = replacement_matrix(buffer, args)
         replace_values(buffer, repl)
       end
 
       # Takes the code +buffer+ and passes +args+ down, operating seperately on marks and spaces
-      def perform_on_pairs(buffer, args)
-        pairs = buffer.each_slice(2).to_a
-        marks_and_spaces = [pairs.map(&:first), pairs.map(&:last)]
-
-        replace = marks_and_spaces.map { |lens| average_values(lens, args) }
+      def perform_on_pairs(buffer, args = {})
+        marks_and_spaces = buffer.partition.with_index { |_v, x| x.even? }
+        replace = replacement_matrix(buffer, args)
 
         replace_values(marks_and_spaces[0], replace[0]).zip(
           replace_values(marks_and_spaces[1], replace[1])
-          ).flatten
+        ).flatten
+      end
+
+      # Given a +buffer+ and +args+ to pass down, returns a hash which can be used to replace
+      # the values in the buffer with grouped averages
+      def replacement_matrix(buffer, args = {})
+        if args.fetch(:pairs, true)
+          buffer.partition
+                .with_index { |_v, x| x.even? }
+                .map { |lens| average_values(lens, args) }
+        else
+          average_values(buffer, args)
+        end
       end
 
       # Uses the +replacements+ hash to map the +buffer+ array
@@ -31,7 +41,7 @@ module LilBlaster
 
       # Given an array of +pulses+, tallies them up and uniquifies them
       # for group_values and weighted_averages, passing +args+ down
-      def average_values(pulses, args)
+      def average_values(pulses, args = {})
         tally = pulses.each_with_object(Hash.new(0)) { |obj, mem| mem.tap { |m| m[obj] += 1 } }
         plens = tally.to_a.sort.to_h.keys
 

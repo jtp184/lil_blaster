@@ -20,9 +20,9 @@ module LilBlaster
                     abort pastel.red('No symbol provided')
                   end
 
-          multi.times { symbs.each { |sy| send_code_and_report(sy) } }
+          symbs.each { |sy| send_code_and_report(sy, multi) }
         else
-          multi.times { collect_symbols.each { |sym| send_code_and_report(sym) } }
+          collect_symbols.each { |sym| send_code_and_report(sym, multi) }
         end
       end
 
@@ -30,11 +30,11 @@ module LilBlaster
 
       # Tries to find a codex that can respond to +sym+, and sends that code if found.
       # Prints a report if successful, a failure message if not
-      def send_code_and_report(sym)
+      def send_code_and_report(sym, multi)
         dex = resolved_codex || codex_responding_to(sym)
 
         if dex
-          LilBlaster::Blaster.send_code(sym, dex)
+          LilBlaster::Blaster.send_code(sym, codex: dex, repetitions: multi)
           puts format(rept_str, sym: sym, rem: dex.remote_name)
         else
           puts pastel.red("No codex found which can respond to #{sym}")
