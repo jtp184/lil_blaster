@@ -85,8 +85,8 @@ module LilBlaster
     end
 
     # Returns a Transmission representing the code identified by +key_sym+
-    def call(key_sym)
-      protocol.encode self[key_sym]
+    def call(key_sym, repetitions = 1)
+      protocol.encode(self[key_sym], repetitions)
     end
 
     # Takes in +args+ to append either data or decoded transmissions to the codex
