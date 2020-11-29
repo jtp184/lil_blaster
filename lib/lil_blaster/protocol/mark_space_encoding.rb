@@ -88,8 +88,6 @@ module LilBlaster
 
           @export_options += %i[gap header one_value repeat_value zero_value]
         end
-
-        private
       end
 
       # Extends the +base_class+ with the ClassMethods upon inclusion
@@ -109,6 +107,7 @@ module LilBlaster
 
       private
 
+      # Compare two values for equality within +tolerance+
       def close?(val_one, val_two, tolerance = 200)
         (val_one - val_two).abs < tolerance
       end

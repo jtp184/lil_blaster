@@ -95,7 +95,7 @@ module LilBlaster
       # Stops the callback stored on the pin object
       def stop_callback
         return self if @callback.nil?
-        
+
         @callback.cancel
         @callback = nil
         self
