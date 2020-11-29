@@ -38,7 +38,7 @@ module LilBlaster
 
     # Returns the number of pulses in +data+
     def count
-      data.cound
+      data.count
     end
 
     # Returns the combined length of the transmission in micros, by summing +data+
