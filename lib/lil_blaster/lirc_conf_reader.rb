@@ -29,8 +29,8 @@ module LilBlaster
       def parse_options(text)
         ctext = text[substring_range(text, 'begin remote', 'end remote')]
         extract_conf_options(ctext)
-        extract_codes(ctext)
         handle_meta_options
+        extract_codes(ctext)
       end
 
       # Scans the +text+ for the essential values to create the protocol
@@ -47,13 +47,25 @@ module LilBlaster
       # Takes the +flopts+ and runs transformations based on them
       def handle_meta_options
         flopts = @matches[:flags]
+        return unless flopts
+
+        @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first
+
+        unless %i[RC5 NEC].include?(@matches[:protocol_flag])
+          raise TypeError, 'Unimplemented protocol'
+        end
 
         @matches[:gap] = estimate_gap if flopts.include?('CONST_LENGTH')
       end
 
       # Reinterprets the gap as the difference between the gap and a standard transmission
       def estimate_gap
-        tlen = [@matches[:header], Array.new(32, @matches[:zero_value])].flatten.reduce(&:+)
+        bit_size = (@matches[:system_data_bits] || 0) + (@matches[:data_bits] || 0)
+
+        tlen = []
+        tlen << @matches[:header] if @matches[:header]
+        tlen << Array.new(bit_size, @matches[:zero_value])
+        tlen = tlen.flatten.reduce(&:+)
 
         @matches[:gap] - tlen
       end
@@ -77,6 +89,8 @@ module LilBlaster
           header: /header\s+(\d+)\s+(\d+)/i,
           zero_value: /zero\s+(\d+)\s+(\d+)/i,
           one_value: /one\s+(\d+)\s+(\d+)/i,
+          two_value: /two\s+(\d+)\s+(\d+)/i,
+          three_value: /three\s+(\d+)\s+(\d+)/i,
           system_data: /pre_data\s+(0x[0-9a-f]+)/i,
           gap: /gap\s+(\d+)/i,
           repeat_value: /repeat\s+(\d+)\s+(\d+)/i,
@@ -84,7 +98,8 @@ module LilBlaster
           remote_name: /name\s+([^\s]+)/i,
           flags: /flags\s+([^\s]+)/i,
           system_data_bits: /pre_data_bits\s+(\d+)/i,
-          data_bits: /\bbits\s+(\d+)/i
+          data_bits: /\bbits\s+(\d+)/i,
+          frequency: /frequency\s+(\d+)/i
         }
       end
 
@@ -97,11 +112,11 @@ module LilBlaster
           flags: ->(m) { m[1].split('|') }
         }
 
-        %i[header zero_value one_value repeat_value].each do |sym|
+        %i[header zero_value one_value two_value three_value repeat_value].each do |sym|
           @formatters[sym] = ->(m) { m[1..2].map(&:to_i) }
         end
 
-        %i[system_data system_data_bits data_bits].each do |sym|
+        %i[system_data system_data_bits data_bits frequency].each do |sym|
           @formatters[sym] = ->(m) { Integer(m[1]) }
         end
 
@@ -124,10 +139,28 @@ module LilBlaster
                                          .merge(repeat_code: - 1)
       end
 
+      # Provides string matchers for flag options related to protocols
+      def protocol_matchers
+        @protocol_matchers ||= {
+          'RC5' => :RC5,
+          'SHIFT_ENC' => :RC5,
+          'RC6' => :RC6,
+          'RCMM' => :RCMM,
+          'SPACE_ENC' => :NEC,
+          'RAW_CODES' => :raw
+        }
+      end
+
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range
       # which will capture the substring
       def substring_range(text, start_str, end_str)
         (text.index(start_str) + start_str.length)..(text.index(end_str) + end_str.length)
+      rescue NoMethodError => e
+        err_str = "Could not find #{start_str}..#{end_str}"
+        not_found = text.index(start_str).nil? || text.index(end_str).nil?
+        raise ArgumentError, err_str if not_found
+
+        raise e
       end
     end
   end
