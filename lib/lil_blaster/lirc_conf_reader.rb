@@ -142,7 +142,7 @@ module LilBlaster
       # Provides string matchers for flag options related to protocols
       def protocol_matchers
         @protocol_matchers ||= {
-          'RAW_CODES' => :raw
+          'RAW_CODES' => :raw,
           'RC5' => :RC5,
           'RC6' => :RC6,
           'RCMM' => :RCMM,
