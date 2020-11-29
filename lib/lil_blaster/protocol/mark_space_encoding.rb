@@ -29,8 +29,8 @@ module LilBlaster
             raise TypeError, 'Not transmissions'
           end
 
-          (tr_one.length - 1).times do |ix|
-            close?(tr_one[ix], tr_two[ix])
+          tr_one.data.map.with_index do |value, index|
+            close?(value, tr_two.data[index])
           end.all?(true)
         end
 
@@ -97,6 +97,12 @@ module LilBlaster
 
           true
         end
+
+        private
+
+        def close?(val_one, val_two, tolerance = 200)
+          (val_one - val_two).abs < tolerance
+        end
       end
 
       # Extends the +base_class+ with the ClassMethods upon inclusion
@@ -105,10 +111,6 @@ module LilBlaster
       end
 
       private
-
-      def close?(val_one, val_two, tolerance = 200)
-        (val_one - val_two).abs < tolerance
-      end
 
       # Takes in an +int+ and converts it first to binary,
       # then to tuples based on the zero and one values
