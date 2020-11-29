@@ -41,6 +41,7 @@ module LilBlaster
       # Stops the callback function, but leaves observers and instance variables set
       def pause_scan
         pin.stop_callback
+        @scanning = false
       end
 
       # Runs the callback function, whether or not observer variables are set
@@ -49,13 +50,21 @@ module LilBlaster
           args.fetch(:callback_edge, :either),
           &method(:pin_callback)
         )
+
+        @scanning = true
       end
 
       # Cancels a continuous scan, unsetting instance variables and deleting observers
       def stop_scan
         pin.stop_callback
         delete_observers
-        @observe_transmissions = @observe_codes = nil
+        @observe_transmissions = @observe_codes = @scanning = nil
+      end
+
+      # Returns a truthy value based on whether the scan is running. True if it is, false if it has
+      # been paused, and nil if it is not
+      def scanning?
+        @scanning
       end
 
       # Takes in +args+ and uses them to decode the transmissions in the +transmission_buffer+,
