@@ -73,33 +73,33 @@ module LilBlaster
       # Returns just the arguments needed for the protocol
       def protocol_options
         @matches.slice(
-          :header,
-          :zero_value,
-          :one_value,
-          :system_data,
           :gap,
+          :header,
+          :one_value,
+          :post_bit,
           :repeat_value,
-          :post_bit
+          :system_data,
+          :zero_value
         )
       end
 
       # Provides regex patterns to match against
       def matchers
         @matchers ||= {
-          header: /header\s+(\d+)\s+(\d+)/i,
-          zero_value: /zero\s+(\d+)\s+(\d+)/i,
-          one_value: /one\s+(\d+)\s+(\d+)/i,
-          two_value: /two\s+(\d+)\s+(\d+)/i,
-          three_value: /three\s+(\d+)\s+(\d+)/i,
-          system_data: /pre_data\s+(0x[0-9a-f]+)/i,
+          data_bits: /\bbits\s+(\d+)/i,
+          flags: /flags\s+([^\s]+)/i,
+          frequency: /frequency\s+(\d+)/i,
           gap: /gap\s+(\d+)/i,
-          repeat_value: /repeat\s+(\d+)\s+(\d+)/i,
+          header: /header\s+(\d+)\s+(\d+)/i,
+          one_value: /one\s+(\d+)\s+(\d+)/i,
           post_bit: /ptrail/,
           remote_name: /name\s+([^\s]+)/i,
-          flags: /flags\s+([^\s]+)/i,
+          repeat_value: /repeat\s+(\d+)\s+(\d+)/i,
+          system_data: /pre_data\s+(0x[0-9a-f]+)/i,
           system_data_bits: /pre_data_bits\s+(\d+)/i,
-          data_bits: /\bbits\s+(\d+)/i,
-          frequency: /frequency\s+(\d+)/i
+          three_value: /three\s+(\d+)\s+(\d+)/i,
+          two_value: /two\s+(\d+)\s+(\d+)/i,
+          zero_value: /zero\s+(\d+)\s+(\d+)/i
         }
       end
 
@@ -142,12 +142,12 @@ module LilBlaster
       # Provides string matchers for flag options related to protocols
       def protocol_matchers
         @protocol_matchers ||= {
+          'RAW_CODES' => :raw
           'RC5' => :RC5,
-          'SHIFT_ENC' => :RC5,
           'RC6' => :RC6,
           'RCMM' => :RCMM,
+          'SHIFT_ENC' => :RC5,
           'SPACE_ENC' => :NEC,
-          'RAW_CODES' => :raw
         }
       end
 
