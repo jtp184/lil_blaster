@@ -89,20 +89,7 @@ module LilBlaster
           @export_options += %i[gap header one_value repeat_value zero_value]
         end
 
-        # Returns true if the +transmission+ is identified to be a repeat signal
-        def recognize_repeat(transmission)
-          return false unless transmission.data.length == 4
-          return false unless close?(transmission.data[0], repeat_value[0])
-          return false unless close?(transmission.data[1], repeat_value[1])
-
-          true
-        end
-
         private
-
-        def close?(val_one, val_two, tolerance = 200)
-          (val_one - val_two).abs < tolerance
-        end
       end
 
       # Extends the +base_class+ with the ClassMethods upon inclusion
@@ -110,7 +97,21 @@ module LilBlaster
         base_class.extend(ClassMethods)
       end
 
+      # Returns true if the +transmission+ is identified to be a repeat signal
+      def recognize_repeat(transmission)
+        return false unless repeat_value
+        return false unless transmission.data.length == 4
+        return false unless close?(transmission.data[0], repeat_value[0])
+        return false unless close?(transmission.data[1], repeat_value[1])
+
+        true
+      end
+
       private
+
+      def close?(val_one, val_two, tolerance = 200)
+        (val_one - val_two).abs < tolerance
+      end
 
       # Takes in an +int+ and converts it first to binary,
       # then to tuples based on the zero and one values

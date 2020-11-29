@@ -80,7 +80,7 @@ module LilBlaster
 
       @remote_name = args.fetch(:remote_name, 'Remote')
       @path ||= "./#{@remote_name}_codex.yaml"
-      @codes = args.fetch(:codes, {})
+      @codes = args.fetch(:codes, { repeat_code: -1 })
       @protocol = interpret_protocol_arg(args)
     end
 
