@@ -156,7 +156,7 @@ module LilBlaster
       def substring_range(text, start_str, end_str)
         (text.index(start_str) + start_str.length)..(text.index(end_str) + end_str.length)
       rescue NoMethodError => e
-        err_str = "Could not find #{start_str}..#{end_str}"
+        err_str = "Could not find '#{start_str}'..'#{end_str}' in string"
         not_found = text.index(start_str).nil? || text.index(end_str).nil?
         raise ArgumentError, err_str if not_found
 
