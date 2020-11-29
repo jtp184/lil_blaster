@@ -29,21 +29,32 @@ module LilBlaster
       # Starts continuously recording in another thread. If passed observe arguments,
       # will pass them on to the relevant add_*_observers method
       def continuous_scan(args = {})
-        pin.start_callback(
-          args.fetch(:callback_edge, :either),
-          &method(:pin_callback)
-        )
-
         if args[:observe_transmissions]
           add_transmission_observers(args[:observe_transmissions])
         elsif args[:observe_codes]
           add_code_observers(args[:observe_codes])
         end
+
+        resume_scan(args)
       end
 
-      # Cancels a continuous scan
+      # Stops the callback function, but leaves observers and instance variables set
+      def pause_scan
+        pin.stop_callback
+      end
+
+      # Runs the callback function, whether or not observer variables are set
+      def resume_scan(args = {})
+        pin.start_callback(
+          args.fetch(:callback_edge, :either),
+          &method(:pin_callback)
+        )
+      end
+
+      # Cancels a continuous scan, unsetting instance variables and deleting observers
       def stop_scan
         pin.stop_callback
+        delete_observers
         @observe_transmissions = @observe_codes = nil
       end
 
