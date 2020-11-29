@@ -15,6 +15,7 @@ module LilBlaster
         ret
       end
 
+      # Given a +str+, extracts the options from it with +parse_options+ and returns the hash
       def parse(str)
         text = File.exist?(str) ? File.read(str) : str
         @matches = {}
