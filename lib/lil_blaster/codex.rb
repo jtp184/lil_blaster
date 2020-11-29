@@ -80,7 +80,7 @@ module LilBlaster
 
       @remote_name = args.fetch(:remote_name, 'Remote')
       @path ||= "./#{@remote_name}_codex.yaml"
-      @codes = args.fetch(:codes, {})
+      @codes = args.fetch(:codes, { repeat_code: -1 })
       @protocol = interpret_protocol_arg(args)
     end
 
@@ -91,7 +91,8 @@ module LilBlaster
 
     # Given a +transmission+, decodes it using our protocol and returns the corresponding key
     def decode(transmission)
-      key(protocol.decode(transmission)[1])
+      dc = protocol.decode(transmission)
+      dc ? key(dc[1]) : nil
     end
 
     # Takes in +args+ to append either data or decoded transmissions to the codex

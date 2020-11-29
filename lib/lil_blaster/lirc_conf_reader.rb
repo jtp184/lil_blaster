@@ -69,6 +69,7 @@ module LilBlaster
                       .transform_keys { |s| Strings::Case.snakecase(s) }
                       .transform_keys(&:to_sym)
                       .transform_values { |v| Integer(v) }
+                      .merge(repeat_code: - 1)
       end
 
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range

@@ -29,22 +29,42 @@ module LilBlaster
       # Starts continuously recording in another thread. If passed observe arguments,
       # will pass them on to the relevant add_*_observers method
       def continuous_scan(args = {})
-        pin.start_callback(
-          args.fetch(:callback_edge, :either),
-          &method(:pin_callback)
-        )
-
         if args[:observe_transmissions]
           add_transmission_observers(args[:observe_transmissions])
         elsif args[:observe_codes]
           add_code_observers(args[:observe_codes])
         end
+
+        resume_scan(args)
       end
 
-      # Cancels a continuous scan
+      # Stops the callback function, but leaves observers and instance variables set
+      def pause_scan
+        pin.stop_callback
+        @scanning = false
+      end
+
+      # Runs the callback function, whether or not observer variables are set
+      def resume_scan(args = {})
+        pin.start_callback(
+          args.fetch(:callback_edge, :either),
+          &method(:pin_callback)
+        )
+
+        @scanning = true
+      end
+
+      # Cancels a continuous scan, unsetting instance variables and deleting observers
       def stop_scan
         pin.stop_callback
-        @observe_transmissions = @observe_codes = nil
+        delete_observers
+        @observe_transmissions = @observe_codes = @scanning = nil
+      end
+
+      # Returns a truthy value based on whether the scan is running. True if it is, false if it has
+      # been paused, and nil if it is not
+      def scanning?
+        @scanning
       end
 
       # Takes in +args+ and uses them to decode the transmissions in the +transmission_buffer+,
@@ -165,11 +185,7 @@ module LilBlaster
       # and returns its key from the Codex
       def observe_map_to_code(transmission)
         dex = @observe_codes || Codex.default
-        dc = dex.protocol.decode(transmission)
-
-        return unless dc
-
-        dex.key(dc.last)
+        dex.decode(transmission)
       end
 
       # Using the ranges from +transmission_bound+, converts the pulses in the +pulse_buffer+
