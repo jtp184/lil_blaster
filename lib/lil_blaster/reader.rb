@@ -165,11 +165,7 @@ module LilBlaster
       # and returns its key from the Codex
       def observe_map_to_code(transmission)
         dex = @observe_codes || Codex.default
-        dc = dex.protocol.decode(transmission)
-
-        return unless dc
-
-        dex.key(dc.last)
+        dex.decode(transmission)
       end
 
       # Using the ranges from +transmission_bound+, converts the pulses in the +pulse_buffer+
