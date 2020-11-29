@@ -245,7 +245,7 @@ callback, and commits it to an instance variable</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-stop_callback-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-stop_callback-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/pin.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stop_callback</span>&#x000A;  <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">cancel</span>&#x000A;  <span class="ruby-ivar">@callback</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-stop_callback-source'><span class="ruby-comment"># File lib/lil_blaster/gpio/pin.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stop_callback</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">nil?</span>&#x000A;&#x000A;  <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">cancel</span>&#x000A;  <span class="ruby-ivar">@callback</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-toggle'>
