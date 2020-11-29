@@ -36,6 +36,16 @@ module LilBlaster
       @carrier_wave
     end
 
+    # Returns the number of pulses in +data+
+    def count
+      data.cound
+    end
+
+    # Returns the combined length of the transmission in micros, by summing +data+
+    def length
+      data.reduce(:+)
+    end
+
     # Combines the data for this and +other+ transmission into a new transmission
     def +(other)
       self.class.new(
