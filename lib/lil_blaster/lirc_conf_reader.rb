@@ -147,7 +147,7 @@ module LilBlaster
           'RC6' => :RC6,
           'RCMM' => :RCMM,
           'SHIFT_ENC' => :RC5,
-          'SPACE_ENC' => :NEC,
+          'SPACE_ENC' => :NEC
         }
       end
 
