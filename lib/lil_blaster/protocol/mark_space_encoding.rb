@@ -19,6 +19,8 @@ module LilBlaster
       BINARY_FORMAT = '%.16b'.freeze
       # Max the gap out so that we don't end up with egregious results
       MAXIMUM_GAP = 120_000
+      # How close pulses have to be to be considered the same
+      NOISE_TOLERANCE = 200
 
       # The methods to extend onto the base class when included
       module ClassMethods
@@ -30,7 +32,7 @@ module LilBlaster
           end
 
           tr_one.data.map.with_index do |value, index|
-            close?(value, tr_two.data[index])
+            (value - tr_two.data[index]).abs < NOISE_TOLERANCE
           end.all?(true)
         end
 
@@ -108,7 +110,7 @@ module LilBlaster
       private
 
       # Compare two values for equality within +tolerance+
-      def close?(val_one, val_two, tolerance = 200)
+      def close?(val_one, val_two, tolerance = NOISE_TOLERANCE)
         (val_one - val_two).abs < tolerance
       end
 
