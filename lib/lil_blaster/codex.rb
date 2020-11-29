@@ -91,7 +91,8 @@ module LilBlaster
 
     # Given a +transmission+, decodes it using our protocol and returns the corresponding key
     def decode(transmission)
-      key(protocol.decode(transmission)[1])
+      dc = protocol.decode(transmission)
+      dc ? key(dc[1]) : nil
     end
 
     # Takes in +args+ to append either data or decoded transmissions to the codex
