@@ -112,7 +112,7 @@ module LilBlaster
 
       # Yields the variables to compare for object equality
       def object_state
-        [system_data, repeat_value, header, pulse_values]
+        export_options.map { |o| instance_variable_get(:"@#{o}") }
       end
 
       private
