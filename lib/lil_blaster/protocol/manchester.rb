@@ -8,8 +8,6 @@ module LilBlaster
 
       # The preamble before the button press
       attr_reader :system_data
-      # Whether to send a post bit
-      attr_reader :post_bit
 
       class << self
         # Checks that there are four distinct tuples in the +data+, and 6 datums

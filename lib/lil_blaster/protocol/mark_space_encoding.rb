@@ -4,14 +4,12 @@ module LilBlaster
     module MarkSpaceEncoding
       # The plen for the header
       attr_reader :header
-      # The plen for the zero value
-      attr_reader :zero_value
-      # The plen for the one value
-      attr_reader :one_value
       # Trailing space length
       attr_reader :gap
       # Repeat code if utilized
       attr_accessor :repeat_value
+      # Whether to send a post bit
+      attr_reader :post_bit
 
       # How to format hex numbers for readability
       HEX_FORMAT = '%#.4x'.freeze
@@ -62,18 +60,26 @@ module LilBlaster
 
           init_args = {
             header: plens.max { |a, b| a[0] <=> b[0] },
-            gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min,
+            gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min
+          }
+
+          init_args[:pulse_values] = extract_pulse_values(init_args, plens)
+          init_args
+        end
+
+        def extract_pulse_values(init_args, plens)
+          pulse_values = {
             zero_value: plens.min
           }
 
-          init_args[:one_value] = plens.find do |plen|
-            next unless plen != init_args[:header] && plen != init_args[:zero_value]
+          pulse_values[:one_value] = plens.find do |plen|
+            next unless plen != init_args[:header] && plen != pulse_values[:zero_value]
             next if plen[1] == init_args[:gap]
 
             plen
           end
 
-          init_args
+          pulse_values
         end
 
         # Takes the +transmission+ and converts the tuples at +range+ into an integer.
@@ -95,6 +101,10 @@ module LilBlaster
       # Extends the +base_class+ with the ClassMethods upon inclusion
       def self.included(base_class)
         base_class.extend(ClassMethods)
+      end
+
+      def pulse_values
+        @pulse_values ||= Hash.new([0, 0])
       end
 
       # Returns true if the +transmission+ is identified to be a repeat signal
