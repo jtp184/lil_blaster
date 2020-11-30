@@ -104,7 +104,7 @@ module LilBlaster
           gap: /gap\s+(\d+)/i,
           header: /header\s+(\d+)\s+(\d+)/i,
           one_value: /one\s+(\d+)\s+(\d+)/i,
-          post_bit: /ptrail/,
+          post_bit: /ptrail\s+(\d+)/i,
           remote_name: /name\s+([^\s]+)/i,
           repeat_value: /repeat\s+(\d+)\s+(\d+)/i,
           system_data: /pre_data\s+(0x[0-9a-f]+)/i,
@@ -128,14 +128,13 @@ module LilBlaster
           @formatters[sym] = ->(m) { m[1..2].map(&:to_i) }
         end
 
-        %i[system_data system_data_bits data_bits].each do |sym|
+        %i[system_data system_data_bits data_bits post_bit].each do |sym|
           @formatters[sym] = ->(m) { Integer(m[1]) }
         end
 
         @formatters[:frequency] = ->(m) { Integer(m[1]) / 1000.0 }
 
         @formatters[:gap] = ->(m) { m[1].to_i }
-        @formatters[:post_bit] = ->(m) { !m.nil? }
 
         @formatters
       end

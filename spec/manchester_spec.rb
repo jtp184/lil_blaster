@@ -10,7 +10,7 @@ RSpec.describe 'Manchester Protocol' do
         one_value: [520, 1710]
       },
       system_data: 0xE0E0,
-      post_bit: true
+      post_bit: 520
     )
 
     @cmd = 0x40BF
@@ -25,7 +25,7 @@ RSpec.describe 'Manchester Protocol' do
         one_value: [509, 1701]
       },
       system_data: 0xE0E0,
-      post_bit: true
+      post_bit: 509
     ).encode(@cmd)
   end
 

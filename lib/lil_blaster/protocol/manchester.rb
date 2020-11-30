@@ -6,13 +6,15 @@ module LilBlaster
     class Manchester < BaseProtocol
       include MarkSpaceEncoding
 
+      # The preamble before the button press
+      attr_reader :system_data
+
       # The range where the system data is stored
       SYSTEM_DATA_RANGE = (1..16).freeze
       # The range where the command data is stored
       COMMAND_DATA_RANGE = (17..-2).freeze
-
-      # The preamble before the button press
-      attr_reader :system_data
+      # How to format binary numbers for length and readability
+      BINARY_FORMAT = '%.16b'.freeze
 
       class << self
         # Checks that there are four distinct tuples in the +data+, and 6 datums
@@ -142,6 +144,24 @@ module LilBlaster
                   end
 
         Transmission.new(data: pulses.flatten, carrier_wave: carrier_wave_options)
+      end
+
+      # Formats a number +num+ as a 16 digit binary number
+      def binary_pad(num)
+        format(BINARY_FORMAT, num)
+      end
+
+      # Takes in an +int+ and converts it first to binary,
+      # then to tuples based on the zero and one values
+      def int_to_pulses(int)
+        binary_pad(int).chars.map do |ch|
+          case ch
+          when /0/
+            pulse_values[:zero_value].clone
+          when /1/
+            pulse_values[:one_value].clone
+          end
+        end
       end
     end
   end

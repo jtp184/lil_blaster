@@ -8,13 +8,11 @@ module LilBlaster
       attr_reader :gap
       # Repeat code if utilized
       attr_accessor :repeat_value
-      # Whether to send a post bit
+      # What to send as a post bit
       attr_reader :post_bit
 
       # How to format hex numbers for readability
       HEX_FORMAT = '%#.4x'.freeze
-      # How to format binary numbers for length and readability
-      BINARY_FORMAT = '%.16b'.freeze
       # Max the gap out so that we don't end up with egregious results
       MAXIMUM_GAP = 120_000
       # How close pulses have to be to be considered the same
@@ -63,7 +61,7 @@ module LilBlaster
           init_args = {
             header: plens.max { |a, b| a[0] <=> b[0] },
             gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min,
-            post_bit: plens.all? { |pl| pl.length == 2 }
+            post_bit: plens[-2][0]
           }
 
           init_args[:pulse_values] = extract_pulse_values(init_args, plens)
@@ -131,27 +129,9 @@ module LilBlaster
         (val_one - val_two).abs < tolerance
       end
 
-      # Takes in an +int+ and converts it first to binary,
-      # then to tuples based on the zero and one values
-      def int_to_pulses(int)
-        binary_pad(int).chars.map do |ch|
-          case ch
-          when /0/
-            pulse_values[:zero_value].clone
-          when /1/
-            pulse_values[:one_value].clone
-          end
-        end
-      end
-
       # Sends a post_bit, which is the mark with a gap sized space
       def post_bit_plen
-        pulse_values[:zero_value].clone.tap { |zv| zv[1] = gap }
-      end
-
-      # Formats a number +num+ as a 16 digit binary number
-      def binary_pad(num)
-        format(BINARY_FORMAT, num)
+        [post_bit, gap]
       end
     end
   end

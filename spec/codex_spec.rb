@@ -18,7 +18,7 @@ RSpec.describe LilBlaster::Codex do
               - 520
               - 600
           :system_data: 57568
-          :post_bit: true
+          :post_bit: 520
       :codes:
         :power: 16575
         :volume_up: 57375
