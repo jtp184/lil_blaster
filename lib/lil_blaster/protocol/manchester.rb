@@ -46,22 +46,10 @@ module LilBlaster
 
         # Does the work of scanning the tuples within the +data+ and identifying the attributes
         def extract_values(data)
-          plens = data.tuples.uniq
-
           init_args = extract_mark_values(data)
           init_args[:system_data] = data_range(data, 1..16, init_args)
-          init_args[:post_bit] = plens.all? { |pl| pl.length == 2 }
 
           init_args
-        end
-      end
-
-      # Takes in +args+ for instance variables
-      def initialize(args = {})
-        super()
-
-        %i[header zero_value one_value system_data post_bit gap repeat_value].each do |sym|
-          instance_variable_set(:"@#{sym}", args.fetch(sym, nil))
         end
       end
 
@@ -116,7 +104,7 @@ module LilBlaster
 
       # Yields the variables to compare for object equality
       def object_state
-        [system_data, repeat_value, header, zero_value, one_value]
+        [system_data, repeat_value, header, pulse_values]
       end
 
       private

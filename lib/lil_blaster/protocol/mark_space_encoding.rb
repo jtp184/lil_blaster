@@ -38,7 +38,9 @@ module LilBlaster
         def bytestring_for(transmission)
           ident = extract_mark_values(transmission)
 
-          transmission.tuples[1..-2].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
+          transmission.tuples[1..-2].map do |plen|
+            plen == ident[:pulse_values][:zero_value] ? '0' : '1'
+          end.join
         end
 
         # Takes in tuples +plens+ and converts them into a binary string first,
@@ -60,7 +62,8 @@ module LilBlaster
 
           init_args = {
             header: plens.max { |a, b| a[0] <=> b[0] },
-            gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min
+            gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min,
+            post_bit: plens.all? { |pl| pl.length == 2 }
           }
 
           init_args[:pulse_values] = extract_pulse_values(init_args, plens)
@@ -87,14 +90,18 @@ module LilBlaster
         def data_range(transmission, range, args = nil)
           args ||= extract_mark_values(transmission)
 
-          pulses_to_int(transmission.tuples[range], args[:zero_value], args[:one_value])
+          pulses_to_int(
+            transmission.tuples[range],
+            args[:pulse_values][:zero_value],
+            args[:pulse_values][:one_value]
+          )
         end
 
         # Returns an array of the instance values to export
         def export_options
           super
 
-          @export_options += %i[gap header one_value repeat_value zero_value]
+          @export_options += %i[gap header repeat_value pulse_values]
         end
       end
 
@@ -130,16 +137,16 @@ module LilBlaster
         binary_pad(int).chars.map do |ch|
           case ch
           when /0/
-            zero_value.clone
+            pulse_values[:zero_value].clone
           when /1/
-            one_value.clone
+            pulse_values[:one_value].clone
           end
         end
       end
 
       # Sends a post_bit, which is the mark with a gap sized space
       def post_bit_plen
-        zero_value.clone.tap { |zv| zv[1] = gap }
+        pulse_values[:zero_value].clone.tap { |zv| zv[1] = gap }
       end
 
       # Formats a number +num+ as a 16 digit binary number

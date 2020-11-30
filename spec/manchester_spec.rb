@@ -5,8 +5,10 @@ RSpec.describe 'Manchester Protocol' do
     @proto = LilBlaster::Protocol::Manchester.new(
       header: [4501, 4509],
       gap: 47_000,
-      zero_value: [520, 610],
-      one_value: [520, 1710],
+      pulse_values: {
+        zero_value: [520, 610],
+        one_value: [520, 1710]
+      },
       system_data: 0xE0E0,
       post_bit: true
     )
@@ -18,8 +20,10 @@ RSpec.describe 'Manchester Protocol' do
     @eq = LilBlaster::Protocol::Manchester.new(
       header: [4501, 4509],
       gap: 47_000,
-      zero_value: [509, 603],
-      one_value: [509, 1701],
+      pulse_values: {
+        zero_value: [509, 603],
+        one_value: [509, 1701]
+      },
       system_data: 0xE0E0,
       post_bit: true
     ).encode(@cmd)

@@ -69,6 +69,12 @@ module LilBlaster
         @descendants << subclass
       end
 
+      def initialize(args = {})
+        args.each do |k, v|
+          instance_variable_set(:"@#{k}", v)
+        end
+      end
+
       # Superclass implementation ignores the +data+ and returns a blank transmission.
       # Subclasses should process the data according to protocol, and return a real transmission
       def encode(_data)

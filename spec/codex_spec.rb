@@ -10,12 +10,13 @@ RSpec.describe LilBlaster::Codex do
           :header:
           - 4511
           - 4540
-          :one_value:
-          - 520
-          - 1730
-          :zero_value:
-          - 520
-          - 600
+          :pulse_values:
+            :one_value:
+              - 520
+              - 1730
+            :zero_value:
+              - 520
+              - 600
           :system_data: 57568
           :post_bit: true
       :codes:
