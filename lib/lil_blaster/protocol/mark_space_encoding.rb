@@ -101,7 +101,7 @@ module LilBlaster
         def export_options
           super
 
-          @export_options += %i[gap header repeat_value pulse_values]
+          @export_options += %i[gap header repeat_value pulse_values post_bit]
         end
       end
 

@@ -6,6 +6,11 @@ module LilBlaster
     class Manchester < BaseProtocol
       include MarkSpaceEncoding
 
+      # The range where the system data is stored
+      SYSTEM_DATA_RANGE = (1..16).freeze
+      # The range where the command data is stored
+      COMMAND_DATA_RANGE = (17..-2).freeze
+
       # The preamble before the button press
       attr_reader :system_data
 
@@ -27,19 +32,19 @@ module LilBlaster
 
         # Returns an integer representing the command_data in the +transmission+
         def command_data(transmission)
-          data_range(transmission, 17..-2)
+          data_range(transmission, COMMAND_DATA_RANGE)
         end
 
         # Returns an integer representing the system_data in the +transmission+
         def system_data(transmission)
-          data_range(transmission, 1..16)
+          data_range(transmission, SYSTEM_DATA_RANGE)
         end
 
         # Returns an array of the instance values to inspect
         def export_options
           super
 
-          @export_options += %i[system_data post_bit]
+          @export_options += %i[system_data]
         end
 
         private
