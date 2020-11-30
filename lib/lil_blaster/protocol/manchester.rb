@@ -95,16 +95,17 @@ module LilBlaster
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
       end
 
-      # Allows for calling +mtd+ on the class if it exists
-      def method_missing(mtd, *args)
-        super unless self.class.respond_to?(mtd)
+      # Returns :shift if pulses have the same first value, :space if they have the same last value
+      # and nil if neither is the case
+      def encoding
+        same_first = pulse_values[:zero_value][0] == pulse_values[:one_value][0]
+        same_last = pulse_values[:zero_value][1] == pulse_values[:one_value][1]
 
-        self.class.public_send(mtd, *args)
-      end
-
-      # Politely override method_missing
-      def respond_to_missing?(mtd, *)
-        self.class.respond_to?(mtd) || super
+        if same_first
+          :shift
+        elsif same_last
+          :space
+        end
       end
 
       # Yields the variables to compare for object equality
@@ -127,7 +128,7 @@ module LilBlaster
           pulses[-1][1] = gap
         end
 
-        Transmission.new(data: pulses.flatten)
+        Transmission.new(data: pulses.flatten, carrier_wave: carrier_wave_options)
       end
 
       # Uses the +repeat_value+ to produce a transmission with the repeat code
@@ -140,7 +141,7 @@ module LilBlaster
                     [1, gap.dup]
                   end
 
-        Transmission.new(data: pulses.flatten)
+        Transmission.new(data: pulses.flatten, carrier_wave: carrier_wave_options)
       end
     end
   end

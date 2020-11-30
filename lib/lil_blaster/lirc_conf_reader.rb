@@ -56,6 +56,12 @@ module LilBlaster
         end
 
         @matches[:gap] = estimate_gap if flopts.include?('CONST_LENGTH')
+
+        @matches[:carrier_wave_options] = if @matches[:frequency]
+                                            { frequency: @matches[:frequency] }
+                                          else
+                                            {}
+                                          end
       end
 
       # Reinterprets the gap as the difference between the gap and a standard transmission
@@ -72,15 +78,21 @@ module LilBlaster
 
       # Returns just the arguments needed for the protocol
       def protocol_options
-        @matches.slice(
+        po = @matches.slice(
           :gap,
           :header,
-          :one_value,
           :post_bit,
           :repeat_value,
           :system_data,
-          :zero_value
+          :carrier_wave_options
         )
+
+        po.merge(pulse_values: @matches.slice(
+          :zero_value,
+          :one_value,
+          :two_value,
+          :three_value
+        ))
       end
 
       # Provides regex patterns to match against
@@ -116,9 +128,11 @@ module LilBlaster
           @formatters[sym] = ->(m) { m[1..2].map(&:to_i) }
         end
 
-        %i[system_data system_data_bits data_bits frequency].each do |sym|
+        %i[system_data system_data_bits data_bits].each do |sym|
           @formatters[sym] = ->(m) { Integer(m[1]) }
         end
+
+        @formatters[:frequency] = ->(m) { Integer(m[1]) / 1000.0 }
 
         @formatters[:gap] = ->(m) { m[1].to_i }
         @formatters[:post_bit] = ->(m) { !m.nil? }
