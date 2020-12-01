@@ -100,8 +100,8 @@ module LilBlaster
       # Returns :shift if pulses have the same first value, :space if they have the same last value
       # and nil if neither is the case
       def encoding
-        same_first = pulse_values[:zero_value][0] == pulse_values[:one_value][0]
-        same_last = pulse_values[:zero_value][1] == pulse_values[:one_value][1]
+        same_first = pulse_values[:zero][0] == pulse_values[:one][0]
+        same_last = pulse_values[:zero][1] == pulse_values[:one][1]
 
         if same_first
           :shift
@@ -157,9 +157,9 @@ module LilBlaster
         binary_pad(int).chars.map do |ch|
           case ch
           when /0/
-            pulse_values[:zero_value].clone
+            pulse_values[:zero].clone
           when /1/
-            pulse_values[:one_value].clone
+            pulse_values[:one].clone
           end
         end
       end

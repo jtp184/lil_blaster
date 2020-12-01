@@ -70,7 +70,7 @@ module LilBlaster
 
         tlen = []
         tlen << @matches[:header] if @matches[:header]
-        tlen << Array.new(bit_size, @matches[:zero_value])
+        tlen << Array.new(bit_size, @matches[:zero])
         tlen = tlen.flatten.reduce(&:+)
 
         @matches[:gap] - tlen
@@ -88,10 +88,10 @@ module LilBlaster
         )
 
         po.merge(pulse_values: @matches.slice(
-          :zero_value,
-          :one_value,
-          :two_value,
-          :three_value
+          :zero,
+          :one,
+          :two,
+          :three
         ))
       end
 
@@ -103,15 +103,15 @@ module LilBlaster
           frequency: /frequency\s+(\d+)/i,
           gap: /gap\s+(\d+)/i,
           header: /header\s+(\d+)\s+(\d+)/i,
-          one_value: /one\s+(\d+)\s+(\d+)/i,
+          one: /one\s+(\d+)\s+(\d+)/i,
           post_bit: /ptrail\s+(\d+)/i,
           remote_name: /name\s+([^\s]+)/i,
           repeat_value: /repeat\s+(\d+)\s+(\d+)/i,
           system_data: /pre_data\s+(0x[0-9a-f]+)/i,
           system_data_bits: /pre_data_bits\s+(\d+)/i,
-          three_value: /three\s+(\d+)\s+(\d+)/i,
-          two_value: /two\s+(\d+)\s+(\d+)/i,
-          zero_value: /zero\s+(\d+)\s+(\d+)/i
+          three: /three\s+(\d+)\s+(\d+)/i,
+          two: /two\s+(\d+)\s+(\d+)/i,
+          zero: /zero\s+(\d+)\s+(\d+)/i
         }
       end
 
@@ -124,7 +124,7 @@ module LilBlaster
           flags: ->(m) { m[1].split('|') }
         }
 
-        %i[header zero_value one_value two_value three_value repeat_value].each do |sym|
+        %i[header zero one two three repeat_value].each do |sym|
           @formatters[sym] = ->(m) { m[1..2].map(&:to_i) }
         end
 

@@ -6,8 +6,8 @@ RSpec.describe 'Manchester Protocol' do
       header: [4501, 4509],
       gap: 47_000,
       pulse_values: {
-        zero_value: [520, 610],
-        one_value: [520, 1710]
+        zero: [520, 610],
+        one: [520, 1710]
       },
       system_data: 0xE0E0,
       post_bit: 520
@@ -21,8 +21,8 @@ RSpec.describe 'Manchester Protocol' do
       header: [4501, 4509],
       gap: 47_000,
       pulse_values: {
-        zero_value: [509, 603],
-        one_value: [509, 1701]
+        zero: [509, 603],
+        one: [509, 1701]
       },
       system_data: 0xE0E0,
       post_bit: 509

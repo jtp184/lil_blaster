@@ -2,12 +2,8 @@ module LilBlaster
   module Protocol
     # Provides common methods for protocols that use mark / space values for binary encoding
     module MarkSpaceEncoding
-      # The plen for the header
-      attr_reader :header
       # Trailing space length
       attr_reader :gap
-      # Repeat code if utilized
-      attr_accessor :repeat_value
       # What to send as a post bit
       attr_reader :post_bit
 
@@ -37,7 +33,7 @@ module LilBlaster
           ident = extract_mark_values(transmission)
 
           transmission.tuples[1..-2].map do |plen|
-            plen == ident[:pulse_values][:zero_value] ? '0' : '1'
+            plen == ident[:pulse_values][:zero] ? '0' : '1'
           end.join
         end
 
@@ -59,7 +55,6 @@ module LilBlaster
           plens = data.tuples.uniq
 
           init_args = {
-            header: plens.max { |a, b| a[0] <=> b[0] },
             gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min,
             post_bit: plens[-2][0]
           }
@@ -70,11 +65,12 @@ module LilBlaster
 
         def extract_pulse_values(init_args, plens)
           pulse_values = {
-            zero_value: plens.min
+            header: plens.max { |a, b| a[0] <=> b[0] },
+            zero: plens.min
           }
 
-          pulse_values[:one_value] = plens.find do |plen|
-            next unless plen != init_args[:header] && plen != pulse_values[:zero_value]
+          pulse_values[:one] = plens.find do |plen|
+            next unless plen != init_args[:header] && plen != pulse_values[:zero]
             next if plen[1] == init_args[:gap]
 
             plen
@@ -90,8 +86,8 @@ module LilBlaster
 
           pulses_to_int(
             transmission.tuples[range],
-            args[:pulse_values][:zero_value],
-            args[:pulse_values][:one_value]
+            args[:pulse_values][:zero],
+            args[:pulse_values][:one]
           )
         end
 
