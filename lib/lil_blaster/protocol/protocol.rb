@@ -69,12 +69,14 @@ module LilBlaster
         @descendants << subclass
       end
 
+      # Auto initialize +args+ as instance variables
       def initialize(args = {})
         args.each do |k, v|
           instance_variable_set(:"@#{k}", v)
         end
       end
 
+      # Memoize carrier wave options on the base class
       def carrier_wave_options
         @carrier_wave_options ||= {}
       end

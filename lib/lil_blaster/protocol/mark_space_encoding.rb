@@ -63,6 +63,7 @@ module LilBlaster
           init_args
         end
 
+        # Returns the pulse specific values, using +init_args+ to examine the +plens+
         def extract_pulse_values(init_args, plens)
           pulse_values = {
             header: plens.max { |a, b| a[0] <=> b[0] },
@@ -104,6 +105,7 @@ module LilBlaster
         base_class.extend(ClassMethods)
       end
 
+      # Lazy returns a tuple defaulting hash
       def pulse_values
         @pulse_values ||= Hash.new([0, 0])
       end
