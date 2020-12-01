@@ -45,6 +45,7 @@ LilBlaster::Protocol::MarkSpaceEncoding::ClassMethods
 <li><a href="#method-i-data_range">data_range</a></li>
 <li><a href="#method-i-export_options">export_options</a></li>
 <li><a href="#method-i-extract_mark_values">extract_mark_values</a></li>
+<li><a href="#method-i-extract_pulse_values">extract_pulse_values</a></li>
 <li><a href="#method-i-pulses_to_int">pulses_to_int</a></li>
 <li><a href="#method-i-same_data-3F">same_data?</a></li>
 </ol>
@@ -57,8 +58,7 @@ LilBlaster::Protocol::MarkSpaceEncoding::ClassMethods
 <div class='method public-instance' id='method-method-i-bytestring_for'>
 <a name='method-i-bytestring_for'></a>
 <div class='synopsis'>
-<span class='name'>bytestring_for</span>
-<span class='arguments'>(transmission)</span>
+<span class='name'>bytestring_for</span><span class='arguments'>(transmission)</span>
 
 </div>
 <div class='description'>
@@ -71,14 +71,13 @@ a bytestring</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-bytestring_for-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-bytestring_for-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 40</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bytestring_for</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">ident</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">plen</span><span class="ruby-operator">|</span> <span class="ruby-identifier">plen</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">ident</span>[<span class="ruby-value">:zero_value</span>] <span class="ruby-operator">?</span> <span class="ruby-string">&#39;0&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;1&#39;</span> }.<span class="ruby-identifier">join</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-bytestring_for-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 32</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bytestring_for</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">ident</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span>].<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">plen</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">plen</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">ident</span>[<span class="ruby-value">:pulse_values</span>][<span class="ruby-value">:zero</span>] <span class="ruby-operator">?</span> <span class="ruby-string">&#39;0&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;1&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-data_range'>
 <a name='method-i-data_range'></a>
 <div class='synopsis'>
-<span class='name'>data_range</span>
-<span class='arguments'>(transmission, range, args = nil)</span>
+<span class='name'>data_range</span><span class='arguments'>(transmission, range, args = nil)</span>
 
 </div>
 <div class='description'>
@@ -92,14 +91,13 @@ one value can be passed</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-data_range-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-data_range-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 81</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">range</span>, <span class="ruby-identifier">args</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">args</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses_to_int</span>(<span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-identifier">range</span>], <span class="ruby-identifier">args</span>[<span class="ruby-value">:zero_value</span>], <span class="ruby-identifier">args</span>[<span class="ruby-value">:one_value</span>])&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-data_range-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 85</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">range</span>, <span class="ruby-identifier">args</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">args</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses_to_int</span>(&#x000A;    <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-identifier">range</span>],&#x000A;    <span class="ruby-identifier">args</span>[<span class="ruby-value">:pulse_values</span>][<span class="ruby-value">:zero</span>],&#x000A;    <span class="ruby-identifier">args</span>[<span class="ruby-value">:pulse_values</span>][<span class="ruby-value">:one</span>]&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-export_options'>
 <a name='method-i-export_options'></a>
 <div class='synopsis'>
-<span class='name'>export_options</span>
-<span class='arguments'>()</span>
+<span class='name'>export_options</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -111,14 +109,13 @@ one value can be passed</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-export_options-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 88</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;&#x000A;  <span class="ruby-ivar">@export_options</span> <span class="ruby-operator">+=</span> <span class="ruby-node">%i[gap header one_value repeat_value zero_value]</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;&#x000A;  <span class="ruby-ivar">@export_options</span> <span class="ruby-operator">+=</span> <span class="ruby-node">%i[gap pulse_values post_bit]</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-extract_mark_values'>
 <a name='method-i-extract_mark_values'></a>
 <div class='synopsis'>
-<span class='name'>extract_mark_values</span>
-<span class='arguments'>(data)</span>
+<span class='name'>extract_mark_values</span><span class='arguments'>(data)</span>
 
 </div>
 <div class='description'>
@@ -131,14 +128,32 @@ identifying the attributes</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-extract_mark_values-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-extract_mark_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 60</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_mark_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">uniq</span>&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span> = {&#x000A;    <span class="ruby-value">header:</span> <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">0</span>] },&#x000A;    <span class="ruby-value">gap:</span> [<span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">1</span>] }[<span class="ruby-value">1</span>], <span class="ruby-constant">MAXIMUM_GAP</span>].<span class="ruby-identifier">min</span>,&#x000A;    <span class="ruby-value">zero_value:</span> <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">min</span>&#x000A;  }&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:one_value</span>] = <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">plen</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">plen</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:header</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">plen</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:zero_value</span>]&#x000A;    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">plen</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:gap</span>]&#x000A;&#x000A;    <span class="ruby-identifier">plen</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-extract_mark_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 54</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_mark_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">uniq</span>&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span> = {&#x000A;    <span class="ruby-value">gap:</span> [<span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">1</span>] }[<span class="ruby-value">1</span>], <span class="ruby-constant">MAXIMUM_GAP</span>].<span class="ruby-identifier">min</span>,&#x000A;    <span class="ruby-value">post_bit:</span> <span class="ruby-identifier">plens</span>[<span class="ruby-value">-2</span>][<span class="ruby-value">0</span>]&#x000A;  }&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:pulse_values</span>] = <span class="ruby-identifier">extract_pulse_values</span>(<span class="ruby-identifier">init_args</span>, <span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">init_args</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-extract_pulse_values'>
+<a name='method-i-extract_pulse_values'></a>
+<div class='synopsis'>
+<span class='name'>extract_pulse_values</span><span class='arguments'>(init_args, plens)</span>
+
+</div>
+<div class='description'>
+
+<p>Returns the pulse specific values, using <code>init_args</code> to examine
+the <code>plens</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-extract_pulse_values-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-extract_pulse_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 67</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_pulse_values</span>(<span class="ruby-identifier">init_args</span>, <span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">pulse_values</span> = {&#x000A;    <span class="ruby-value">header:</span> <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">0</span>] },&#x000A;    <span class="ruby-value">zero:</span> <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">min</span>&#x000A;  }&#x000A;&#x000A;  <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:one</span>] = <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">plen</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">plen</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:header</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">plen</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:zero</span>]&#x000A;    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">plen</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:gap</span>]&#x000A;&#x000A;    <span class="ruby-identifier">plen</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">pulse_values</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-pulses_to_int'>
 <a name='method-i-pulses_to_int'></a>
 <div class='synopsis'>
-<span class='name'>pulses_to_int</span>
-<span class='arguments'>(plens, zero, one)</span>
+<span class='name'>pulses_to_int</span><span class='arguments'>(plens, zero, one)</span>
 
 </div>
 <div class='description'>
@@ -151,14 +166,13 @@ first, then to an integer based on the zero and one values</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-pulses_to_int-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-pulses_to_int-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 48</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulses_to_int</span>(<span class="ruby-identifier">plens</span>, <span class="ruby-identifier">zero</span>, <span class="ruby-identifier">one</span>)&#x000A;  <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">pl</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">one</span>&#x000A;      <span class="ruby-string">&#39;1&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">zero</span>&#x000A;      <span class="ruby-string">&#39;0&#39;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">2</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-pulses_to_int-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 42</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulses_to_int</span>(<span class="ruby-identifier">plens</span>, <span class="ruby-identifier">zero</span>, <span class="ruby-identifier">one</span>)&#x000A;  <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">pl</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">one</span>&#x000A;      <span class="ruby-string">&#39;1&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">zero</span>&#x000A;      <span class="ruby-string">&#39;0&#39;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">2</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-same_data-3F'>
 <a name='method-i-same_data-3F'></a>
 <div class='synopsis'>
-<span class='name'>same_data?</span>
-<span class='arguments'>(tr_one, tr_two)</span>
+<span class='name'>same_data?</span><span class='arguments'>(tr_one, tr_two)</span>
 
 </div>
 <div class='description'>
@@ -172,7 +186,7 @@ same underlying data</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-same_data-3F-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-same_data-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 29</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">same_data?</span>(<span class="ruby-identifier">tr_one</span>, <span class="ruby-identifier">tr_two</span>)&#x000A;  <span class="ruby-keyword">unless</span> [<span class="ruby-identifier">tr_one</span>, <span class="ruby-identifier">tr_two</span>].<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Transmission</span>) }&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-string">&#39;Not transmissions&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">tr_one</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">value</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>&#x000A;    (<span class="ruby-identifier">value</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tr_two</span>.<span class="ruby-identifier">data</span>[<span class="ruby-identifier">index</span>]).<span class="ruby-identifier">abs</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">NOISE_TOLERANCE</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">all?</span>(<span class="ruby-keyword">true</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-same_data-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/mark_space_encoding.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">same_data?</span>(<span class="ruby-identifier">tr_one</span>, <span class="ruby-identifier">tr_two</span>)&#x000A;  <span class="ruby-keyword">unless</span> [<span class="ruby-identifier">tr_one</span>, <span class="ruby-identifier">tr_two</span>].<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Transmission</span>) }&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-string">&#39;Not transmissions&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">tr_one</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">map</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">value</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>&#x000A;    (<span class="ruby-identifier">value</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tr_two</span>.<span class="ruby-identifier">data</span>[<span class="ruby-identifier">index</span>]).<span class="ruby-identifier">abs</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">NOISE_TOLERANCE</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">all?</span>(<span class="ruby-keyword">true</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

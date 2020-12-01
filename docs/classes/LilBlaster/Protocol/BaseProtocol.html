@@ -50,11 +50,13 @@ Superclass:
 <li><a href="#method-c-export_options">export_options</a></li>
 <li><a href="#method-c-inherited">inherited</a></li>
 <li><a href="#method-c-match-3F">match?</a></li>
+<li><a href="#method-c-new">new</a></li>
 <li><a href="#method-c-to_sym">to_sym</a></li>
 </ol>
 <h3>Public Instance</h3>
 <ol>
 <li><a href="#method-i-3D-3D">==</a></li>
+<li><a href="#method-i-carrier_wave_options">carrier_wave_options</a></li>
 <li><a href="#method-i-encode">encode</a></li>
 <li><a href="#method-i-export_options">export_options</a></li>
 <li><a href="#method-i-hash">hash</a></li>
@@ -98,8 +100,7 @@ Superclass:
 <div class='method public-class' id='method-method-c-decode'>
 <a name='method-c-decode'></a>
 <div class='synopsis'>
-<span class='name'>decode</span>
-<span class='arguments'>(data)</span>
+<span class='name'>decode</span><span class='arguments'>(data)</span>
 
 </div>
 <div class='description'>
@@ -120,8 +121,7 @@ a representation of the decoded data as well.</p>
 <div class='method public-class' id='method-method-c-export_options'>
 <a name='method-c-export_options'></a>
 <div class='synopsis'>
-<span class='name'>export_options</span>
-<span class='arguments'>()</span>
+<span class='name'>export_options</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -139,8 +139,7 @@ a representation of the decoded data as well.</p>
 <div class='method public-class' id='method-method-c-inherited'>
 <a name='method-c-inherited'></a>
 <div class='synopsis'>
-<span class='name'>inherited</span>
-<span class='arguments'>(subclass)</span>
+<span class='name'>inherited</span><span class='arguments'>(subclass)</span>
 
 </div>
 <div class='description'>
@@ -159,8 +158,7 @@ internal array</p>
 <div class='method public-class' id='method-method-c-match-3F'>
 <a name='method-c-match-3F'></a>
 <div class='synopsis'>
-<span class='name'>match?</span>
-<span class='arguments'>(_data)</span>
+<span class='name'>match?</span><span class='arguments'>(_data)</span>
 
 </div>
 <div class='description'>
@@ -176,11 +174,28 @@ true if the data matches the protocol. Superclass always returns true</p>
 <pre id='method-c-match-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 39</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">match?</span>(<span class="ruby-identifier">_data</span>)&#x000A;  <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
+<div class='method public-class' id='method-method-c-new'>
+<a name='method-c-new'></a>
+<div class='synopsis'>
+<span class='name'>new</span><span class='arguments'>(args = {})</span>
+
+</div>
+<div class='description'>
+
+<p>Auto initialize <code>args</code> as instance variables</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-value">:&quot;@#{k}&quot;</span>, <span class="ruby-identifier">v</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-class' id='method-method-c-to_sym'>
 <a name='method-c-to_sym'></a>
 <div class='synopsis'>
-<span class='name'>to_sym</span>
-<span class='arguments'>()</span>
+<span class='name'>to_sym</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -199,8 +214,7 @@ true if the data matches the protocol. Superclass always returns true</p>
 <div class='method public-instance' id='method-method-i-3D-3D'>
 <a name='method-i-3D-3D'></a>
 <div class='synopsis'>
-<span class='name'>==</span>
-<span class='arguments'>(other)</span>
+<span class='name'>==</span><span class='arguments'>(other)</span>
 
 </div>
 <div class='description'>
@@ -212,14 +226,31 @@ true if the data matches the protocol. Superclass always returns true</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-3D-3D-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-3D-3D-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 79</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span>(<span class="ruby-identifier">other</span>)&#x000A;  <span class="ruby-identifier">other</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">object_state</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">object_state</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-3D-3D-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 91</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span>(<span class="ruby-identifier">other</span>)&#x000A;  <span class="ruby-identifier">other</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">object_state</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">object_state</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-carrier_wave_options'>
+<a name='method-i-carrier_wave_options'></a>
+<div class='synopsis'>
+<span class='name'>carrier_wave_options</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Memoize carrier wave options on the base class</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-carrier_wave_options-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-carrier_wave_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 80</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">carrier_wave_options</span>&#x000A;  <span class="ruby-ivar">@carrier_wave_options</span> <span class="ruby-operator">||=</span> {}&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-encode'>
 <a name='method-i-encode'></a>
 <div class='synopsis'>
-<span class='name'>encode</span>
-<span class='arguments'>(_data)</span>
+<span class='name'>encode</span><span class='arguments'>(_data)</span>
 
 </div>
 <div class='description'>
@@ -233,14 +264,13 @@ return a real transmission</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-encode-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">_data</span>)&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> [])&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 86</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">_data</span>)&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> [], <span class="ruby-value">carrier_wave:</span> <span class="ruby-identifier">carrier_wave_options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-export_options'>
 <a name='method-i-export_options'></a>
 <div class='synopsis'>
-<span class='name'>export_options</span>
-<span class='arguments'>()</span>
+<span class='name'>export_options</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -252,14 +282,13 @@ return a real transmission</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-export_options-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 105</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">export_options</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-export_options-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 117</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export_options</span>&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">export_options</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-hash'>
 <a name='method-i-hash'></a>
 <div class='synopsis'>
-<span class='name'>hash</span>
-<span class='arguments'>()</span>
+<span class='name'>hash</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -272,14 +301,13 @@ href="BaseProtocol.html#method-i-object_state">#object_state</a>&#39;s hash</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-hash-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-hash-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 86</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">hash</span>&#x000A;  <span class="ruby-identifier">object_state</span>.<span class="ruby-identifier">hash</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-hash-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 98</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">hash</span>&#x000A;  <span class="ruby-identifier">object_state</span>.<span class="ruby-identifier">hash</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-object_state'>
 <a name='method-i-object_state'></a>
 <div class='synopsis'>
-<span class='name'>object_state</span>
-<span class='arguments'>()</span>
+<span class='name'>object_state</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -292,14 +320,13 @@ attributes</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-object_state-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 91</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-keyword">self</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  [<span class="ruby-keyword">self</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-to_sym'>
 <a name='method-i-to_sym'></a>
 <div class='synopsis'>
-<span class='name'>to_sym</span>
-<span class='arguments'>()</span>
+<span class='name'>to_sym</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -311,7 +338,7 @@ attributes</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-to_sym-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-to_sym-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_sym</span>&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>&#x000A;      .<span class="ruby-identifier">name</span>&#x000A;      .<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>)&#x000A;      .<span class="ruby-identifier">last</span>&#x000A;      .<span class="ruby-identifier">to_sym</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-to_sym-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/protocol.rb, line 108</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_sym</span>&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>&#x000A;      .<span class="ruby-identifier">name</span>&#x000A;      .<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>)&#x000A;      .<span class="ruby-identifier">last</span>&#x000A;      .<span class="ruby-identifier">to_sym</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
