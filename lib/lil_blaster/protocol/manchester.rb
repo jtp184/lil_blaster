@@ -8,8 +8,13 @@ module LilBlaster
 
       # The preamble before the button press
       attr_reader :system_data
-      # Whether to send a post bit
-      attr_reader :post_bit
+
+      # The range where the system data is stored
+      SYSTEM_DATA_RANGE = (1..16).freeze
+      # The range where the command data is stored
+      COMMAND_DATA_RANGE = (17..-2).freeze
+      # How to format binary numbers for length and readability
+      BINARY_FORMAT = '%.16b'.freeze
 
       class << self
         # Checks that there are four distinct tuples in the +data+, and 6 datums
@@ -29,42 +34,40 @@ module LilBlaster
 
         # Returns an integer representing the command_data in the +transmission+
         def command_data(transmission)
-          data_range(transmission, 17..-2)
+          data_range(transmission, COMMAND_DATA_RANGE)
         end
 
         # Returns an integer representing the system_data in the +transmission+
         def system_data(transmission)
-          data_range(transmission, 1..16)
+          data_range(transmission, SYSTEM_DATA_RANGE)
         end
 
         # Returns an array of the instance values to inspect
         def export_options
           super
 
-          @export_options += %i[system_data post_bit]
+          @export_options += %i[system_data]
         end
 
         private
 
         # Does the work of scanning the tuples within the +data+ and identifying the attributes
         def extract_values(data)
-          plens = data.tuples.uniq
-
           init_args = extract_mark_values(data)
           init_args[:system_data] = data_range(data, 1..16, init_args)
-          init_args[:post_bit] = plens.all? { |pl| pl.length == 2 }
 
           init_args
         end
       end
 
-      # Takes in +args+ for instance variables
+      # Handles the :pre_data within the +args+, after deferring to super
       def initialize(args = {})
-        super()
+        super
 
-        %i[header zero_value one_value system_data post_bit gap repeat_value].each do |sym|
-          instance_variable_set(:"@#{sym}", args.fetch(sym, nil))
-        end
+        return unless @pre_data
+
+        @system_data = @pre_data
+        remove_instance_variable(:@pre_data)
       end
 
       # Takes in an integer +data+, and constructs a transmission with a header, the encoded
@@ -73,17 +76,15 @@ module LilBlaster
         raise TypeError, 'data is not an integer' unless data.is_a?(Integer)
         raise IndexError, 'data is out of bounds' unless (-1..0xFFFF).cover?(data)
 
-        return repeat_transmission if data == -1
-
+        return repeat_transmission if data == -1 && repititions == 1
+        return repeat_transmission * repetitions if data == -1
         return data_transmission(data) if repititions == 1
 
         tr = [data_transmission(data)]
 
-        tr += if repeat_value
-                Array.new(repititions - 1) { repeat_transmission }
-              else
-                Array.new(repititions - 1) { data_transmission(data) }
-              end
+        tr += Array.new(repetitions - 1) do
+          pulse_values[:repeat] ? repeat_transmission : data_transmission(data)
+        end
 
         tr.reduce(&:+)
       end
@@ -104,21 +105,22 @@ module LilBlaster
         [system_data, data].map { |d| binary_pad(d) }.reduce(&:+)
       end
 
-      # Allows for calling +mtd+ on the class if it exists
-      def method_missing(mtd, *args)
-        super unless self.class.respond_to?(mtd)
+      # Returns :shift if pulses have the same first value, :space if they have the same last value
+      # and nil if neither is the case
+      def encoding
+        same_first = pulse_values[:zero][0] == pulse_values[:one][0]
+        same_last = pulse_values[:zero][1] == pulse_values[:one][1]
 
-        self.class.public_send(mtd, *args)
-      end
-
-      # Politely override method_missing
-      def respond_to_missing?(mtd, *)
-        self.class.respond_to?(mtd) || super
+        if same_first
+          :shift
+        elsif same_last
+          :space
+        end
       end
 
       # Yields the variables to compare for object equality
       def object_state
-        [system_data, repeat_value, header, zero_value, one_value]
+        export_options.map { |o| instance_variable_get(:"@#{o}") }
       end
 
       private
@@ -126,7 +128,7 @@ module LilBlaster
       # Provided +data+ to encode, creates a transmission doing so
       def data_transmission(data)
         pulses = []
-        pulses += header.clone
+        pulses += pulse_values[:header].clone
         pulses += int_to_pulses(system_data)
         pulses += int_to_pulses(data)
 
@@ -136,12 +138,12 @@ module LilBlaster
           pulses[-1][1] = gap
         end
 
-        Transmission.new(data: pulses.flatten)
+        Transmission.new(data: pulses.flatten, carrier_wave: carrier_wave_options)
       end
 
-      # Uses the +repeat_value+ to produce a transmission with the repeat code
+      # Uses the +repeat+ to produce a transmission with the repeat code
       def repeat_transmission
-        pulses = repeat_value.dup
+        pulses = pulse_values[:repeat].dup
 
         pulses += if post_bit
                     post_bit_plen
@@ -149,7 +151,25 @@ module LilBlaster
                     [1, gap.dup]
                   end
 
-        Transmission.new(data: pulses.flatten)
+        Transmission.new(data: pulses.flatten, carrier_wave: carrier_wave_options)
+      end
+
+      # Formats a number +num+ as a 16 digit binary number
+      def binary_pad(num)
+        format(BINARY_FORMAT, num)
+      end
+
+      # Takes in an +int+ and converts it first to binary,
+      # then to tuples based on the zero and one values
+      def int_to_pulses(int)
+        binary_pad(int).chars.map do |ch|
+          case ch
+          when /0/
+            pulse_values[:zero].clone
+          when /1/
+            pulse_values[:one].clone
+          end
+        end
       end
     end
   end

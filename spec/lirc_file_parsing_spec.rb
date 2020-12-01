@@ -76,7 +76,7 @@ RSpec.describe 'LIRC File parsing' do
 
     expect(codex).to be_a(LilBlaster::Codex)
     expect(codex.keys).to include(:key_power)
-    expect(codex.protocol.gap).to eq(108_193)
+    expect(codex.protocol.pulse_values[:header]).to eq([4633, 4321])
   end
 
   describe 'with a present lircd.conf file' do
@@ -113,7 +113,7 @@ RSpec.describe 'LIRC File parsing' do
       expect(codexes).not_to be_empty
       expect(codexes.first).to be_a(LilBlaster::Codex)
       expect(codexes.first.remote_name).to eq('Samsung_BN59-00865A')
-      expect(codexes.first.protocol.gap).to eq(108_193)
+      expect(codexes.first.protocol.pulse_values[:header]).to eq([4633, 4321])
     end
   end
 end

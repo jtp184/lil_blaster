@@ -7,17 +7,18 @@ RSpec.describe LilBlaster::Codex do
         :protocol: :Manchester
         :protocol_options:
           :gap: 10000
-          :header:
-          - 4511
-          - 4540
-          :one_value:
-          - 520
-          - 1730
-          :zero_value:
-          - 520
-          - 600
+          :pulse_values:
+            :header:
+              - 4511
+              - 4540
+            :one:
+              - 520
+              - 1730
+            :zero:
+              - 520
+              - 600
           :system_data: 57568
-          :post_bit: true
+          :post_bit: 520
       :codes:
         :power: 16575
         :volume_up: 57375

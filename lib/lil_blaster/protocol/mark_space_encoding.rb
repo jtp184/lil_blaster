@@ -2,21 +2,13 @@ module LilBlaster
   module Protocol
     # Provides common methods for protocols that use mark / space values for binary encoding
     module MarkSpaceEncoding
-      # The plen for the header
-      attr_reader :header
-      # The plen for the zero value
-      attr_reader :zero_value
-      # The plen for the one value
-      attr_reader :one_value
       # Trailing space length
       attr_reader :gap
-      # Repeat code if utilized
-      attr_accessor :repeat_value
+      # What to send as a post bit
+      attr_reader :post_bit
 
       # How to format hex numbers for readability
       HEX_FORMAT = '%#.4x'.freeze
-      # How to format binary numbers for length and readability
-      BINARY_FORMAT = '%.16b'.freeze
       # Max the gap out so that we don't end up with egregious results
       MAXIMUM_GAP = 120_000
       # How close pulses have to be to be considered the same
@@ -40,7 +32,9 @@ module LilBlaster
         def bytestring_for(transmission)
           ident = extract_mark_values(transmission)
 
-          transmission.tuples[1..-2].map { |plen| plen == ident[:zero_value] ? '0' : '1' }.join
+          transmission.tuples[1..-2].map do |plen|
+            plen == ident[:pulse_values][:zero] ? '0' : '1'
+          end.join
         end
 
         # Takes in tuples +plens+ and converts them into a binary string first,
@@ -61,19 +55,29 @@ module LilBlaster
           plens = data.tuples.uniq
 
           init_args = {
-            header: plens.max { |a, b| a[0] <=> b[0] },
             gap: [plens.max { |_a, b| b[1] }[1], MAXIMUM_GAP].min,
-            zero_value: plens.min
+            post_bit: plens[-2][0]
           }
 
-          init_args[:one_value] = plens.find do |plen|
-            next unless plen != init_args[:header] && plen != init_args[:zero_value]
+          init_args[:pulse_values] = extract_pulse_values(init_args, plens)
+          init_args
+        end
+
+        # Returns the pulse specific values, using +init_args+ to examine the +plens+
+        def extract_pulse_values(init_args, plens)
+          pulse_values = {
+            header: plens.max { |a, b| a[0] <=> b[0] },
+            zero: plens.min
+          }
+
+          pulse_values[:one] = plens.find do |plen|
+            next unless plen != pulse_values[:header] && plen != pulse_values[:zero]
             next if plen[1] == init_args[:gap]
 
             plen
           end
 
-          init_args
+          pulse_values
         end
 
         # Takes the +transmission+ and converts the tuples at +range+ into an integer.
@@ -81,14 +85,18 @@ module LilBlaster
         def data_range(transmission, range, args = nil)
           args ||= extract_mark_values(transmission)
 
-          pulses_to_int(transmission.tuples[range], args[:zero_value], args[:one_value])
+          pulses_to_int(
+            transmission.tuples[range],
+            args[:pulse_values][:zero],
+            args[:pulse_values][:one]
+          )
         end
 
         # Returns an array of the instance values to export
         def export_options
           super
 
-          @export_options += %i[gap header one_value repeat_value zero_value]
+          @export_options += %i[gap pulse_values post_bit]
         end
       end
 
@@ -97,12 +105,17 @@ module LilBlaster
         base_class.extend(ClassMethods)
       end
 
+      # Lazy returns a tuple defaulting hash
+      def pulse_values
+        @pulse_values ||= Hash.new([0, 0])
+      end
+
       # Returns true if the +transmission+ is identified to be a repeat signal
       def recognize_repeat(transmission)
-        return false unless repeat_value
+        return false unless pulse_values.key?(:repeat)
         return false unless transmission.data.length == 4
-        return false unless close?(transmission.data[0], repeat_value[0])
-        return false unless close?(transmission.data[1], repeat_value[1])
+        return false unless close?(transmission.data[0], pulse_values[:repeat][0])
+        return false unless close?(transmission.data[1], pulse_values[:repeat][1])
 
         true
       end
@@ -114,27 +127,9 @@ module LilBlaster
         (val_one - val_two).abs < tolerance
       end
 
-      # Takes in an +int+ and converts it first to binary,
-      # then to tuples based on the zero and one values
-      def int_to_pulses(int)
-        binary_pad(int).chars.map do |ch|
-          case ch
-          when /0/
-            zero_value.clone
-          when /1/
-            one_value.clone
-          end
-        end
-      end
-
       # Sends a post_bit, which is the mark with a gap sized space
       def post_bit_plen
-        zero_value.clone.tap { |zv| zv[1] = gap }
-      end
-
-      # Formats a number +num+ as a 16 digit binary number
-      def binary_pad(num)
-        format(BINARY_FORMAT, num)
+        [post_bit, gap]
       end
     end
   end

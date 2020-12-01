@@ -3,12 +3,14 @@ RSpec.describe 'Manchester Protocol' do
     @klass = LilBlaster::Protocol::Manchester
 
     @proto = LilBlaster::Protocol::Manchester.new(
-      header: [4501, 4509],
       gap: 47_000,
-      zero_value: [520, 610],
-      one_value: [520, 1710],
+      pulse_values: {
+        header: [4501, 4509],
+        zero: [520, 610],
+        one: [520, 1710]
+      },
       system_data: 0xE0E0,
-      post_bit: true
+      post_bit: 520
     )
 
     @cmd = 0x40BF
@@ -16,12 +18,14 @@ RSpec.describe 'Manchester Protocol' do
     @tr = @proto.encode @cmd
 
     @eq = LilBlaster::Protocol::Manchester.new(
-      header: [4501, 4509],
       gap: 47_000,
-      zero_value: [509, 603],
-      one_value: [509, 1701],
+      pulse_values: {
+        header: [4501, 4509],
+        zero: [509, 603],
+        one: [509, 1701]
+      },
       system_data: 0xE0E0,
-      post_bit: true
+      post_bit: 509
     ).encode(@cmd)
   end
 

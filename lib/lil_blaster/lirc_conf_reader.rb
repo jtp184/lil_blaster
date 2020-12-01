@@ -11,7 +11,14 @@ module LilBlaster
           codes: @matches[:codes]
         )
 
-        ret.protocol = Protocol::Manchester.new(protocol_options)
+        sym = case @matches[:protocol_flag]
+              when :RC5, :NEC
+                :Manchester
+              when :RCMM
+                :RCMM
+              end
+
+        ret.protocol = Protocol[sym].new(protocol_options)
         ret
       end
 
@@ -51,11 +58,17 @@ module LilBlaster
 
         @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first
 
-        unless %i[RC5 NEC].include?(@matches[:protocol_flag])
+        unless %i[RC5 NEC RCMM].include?(@matches[:protocol_flag])
           raise TypeError, 'Unimplemented protocol'
         end
 
         @matches[:gap] = estimate_gap if flopts.include?('CONST_LENGTH')
+
+        @matches[:carrier_wave_options] = if @matches[:frequency]
+                                            { frequency: @matches[:frequency] }
+                                          else
+                                            {}
+                                          end
       end
 
       # Reinterprets the gap as the difference between the gap and a standard transmission
@@ -64,7 +77,7 @@ module LilBlaster
 
         tlen = []
         tlen << @matches[:header] if @matches[:header]
-        tlen << Array.new(bit_size, @matches[:zero_value])
+        tlen << Array.new(bit_size, @matches[:zero])
         tlen = tlen.flatten.reduce(&:+)
 
         @matches[:gap] - tlen
@@ -72,15 +85,21 @@ module LilBlaster
 
       # Returns just the arguments needed for the protocol
       def protocol_options
-        @matches.slice(
+        po = @matches.slice(
           :gap,
-          :header,
-          :one_value,
           :post_bit,
-          :repeat_value,
-          :system_data,
-          :zero_value
+          :pre_data,
+          :carrier_wave_options
         )
+
+        po.merge(pulse_values: @matches.slice(
+          :header,
+          :repeat,
+          :zero,
+          :one,
+          :two,
+          :three
+        ))
       end
 
       # Provides regex patterns to match against
@@ -91,15 +110,15 @@ module LilBlaster
           frequency: /frequency\s+(\d+)/i,
           gap: /gap\s+(\d+)/i,
           header: /header\s+(\d+)\s+(\d+)/i,
-          one_value: /one\s+(\d+)\s+(\d+)/i,
-          post_bit: /ptrail/,
+          one: /one\s+(\d+)\s+(\d+)/i,
+          post_bit: /ptrail\s+(\d+)/i,
           remote_name: /name\s+([^\s]+)/i,
-          repeat_value: /repeat\s+(\d+)\s+(\d+)/i,
-          system_data: /pre_data\s+(0x[0-9a-f]+)/i,
-          system_data_bits: /pre_data_bits\s+(\d+)/i,
-          three_value: /three\s+(\d+)\s+(\d+)/i,
-          two_value: /two\s+(\d+)\s+(\d+)/i,
-          zero_value: /zero\s+(\d+)\s+(\d+)/i
+          repeat: /repeat\s+(\d+)\s+(\d+)/i,
+          pre_data: /pre_data\s+(0x[0-9a-f]+)/i,
+          pre_data_bits: /pre_data_bits\s+(\d+)/i,
+          three: /three\s+(\d+)\s+(\d+)/i,
+          two: /two\s+(\d+)\s+(\d+)/i,
+          zero: /zero\s+(\d+)\s+(\d+)/i
         }
       end
 
@@ -112,16 +131,17 @@ module LilBlaster
           flags: ->(m) { m[1].split('|') }
         }
 
-        %i[header zero_value one_value two_value three_value repeat_value].each do |sym|
+        %i[header zero one two three repeat].each do |sym|
           @formatters[sym] = ->(m) { m[1..2].map(&:to_i) }
         end
 
-        %i[system_data system_data_bits data_bits frequency].each do |sym|
+        %i[pre_data pre_data_bits data_bits post_bit].each do |sym|
           @formatters[sym] = ->(m) { Integer(m[1]) }
         end
 
+        @formatters[:frequency] = ->(m) { Integer(m[1]) / 1000.0 }
+
         @formatters[:gap] = ->(m) { m[1].to_i }
-        @formatters[:post_bit] = ->(m) { !m.nil? }
 
         @formatters
       end
