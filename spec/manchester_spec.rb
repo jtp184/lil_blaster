@@ -3,9 +3,9 @@ RSpec.describe 'Manchester Protocol' do
     @klass = LilBlaster::Protocol::Manchester
 
     @proto = LilBlaster::Protocol::Manchester.new(
-      header: [4501, 4509],
       gap: 47_000,
       pulse_values: {
+        header: [4501, 4509],
         zero: [520, 610],
         one: [520, 1710]
       },
@@ -18,9 +18,9 @@ RSpec.describe 'Manchester Protocol' do
     @tr = @proto.encode @cmd
 
     @eq = LilBlaster::Protocol::Manchester.new(
-      header: [4501, 4509],
       gap: 47_000,
       pulse_values: {
+        header: [4501, 4509],
         zero: [509, 603],
         one: [509, 1701]
       },

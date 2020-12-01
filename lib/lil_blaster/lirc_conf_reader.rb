@@ -80,14 +80,14 @@ module LilBlaster
       def protocol_options
         po = @matches.slice(
           :gap,
-          :header,
           :post_bit,
-          :repeat,
           :system_data,
           :carrier_wave_options
         )
 
         po.merge(pulse_values: @matches.slice(
+          :header,
+          :repeat,
           :zero,
           :one,
           :two,
