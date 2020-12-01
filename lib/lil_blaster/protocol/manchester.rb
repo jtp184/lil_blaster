@@ -60,14 +60,24 @@ module LilBlaster
         end
       end
 
+      # Handles the :pre_data within the +args+, after deferring to super
+      def initialize(args = {})
+        super
+
+        return unless @pre_data
+
+        @system_data = @pre_data
+        remove_instance_variable(:@pre_data)
+      end
+
       # Takes in an integer +data+, and constructs a transmission with a header, the encoded
       # system_data, and the encoded integer. Optionally specify the number of +repititions+
       def encode(data = 0x0000, repititions = 1)
         raise TypeError, 'data is not an integer' unless data.is_a?(Integer)
         raise IndexError, 'data is out of bounds' unless (-1..0xFFFF).cover?(data)
 
-        return repeat_transmission if data == -1
-
+        return repeat_transmission if data == -1 && repititions == 1
+        return repeat_transmission * repetitions if data == -1
         return data_transmission(data) if repititions == 1
 
         tr = [data_transmission(data)]

@@ -11,7 +11,14 @@ module LilBlaster
           codes: @matches[:codes]
         )
 
-        ret.protocol = Protocol::Manchester.new(protocol_options)
+        sym = case @matches[:protocol_flag]
+              when :RC5, :NEC
+                :Manchester
+              when :RCMM
+                :RCMM
+              end
+
+        ret.protocol = Protocol[sym].new(protocol_options)
         ret
       end
 
@@ -51,7 +58,7 @@ module LilBlaster
 
         @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first
 
-        unless %i[RC5 NEC].include?(@matches[:protocol_flag])
+        unless %i[RC5 NEC RCMM].include?(@matches[:protocol_flag])
           raise TypeError, 'Unimplemented protocol'
         end
 
@@ -81,7 +88,7 @@ module LilBlaster
         po = @matches.slice(
           :gap,
           :post_bit,
-          :system_data,
+          :pre_data,
           :carrier_wave_options
         )
 
@@ -107,8 +114,8 @@ module LilBlaster
           post_bit: /ptrail\s+(\d+)/i,
           remote_name: /name\s+([^\s]+)/i,
           repeat: /repeat\s+(\d+)\s+(\d+)/i,
-          system_data: /pre_data\s+(0x[0-9a-f]+)/i,
-          system_data_bits: /pre_data_bits\s+(\d+)/i,
+          pre_data: /pre_data\s+(0x[0-9a-f]+)/i,
+          pre_data_bits: /pre_data_bits\s+(\d+)/i,
           three: /three\s+(\d+)\s+(\d+)/i,
           two: /two\s+(\d+)\s+(\d+)/i,
           zero: /zero\s+(\d+)\s+(\d+)/i
@@ -128,7 +135,7 @@ module LilBlaster
           @formatters[sym] = ->(m) { m[1..2].map(&:to_i) }
         end
 
-        %i[system_data system_data_bits data_bits post_bit].each do |sym|
+        %i[pre_data pre_data_bits data_bits post_bit].each do |sym|
           @formatters[sym] = ->(m) { Integer(m[1]) }
         end
 

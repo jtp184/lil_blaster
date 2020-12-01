@@ -50,10 +50,32 @@ module LilBlaster
 
           %i[zero one two three].zip(plens.sort { |a, b| a[enc] <=> b[enc] }).to_h
         end
+
+        def data_range(transmission, range, args = nil)
+          args ||= extract_mark_values(transmission)
+
+          pulses_to_int(
+            transmission.tuples[range],
+            args[:pulse_values]
+          )
+        end
       end
 
       def self.included(base_class)
         base_class.extend(ClassMethods)
+      end
+
+      def plen_to_int(plen, args)
+        case plen
+        when args[:zero]
+          0
+        when args[:one]
+          1
+        when args[:two]
+          2
+        when args[:three]
+          3
+        end
       end
     end
   end
