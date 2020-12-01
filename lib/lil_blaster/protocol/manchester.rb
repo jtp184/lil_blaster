@@ -118,7 +118,7 @@ module LilBlaster
       # Provided +data+ to encode, creates a transmission doing so
       def data_transmission(data)
         pulses = []
-        pulses += header.clone
+        pulses += pulse_values[:header].clone
         pulses += int_to_pulses(system_data)
         pulses += int_to_pulses(data)
 
