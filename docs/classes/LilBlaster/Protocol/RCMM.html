@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>LilBlaster::Protocol::RCMM</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='class' id='wrapper'>
+<div class='header'>
+<h1 class='name'><span class='type'>class</span>
+LilBlaster::Protocol::RCMM
+</h1>
+<ol class='paths'>
+<li>
+<a href="../../../files/lib/lil_blaster/protocol/rcmm_rb.html">lib/lil_blaster/protocol/rcmm.rb</a>
+</li>
+</ol>
+<div class='parent'>
+Superclass:
+<strong><a href="BaseProtocol.html">BaseProtocol</a></strong>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<p>The 4-bit encoded remote format</p>
+</div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-address_data">address_data</a></li>
+<li><a href="#method-c-decode">decode</a></li>
+<li><a href="#method-c-match-3F">match?</a></li>
+<li><a href="#method-c-mode_data">mode_data</a></li>
+<li><a href="#method-c-new">new</a></li>
+</ol>
+<h3>Private Class</h3>
+<ol>
+<li><a href="#method-c-extract_values">extract_values</a></li>
+</ol>
+<h3>Public Instance</h3>
+<ol>
+<li><a href="#attribute-i-address">address</a></li>
+<li><a href="#method-i-decode">decode</a></li>
+<li><a href="#method-i-encode">encode</a></li>
+<li><a href="#attribute-i-mode">mode</a></li>
+<li><a href="#method-i-object_state">object_state</a></li>
+</ol>
+<h3>Private Instance</h3>
+<ol>
+<li><a href="#method-i-data_transmission">data_transmission</a></li>
+<li><a href="#method-i-int_to_pulses">int_to_pulses</a></li>
+<li><a href="#method-i-mode_transmission">mode_transmission</a></li>
+</ol>
+</div>
+<div id='context'>
+<div id='includes'>
+<h2>Included modules</h2>
+<ol>
+<li><a href="MarkSpaceEncoding.html">MarkSpaceEncoding</a></li>
+<li><a href="FourBitData.html">FourBitData</a></li>
+</ol>
+</div>
+</div>
+<div id='section'>
+<div id='constants-list'>
+<h2>Constants</h2>
+<div class='name-list'>
+<table summary='Constants'>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>TWELVE_BIT_MODES</td>
+<td>=</td>
+<td class='context-item-value'>%i[extended mouse keyboard gamepad].freeze</td>
+<td>&nbsp;</td>
+<td class='context-item-desc'>
+<p>Modes for basic operation</p>
+</td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>TWENTY_FOUR_BIT_MODES</td>
+<td>=</td>
+<td class='context-item-value'>%i[oem x_mouse x_keyboard x_gamepad].freeze</td>
+<td>&nbsp;</td>
+<td class='context-item-desc'>
+<p>Modes for extended operation</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id='attribute-list'>
+<h2 class='section-bar'>Attributes</h2>
+<div class='name-list'>
+<table>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-i-address'>address</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'>
+<p>The device address to avoid collisions</p>
+</td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-i-mode'>mode</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'>
+<p>The mode the device is operating in</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-address_data'>
+<a name='method-c-address_data'></a>
+<div class='synopsis'>
+<span class='name'>address_data</span><span class='arguments'>(transmission, values = nil)</span>
+
+</div>
+<div class='description'>
+
+<p>Returns an integer dependant on the value in the second bit of
+<code>transmission</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-address_data-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-address_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 51</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">address_data</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">values</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">init_args</span> = <span class="ruby-identifier">values</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">md</span> = <span class="ruby-identifier">mode_data</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:pulse_values</span>])&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-node">%i[mouse keyboard gamepad]</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">md</span>)&#x000A;&#x000A;  <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-value">3</span><span class="ruby-operator">..</span><span class="ruby-value">4</span>].<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pulses_to_int</span>(<span class="ruby-identifier">pl</span>, <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:pulse_values</span>]) }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-decode'>
+<a name='method-c-decode'></a>
+<div class='synopsis'>
+<span class='name'>decode</span><span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in the <code>data</code>, ensures it passes the identity check, then
+returns an instance based on interpreting the signal, and an integer
+representing the specific code sent</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-decode-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-decode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 29</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">decode</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">match?</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">proto</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">extract_values</span>(<span class="ruby-identifier">data</span>))&#x000A;&#x000A;  [<span class="ruby-identifier">proto</span>, <span class="ruby-identifier">command_data</span>(<span class="ruby-identifier">data</span>)]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-match-3F'>
+<a name='method-c-match-3F'></a>
+<div class='synopsis'>
+<span class='name'>match?</span><span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Checks that the <code>data</code> had five distinct tuples and 6 distinct
+datums</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-match-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-match-3F-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 23</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">match?</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">5</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">6</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-mode_data'>
+<a name='method-c-mode_data'></a>
+<div class='synopsis'>
+<span class='name'>mode_data</span><span class='arguments'>(transmission, values = nil)</span>
+
+</div>
+<div class='description'>
+
+<p>Returns a symbol dependant on the values in the first two bits of
+<code>transmission</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-mode_data-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-mode_data-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 38</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mode_data</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">values</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">init_args</span> = <span class="ruby-identifier">values</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">mode_one</span>, <span class="ruby-identifier">mode_two</span> = <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">plen_to_int</span>(<span class="ruby-identifier">pl</span>, <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:pulse_values</span>])&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-constant">TWELVE_BIT_MODES</span>[<span class="ruby-identifier">mode_one</span>] <span class="ruby-keyword">unless</span> <span class="ruby-identifier">mode_one</span>.<span class="ruby-identifier">zero?</span>&#x000A;&#x000A;  <span class="ruby-constant">TWENTY_FOUR_BIT_MODES</span>[<span class="ruby-identifier">mode_two</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-new'>
+<a name='method-c-new'></a>
+<div class='synopsis'>
+<span class='name'>new</span><span class='arguments'>(args = {})</span>
+
+</div>
+<div class='description'>
+
+<p>Handles the :pre_data in <code>args</code> to extract the mode and address</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-keyword">super</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@pre_data</span>&#x000A;&#x000A;  <span class="ruby-identifier">sys_mode</span> = <span class="ruby-ivar">@pre_data</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-value">4</span>).<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_i</span>)&#x000A;  <span class="ruby-identifier">mode_one</span> = <span class="ruby-constant">TWELVE_BIT_MODES</span>[<span class="ruby-identifier">sys_mode</span>[<span class="ruby-value">0</span>]]&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">mode_one</span> <span class="ruby-operator">==</span> <span class="ruby-value">:extended</span>&#x000A;    <span class="ruby-ivar">@mode</span> = <span class="ruby-constant">TWENTY_FOUR_BIT_MODES</span>[<span class="ruby-identifier">sys_mode</span>[<span class="ruby-value">1</span>]]&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-ivar">@mode</span> = <span class="ruby-identifier">mode_one</span>&#x000A;    <span class="ruby-ivar">@address</span> = <span class="ruby-identifier">sys_mode</span>[<span class="ruby-value">1</span>]&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">remove_instance_variable</span>(<span class="ruby-value">:@pre_data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Private Class methods</h2>
+<div class='method private-class' id='method-method-c-extract_values'>
+<a name='method-c-extract_values'></a>
+<div class='synopsis'>
+<span class='name'>extract_values</span><span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Extracts the mode</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-extract_values-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-extract_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 63</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">init_args</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:mode</span>] = <span class="ruby-identifier">mode_data</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:address</span>] = <span class="ruby-identifier">address_data</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Public Instance methods</h2>
+<div class='method public-instance' id='method-method-i-decode'>
+<a name='method-i-decode'></a>
+<div class='synopsis'>
+<span class='name'>decode</span><span class='arguments'>(transmission)</span>
+
+</div>
+<div class='description'>
+
+<p>Instance level decode which takes the <code>transmission</code> and checks
+if it is a repeat</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-decode-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-decode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 112</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">decode</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">match?</span>(<span class="ruby-identifier">transmission</span>)&#x000A;    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">decode</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">recognize_repeat</span>(<span class="ruby-identifier">transmission</span>)&#x000A;    [<span class="ruby-keyword">self</span>, <span class="ruby-value">-1</span>]&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-encode'>
+<a name='method-i-encode'></a>
+<div class='synopsis'>
+<span class='name'>encode</span><span class='arguments'>(data = 0x0, repititions = 1)</span>
+
+</div>
+<div class='description'>
+
+<p>Encodes the integer <code>data</code> constructing the transmission, and
+specifying a number of <code>repititions</code></p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-encode-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-encode-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 94</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode</span>(<span class="ruby-identifier">data</span> = <span class="ruby-value">0x0</span>, <span class="ruby-identifier">repititions</span> = <span class="ruby-value">1</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-string">&#39;data is not an integer&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">IndexError</span>, <span class="ruby-string">&#39;data is out of bounds&#39;</span> <span class="ruby-keyword">unless</span> (<span class="ruby-value">-1</span><span class="ruby-operator">..</span>(<span class="ruby-value">2</span><span class="ruby-operator">**</span><span class="ruby-value">24</span>)).<span class="ruby-identifier">cover?</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">repeat_transmission</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">data</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">repititions</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">repeat_transmission</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">repititions</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">data</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">data_transmission</span>(<span class="ruby-identifier">data</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">repititions</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;&#x000A;  <span class="ruby-identifier">tr</span> = [<span class="ruby-identifier">data_transmission</span>(<span class="ruby-identifier">data</span>)]&#x000A;&#x000A;  <span class="ruby-identifier">tr</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">repetitions</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:repeat</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">repeat_transmission</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">data_transmission</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">tr</span>.<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-object_state'>
+<a name='method-i-object_state'></a>
+<div class='synopsis'>
+<span class='name'>object_state</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Export instance variable options</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-object_state-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-object_state-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 121</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_state</span>&#x000A;  <span class="ruby-identifier">export_options</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">o</span><span class="ruby-operator">|</span> <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:&quot;@#{o}&quot;</span>) }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Private Instance methods</h2>
+<div class='method private-instance' id='method-method-i-data_transmission'>
+<a name='method-i-data_transmission'></a>
+<div class='synopsis'>
+<span class='name'>data_transmission</span><span class='arguments'>(data)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in the <code>data</code> and encodes a transmission</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-data_transmission-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-data_transmission-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 128</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">data_transmission</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">pulses</span> = []&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:header</span>].<span class="ruby-identifier">clone</span>&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">mode_transmission</span>&#x000A;  <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">int_to_pulses</span>(<span class="ruby-identifier">data</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">post_bit</span>&#x000A;    <span class="ruby-identifier">pulses</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">post_bit_plen</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">pulses</span>[<span class="ruby-value">-1</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">gap</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-constant">Transmission</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">data:</span> <span class="ruby-identifier">pulses</span>.<span class="ruby-identifier">flatten</span>, <span class="ruby-value">carrier_wave:</span> <span class="ruby-identifier">carrier_wave_options</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-int_to_pulses'>
+<a name='method-i-int_to_pulses'></a>
+<div class='synopsis'>
+<span class='name'>int_to_pulses</span><span class='arguments'>(int)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in the <code>int</code> and returns a pulse mapped value</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-int_to_pulses-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-int_to_pulses-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 157</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">int_to_pulses</span>(<span class="ruby-identifier">int</span>)&#x000A;  <span class="ruby-identifier">int</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-value">4</span>).<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;    {&#x000A;      <span class="ruby-string">&#39;0&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:zero</span>].<span class="ruby-identifier">clone</span>,&#x000A;      <span class="ruby-string">&#39;1&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:one</span>].<span class="ruby-identifier">clone</span>,&#x000A;      <span class="ruby-string">&#39;2&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:two</span>].<span class="ruby-identifier">clone</span>,&#x000A;      <span class="ruby-string">&#39;3&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:three</span>].<span class="ruby-identifier">clone</span>&#x000A;    }[<span class="ruby-identifier">ch</span>]&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-mode_transmission'>
+<a name='method-i-mode_transmission'></a>
+<div class='synopsis'>
+<span class='name'>mode_transmission</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Returns an array to construct the mode bits</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-mode_transmission-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-mode_transmission-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/rcmm.rb, line 144</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mode_transmission</span>&#x000A;  {&#x000A;    <span class="ruby-value">mouse:</span> [<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:one</span>], <span class="ruby-identifier">address</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:clone</span>),&#x000A;    <span class="ruby-value">keyboard:</span> [<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:two</span>], <span class="ruby-identifier">address</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:clone</span>),&#x000A;    <span class="ruby-value">gamepad:</span> [<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:three</span>], <span class="ruby-identifier">address</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:clone</span>),&#x000A;    <span class="ruby-value">oem:</span> [<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:zero</span>], <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:zero</span>]].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:clone</span>),&#x000A;    <span class="ruby-value">x_keyboard:</span> [<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:zero</span>], <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:one</span>]].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:clone</span>),&#x000A;    <span class="ruby-value">x_gamepad:</span> [<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:zero</span>], <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:two</span>]].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:clone</span>),&#x000A;    <span class="ruby-value">x_mouse:</span> [<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:zero</span>], <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:three</span>]].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:clone</span>)&#x000A;  }[<span class="ruby-identifier">mode</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
