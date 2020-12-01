@@ -70,7 +70,7 @@ module LilBlaster
           }
 
           pulse_values[:one] = plens.find do |plen|
-            next unless plen != init_args[:header] && plen != pulse_values[:zero]
+            next unless plen != pulse_values[:header] && plen != pulse_values[:zero]
             next if plen[1] == init_args[:gap]
 
             plen
@@ -95,7 +95,7 @@ module LilBlaster
         def export_options
           super
 
-          @export_options += %i[gap header repeat_value pulse_values post_bit]
+          @export_options += %i[gap pulse_values post_bit]
         end
       end
 
@@ -110,10 +110,10 @@ module LilBlaster
 
       # Returns true if the +transmission+ is identified to be a repeat signal
       def recognize_repeat(transmission)
-        return false unless repeat_value
+        return false unless pulse_values.key?(:repeat)
         return false unless transmission.data.length == 4
-        return false unless close?(transmission.data[0], repeat_value[0])
-        return false unless close?(transmission.data[1], repeat_value[1])
+        return false unless close?(transmission.data[0], pulse_values[:repeat][0])
+        return false unless close?(transmission.data[1], pulse_values[:repeat][1])
 
         true
       end

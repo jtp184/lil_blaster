@@ -72,11 +72,9 @@ module LilBlaster
 
         tr = [data_transmission(data)]
 
-        tr += if repeat_value
-                Array.new(repititions - 1) { repeat_transmission }
-              else
-                Array.new(repititions - 1) { data_transmission(data) }
-              end
+        tr += Array.new(repetitions - 1) do
+          pulse_values[:repeat] ? repeat_transmission : data_transmission(data)
+        end
 
         tr.reduce(&:+)
       end
@@ -133,9 +131,9 @@ module LilBlaster
         Transmission.new(data: pulses.flatten, carrier_wave: carrier_wave_options)
       end
 
-      # Uses the +repeat_value+ to produce a transmission with the repeat code
+      # Uses the +repeat+ to produce a transmission with the repeat code
       def repeat_transmission
-        pulses = repeat_value.dup
+        pulses = pulse_values[:repeat].dup
 
         pulses += if post_bit
                     post_bit_plen

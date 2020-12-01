@@ -82,7 +82,7 @@ module LilBlaster
           :gap,
           :header,
           :post_bit,
-          :repeat_value,
+          :repeat,
           :system_data,
           :carrier_wave_options
         )
@@ -106,7 +106,7 @@ module LilBlaster
           one: /one\s+(\d+)\s+(\d+)/i,
           post_bit: /ptrail\s+(\d+)/i,
           remote_name: /name\s+([^\s]+)/i,
-          repeat_value: /repeat\s+(\d+)\s+(\d+)/i,
+          repeat: /repeat\s+(\d+)\s+(\d+)/i,
           system_data: /pre_data\s+(0x[0-9a-f]+)/i,
           system_data_bits: /pre_data_bits\s+(\d+)/i,
           three: /three\s+(\d+)\s+(\d+)/i,
@@ -124,7 +124,7 @@ module LilBlaster
           flags: ->(m) { m[1].split('|') }
         }
 
-        %i[header zero one two three repeat_value].each do |sym|
+        %i[header zero one two three repeat].each do |sym|
           @formatters[sym] = ->(m) { m[1..2].map(&:to_i) }
         end
 
