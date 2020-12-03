@@ -28,6 +28,13 @@ module LilBlaster
           nil
         end
       end
+
+      def pi_constants
+        return @pi_constants if @pi_constants
+
+        cons = driver.const_get(:Constant)
+        @pi_constants = cons.constants.map { |c| [c, cons.const_get(c)] }.to_h
+      end
     end
   end
 end
