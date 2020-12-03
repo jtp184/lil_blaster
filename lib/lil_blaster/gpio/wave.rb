@@ -3,6 +3,9 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
+        # Largest number of sustainable ids before rollover errors
+        MAX_IDS = 255
+
         # Takes in a +transmission+ and returns an array of wave ids corresponding to it
         def create(transmission)
           tuples_to_wave(
@@ -11,9 +14,18 @@ module LilBlaster
           )
         end
 
-        # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it
+        # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it.
+        # Handles the case where the data length is greate than the MAX_IDS
         def transmit(transmission)
-          chain_waves create(transmission)
+          if transmission.data.length <= MAX_IDS
+            chain_waves(create(transmission))
+          else
+            split_for_max(transmission).each do |tr|
+              nil while busy?
+              chain_waves(create(tr))
+              clear_waves
+            end
+          end
         end
 
         # Waits for a non-busy device, clears waves with #clear_waves
@@ -42,27 +54,27 @@ module LilBlaster
 
         # Syntax sugar for wavetuner#add_new
         def begin_wave
-          wavetuner.add_new
+          GPIO.gpio_success(wavetuner.add_new)
         end
 
         # Syntax sugar for wavetuner#create
         def end_wave
-          wavetuner.create
+          GPIO.gpio_success(wavetuner.create)
         end
 
         # Syntax sugar for wavetuner#add_generic, converts the array 3-tuples into pulses
         def add_to_wave(data)
-          wavetuner.add_generic(data.map { |x| wavetuner.pulse(*x) })
+          GPIO.gpio_success(wavetuner.add_generic(data.map { |x| wavetuner.pulse(*x) }))
         end
 
         # Chains the waves with ids +wids+ together
         def chain_waves(wids)
-          wavetuner.chain(wids)
+          GPIO.gpio_success(wavetuner.chain(wids))
         end
 
         # Clears the waves in the wavetuner
         def clear_waves
-          wavetuner.clear
+          GPIO.gpio_success(wavetuner.clear)
         end
 
         # Returns bool based on whether the device is currently transmitting a wave
@@ -76,6 +88,14 @@ module LilBlaster
         end
 
         private
+
+        # Takes in a +transmission+ slices its tuples by half the +max_ids+ and returns new
+        # Transmissions
+        def split_for_max(transmission, max_ids = MAX_IDS)
+          transmission.tuples.each_slice(max_ids / 2).map do |d|
+            Transmission.new(data: d.flatten, carrier_wave: transmission.carrier_wave_options)
+          end
+        end
 
         # Takes in +data+ of marks and spaces tuples and returns an array of wave ids
         def tuples_to_wave(data, carrier_wave = nil)

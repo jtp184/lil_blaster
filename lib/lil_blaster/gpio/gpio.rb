@@ -28,6 +28,23 @@ module LilBlaster
           nil
         end
       end
+
+      # Memoizes the constant values given by the hardware interface
+      def pi_constants
+        return @pi_constants if @pi_constants
+
+        cons = driver.const_get(:Constant)
+        @pi_constants = cons.constants.map { |c| [c, cons.const_get(c)] }.to_h
+      end
+
+      # Checks if the hardware interface had an error, and raises a corresponding IOError
+      def gpio_success(value)
+        return value unless value.negative?
+
+        err_str = "Hardware driver error. The error was `#{pi_constants.key(value)}` (#{value})"
+
+        raise IOError, err_str
+      end
     end
   end
 end
