@@ -3,6 +3,8 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
+        MAX_IDS = 256
+
         # Takes in a +transmission+ and returns an array of wave ids corresponding to it
         def create(transmission)
           tuples_to_wave(
@@ -13,7 +15,11 @@ module LilBlaster
 
         # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it
         def transmit(transmission)
-          chain_waves create(transmission)
+          if transmission.data.length <= MAX_IDS
+            chain_waves create(transmission)
+          else
+            split_for_max(transmission).each { |tr| chain_waves(create(tr)) }
+          end
         end
 
         # Waits for a non-busy device, clears waves with #clear_waves
@@ -76,6 +82,12 @@ module LilBlaster
         end
 
         private
+
+        def split_for_max(transmission, max_ids = MAX_IDS)
+          transmission.data.each_slice(max_ids).map do |d|
+            Transmission.new(data: d, carrier_wave: transmission.carrier_wave_options)
+          end
+        end
 
         # Takes in +data+ of marks and spaces tuples and returns an array of wave ids
         def tuples_to_wave(data, carrier_wave = nil)
