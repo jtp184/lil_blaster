@@ -3,7 +3,7 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
-        MAX_IDS = 256
+        MAX_IDS = 255
 
         # Takes in a +transmission+ and returns an array of wave ids corresponding to it
         def create(transmission)
