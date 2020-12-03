@@ -37,7 +37,7 @@ module LilBlaster
       end
 
       def gpio_success(value)
-        return value unless value.positive?
+        return value unless value.negative?
 
         err_str = "Hardware driver error. The error was `#{pi_constants.key(value)}` (#{value})"
 
