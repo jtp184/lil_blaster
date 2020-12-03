@@ -18,7 +18,10 @@ module LilBlaster
           if transmission.data.length <= MAX_IDS
             chain_waves create(transmission)
           else
-            split_for_max(transmission).each { |tr| chain_waves(create(tr)) }
+            split_for_max(transmission).each do |tr|
+              chain_waves create(tr)
+              clear_waves
+            end
           end
         end
 
