@@ -3,6 +3,7 @@ module LilBlaster
     # Models the hardware level signal processing
     class Wave
       class << self
+        # Largest number of sustainable ids before rollover errors
         MAX_IDS = 255
 
         # Takes in a +transmission+ and returns an array of wave ids corresponding to it
@@ -13,7 +14,8 @@ module LilBlaster
           )
         end
 
-        # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it
+        # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it.
+        # Handles the case where the data length is greate than the MAX_IDS
         def transmit(transmission)
           if transmission.data.length <= MAX_IDS
             chain_waves(create(transmission))
@@ -87,6 +89,8 @@ module LilBlaster
 
         private
 
+        # Takes in a +transmission+ slices its tuples by half the +max_ids+ and returns new
+        # Transmissions
         def split_for_max(transmission, max_ids = MAX_IDS)
           transmission.tuples.each_slice(max_ids / 2).map do |d|
             Transmission.new(data: d.flatten, carrier_wave: transmission.carrier_wave_options)
