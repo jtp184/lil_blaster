@@ -20,9 +20,9 @@ module LilBlaster
                     abort pastel.red('No symbol provided')
                   end
 
-          symbs.each { |sy| send_code_and_report(sy, multi) }
+          multi.times { symbs.each { |sy| send_code_and_report(sy) } }
         else
-          collect_symbols.each { |sym| send_code_and_report(sym, multi) }
+          multi.times { collect_symbols.each { |sym| send_code_and_report(sym) } }
         end
       end
 
