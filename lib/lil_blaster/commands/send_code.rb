@@ -30,11 +30,11 @@ module LilBlaster
 
       # Tries to find a codex that can respond to +sym+, and sends that code if found.
       # Prints a report if successful, a failure message if not
-      def send_code_and_report(sym, multi)
+      def send_code_and_report(sym)
         dex = resolved_codex || codex_responding_to(sym)
 
         if dex
-          LilBlaster::Blaster.send_code(sym, codex: dex, repetitions: multi)
+          LilBlaster::Blaster.send_code(sym, codex: dex)
           puts format(rept_str, sym: sym, rem: dex.remote_name)
         else
           puts pastel.red("No codex found which can respond to #{sym}")
