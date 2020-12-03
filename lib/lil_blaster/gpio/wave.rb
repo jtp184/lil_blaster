@@ -42,27 +42,27 @@ module LilBlaster
 
         # Syntax sugar for wavetuner#add_new
         def begin_wave
-          wavetuner.add_new
+          gpio_success(wavetuner.add_new)
         end
 
         # Syntax sugar for wavetuner#create
         def end_wave
-          wavetuner.create
+          gpio_success(wavetuner.create)
         end
 
         # Syntax sugar for wavetuner#add_generic, converts the array 3-tuples into pulses
         def add_to_wave(data)
-          wavetuner.add_generic(data.map { |x| wavetuner.pulse(*x) })
+          gpio_success(wavetuner.add_generic(data.map { |x| wavetuner.pulse(*x) }))
         end
 
         # Chains the waves with ids +wids+ together
         def chain_waves(wids)
-          wavetuner.chain(wids)
+          gpio_success(wavetuner.chain(wids))
         end
 
         # Clears the waves in the wavetuner
         def clear_waves
-          wavetuner.clear
+          gpio_success(wavetuner.clear)
         end
 
         # Returns bool based on whether the device is currently transmitting a wave

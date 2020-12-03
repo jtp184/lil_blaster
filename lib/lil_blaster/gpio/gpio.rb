@@ -35,6 +35,14 @@ module LilBlaster
         cons = driver.const_get(:Constant)
         @pi_constants = cons.constants.map { |c| [c, cons.const_get(c)] }.to_h
       end
+
+      def gpio_success(value)
+        return value unless value.positive?
+
+        err_str = "Hardware driver error. The error was `#{pi_constants.key(value)}` (#{value})"
+
+        raise IOError, err_str
+      end
     end
   end
 end
