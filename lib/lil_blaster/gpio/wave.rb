@@ -87,8 +87,8 @@ module LilBlaster
         private
 
         def split_for_max(transmission, max_ids = MAX_IDS)
-          transmission.data.each_slice(max_ids).map do |d|
-            Transmission.new(data: d, carrier_wave: transmission.carrier_wave_options)
+          transmission.tuples.each_slice(max_ids / 2).map do |d|
+            Transmission.new(data: d.flatten, carrier_wave: transmission.carrier_wave_options)
           end
         end
 
