@@ -16,10 +16,11 @@ module LilBlaster
         # Takes in a +transmission+ and converts it into wave ids, then calls chain_waves on it
         def transmit(transmission)
           if transmission.data.length <= MAX_IDS
-            chain_waves create(transmission)
+            chain_waves(create(transmission))
           else
             split_for_max(transmission).each do |tr|
-              chain_waves create(tr)
+              nil while busy?
+              chain_waves(create(tr))
               clear_waves
             end
           end
