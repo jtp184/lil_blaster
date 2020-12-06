@@ -11,14 +11,7 @@ module LilBlaster
           codes: @matches[:codes]
         )
 
-        sym = case @matches[:protocol_flag]
-              when :RC5, :NEC
-                :Manchester
-              when :RCMM
-                :RCMM
-              end
-
-        ret.protocol = Protocol[sym].new(protocol_options)
+        ret.protocol = Protocol[proto_sym].new(protocol_options)
         ret
       end
 
@@ -59,7 +52,7 @@ module LilBlaster
         @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first
 
         unless %i[RC5 NEC RCMM].include?(@matches[:protocol_flag])
-          raise TypeError, 'Unimplemented protocol'
+          raise TypeError, "Unimplemented protocol `#{@matches[:protocol_flag] || 'none'}`"
         end
 
         @matches[:gap] = estimate_gap if flopts.include?('CONST_LENGTH')
@@ -107,6 +100,7 @@ module LilBlaster
         @matchers ||= {
           data_bits: /\bbits\s+(\d+)/i,
           flags: /flags\s+([^\s]+)/i,
+          driver: /driver\s+([^\s]+)/,
           frequency: /frequency\s+(\d+)/i,
           gap: /gap\s+(\d+)/i,
           header: /header\s+(\d+)\s+(\d+)/i,
@@ -128,6 +122,7 @@ module LilBlaster
 
         @formatters = {
           remote_name: ->(m) { m[1] },
+          driver: ->(m) { m[1] },
           flags: ->(m) { m[1].split('|') }
         }
 
@@ -140,7 +135,6 @@ module LilBlaster
         end
 
         @formatters[:frequency] = ->(m) { Integer(m[1]) / 1000.0 }
-
         @formatters[:gap] = ->(m) { m[1].to_i }
 
         @formatters
@@ -169,6 +163,16 @@ module LilBlaster
           'SHIFT_ENC' => :RC5,
           'SPACE_ENC' => :NEC
         }
+      end
+
+      def proto_sym
+        if %i[RC5 NEC].include?(@matches[:protocol_flag])
+          :Manchester
+        elsif @matches[:protocol_flag] == :RCMM
+          :RCMM
+        else
+          :Manchester
+        end
       end
 
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range
