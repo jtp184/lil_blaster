@@ -52,7 +52,7 @@ module LilBlaster
         @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first
 
         unless %i[RC5 NEC RCMM].include?(@matches[:protocol_flag])
-          raise TypeError, 'Unimplemented protocol'
+          raise TypeError, "Unimplemented protocol `#{@matches[:protocol_flag] || 'none'}`"
         end
 
         @matches[:gap] = estimate_gap if flopts.include?('CONST_LENGTH')
