@@ -17,9 +17,9 @@ module LilBlaster
       BINARY_FORMAT = '%.16b'.freeze
 
       class << self
-        # Checks that there are four distinct tuples in the +data+, and 6 datums
+        # Checks that there are four distinct tuples in the +data+, and 5 to 6 datums
         def match?(data)
-          data.tuples.uniq.length == 4 && data.data.uniq.length == 6
+          data.tuples.uniq.length == 4 && (5..6).cover?(data.data.uniq.length)
         end
 
         # Takes in the +data+, ensures it passes the identity check, then returns an instance
