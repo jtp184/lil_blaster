@@ -109,7 +109,9 @@ module LilBlaster
       # Taking in +args+ for :seconds, returns a boolean based on whether the value
       # is positive and finite, and more time has ellapsed than it
       def timer_reached?(args = {})
-        secs = args.fetch(:seconds, 3.0)
+        return false unless args.key?(:seconds)
+
+        secs = args.fetch(:seconds)
         limit = secs.finite? && secs.positive?
 
         limit && Time.now - @start_time > secs
