@@ -178,7 +178,7 @@ module LilBlaster
 
       # Transforms the key symbol found in the config file into a rubyish symbol
       def sym_for_code(code)
-        sym = code.gsub(/\+/, 'up').gsub(/-/, 'down')
+        sym = code.gsub(/\+$/, 'up').gsub(/-$/, 'down')
         sym = Strings::Case.snakecase(sym)
 
         sym = sym.split(/^(x_)?(key_|btn_)/).last if sym.match?(/^(x_)?(key_|btn_)/)
