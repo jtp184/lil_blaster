@@ -86,7 +86,15 @@ module LilBlaster
 
     # Returns a Transmission representing the code identified by +key_sym+
     def call(key_sym, repetitions = 1)
-      protocol.encode(self[key_sym], repetitions)
+      if self[key_sym].is_a?(Transmission)
+        self[key_sym] * repetitions
+      elsif self[key_sym].is_a?(Array)
+        self[key_sym].reduce(Transmission.new) do |acc, dta|
+          acc + protocol.encode(dta, repetitions)
+        end
+      else
+        protocol.encode(self[key_sym], repetitions)
+      end
     end
 
     # Given a +transmission+, decodes it using our protocol and returns the corresponding key
