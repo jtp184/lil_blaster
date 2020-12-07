@@ -1,3 +1,5 @@
+require 'numbers_in_words'
+
 module LilBlaster
   # Translates LIRC configs into codexes
   class LircConfReader
@@ -144,11 +146,9 @@ module LilBlaster
       # and converts them to a Symbol => Integer hash
       def extract_codes(text)
         code_rng = substring_range(text, 'begin codes', 'end codes')
-        @matches[:codes] = text[code_rng].scan(/([\w-]+)\s+(0x[0-9a-f]+)/i)
+        @matches[:codes] = text[code_rng].scan(/([\w\-+]+)\s+(0x[0-9a-f]+)/i)
                                          .to_h
-                                         .transform_keys(&:downcase)
-                                         .transform_keys { |s| Strings::Case.snakecase(s) }
-                                         .transform_keys(&:to_sym)
+                                         .transform_keys { |k| sym_for_code(k) }
                                          .transform_values { |v| Integer(v) }
                                          .merge(repeat_code: - 1)
       end
@@ -165,6 +165,7 @@ module LilBlaster
         }
       end
 
+      # Determines whether to use RCMM or Manchester based on protocol flag
       def proto_sym
         if %i[RC5 NEC].include?(@matches[:protocol_flag])
           :Manchester
@@ -173,6 +174,17 @@ module LilBlaster
         else
           :Manchester
         end
+      end
+
+      # Transforms the key symbol found in the config file into a rubyish symbol
+      def sym_for_code(code)
+        sym = code.gsub(/\+/, 'up').gsub(/-/, 'down')
+        sym = Strings::Case.snakecase(sym)
+
+        sym = sym.split(/^(x_)?(key_|btn_)/).last if sym.match?(/^(x_)?(key_|btn_)/)
+        sym = sym.scan(/(\w+)(up|down)/).join('_') if sym.match?(/[a-z](up|down)$/)
+        sym = NumbersInWords.in_words(Integer(sym)) if sym.match?(/^\d+$/)
+        sym.to_sym
       end
 
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range
