@@ -77,10 +77,10 @@ module LilBlaster
 
         tlen = []
         tlen << @matches[:header] if @matches[:header]
-        tlen << Array.new(bit_size, @matches[:zero])
-        tlen = tlen.flatten.reduce(&:+)
+        tlen << Array.new(bit_size, @matches[:zero] || 0)
+        tlen = tlen.compact.flatten.reduce(&:+)
 
-        @matches[:gap] - tlen
+        @matches[:gap] - (tlen || 0)
       end
 
       # Returns just the arguments needed for the protocol
