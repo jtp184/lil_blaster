@@ -74,7 +74,6 @@ module LilBlaster
       # system_data, and the encoded integer. Optionally specify the number of +repititions+
       def encode(data = 0x0000, repititions = 1)
         raise TypeError, 'data is not an integer' unless data.is_a?(Integer)
-        raise IndexError, 'data is out of bounds' unless (-1..0xFFFF).cover?(data)
 
         return repeat_transmission if data == -1 && repititions == 1
         return repeat_transmission * repetitions if data == -1
