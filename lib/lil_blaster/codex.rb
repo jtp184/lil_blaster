@@ -92,6 +92,8 @@ module LilBlaster
         self[key_sym].reduce(Transmission.new) do |acc, dta|
           acc + protocol.encode(dta, repetitions)
         end
+      elsif self[key_sym].nil?
+        raise KeyError, "#{key_sym} not present"
       else
         protocol.encode(self[key_sym], repetitions)
       end
