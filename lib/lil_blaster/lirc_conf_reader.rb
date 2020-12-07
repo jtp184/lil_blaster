@@ -183,7 +183,8 @@ module LilBlaster
           'RC6' => :RC6,
           'RCMM' => :RCMM,
           'SHIFT_ENC' => :RC5,
-          'SPACE_ENC' => :NEC
+          'SPACE_ENC' => :NEC,
+          'XMP' => :XMP
         }
       end
 
@@ -205,7 +206,7 @@ module LilBlaster
 
         sym = sym.split(/^(x_)?(key_|btn_)/).last if sym.match?(/^(x_)?(key_|btn_)/)
         sym = sym.scan(/(\w+)(up|down)/).join('_') if sym.match?(/[a-z](up|down)$/)
-        sym = NumbersInWords.in_words(Integer(sym)) if sym.match?(/^\d+$/)
+        sym = NumbersInWords.in_words(sym.to_i) if sym.match?(/^\d+$/)
         sym.to_sym
       end
 
