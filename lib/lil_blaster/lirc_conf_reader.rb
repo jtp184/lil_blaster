@@ -10,10 +10,10 @@ module LilBlaster
 
         ret = Codex.new(
           remote_name: @matches[:remote_name],
-          codes: @matches[:codes]
+          codes: {}.merge(@matches[:codes] || {}).merge(@matches[:raw_codes] || {})
         )
 
-        ret.protocol = Protocol[proto_sym].new(protocol_options)
+        ret.protocol = Protocol[proto_sym].new(protocol_options) unless proto_sym == :raw
         ret
       end
 
@@ -32,7 +32,7 @@ module LilBlaster
         ctext = text[substring_range(text, 'begin remote', 'end remote')]
         extract_conf_options(ctext)
         handle_meta_options
-        extract_codes(ctext)
+        handle_code_extracts(ctext)
       end
 
       # Scans the +text+ for the essential values to create the protocol
@@ -46,16 +46,24 @@ module LilBlaster
         end
       end
 
-      # Takes the +flopts+ and runs transformations based on them
+      # Extracts the codes and raw codes within +ctext+
+      def handle_code_extracts(ctext)
+        extract_codes(ctext)
+        extract_raw_codes(ctext)
+      end
+
+      # Takes the flag options and runs transformations based on them
       def handle_meta_options
         flopts = @matches[:flags]
-        return unless flopts
 
-        @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first
+        @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first if flopts
 
-        unless %i[RC5 NEC RCMM].include?(@matches[:protocol_flag])
-          raise TypeError, "Unimplemented protocol `#{@matches[:protocol_flag] || 'none'}`"
+        unless %i[RC5 NEC RCMM raw].include?(@matches[:protocol_flag])
+          str = "Unparsable conf format `#{@matches[:protocol_flag] || @matches[:driver] || 'nil'}`"
+          raise TypeError, str
         end
+
+        return unless flopts
 
         @matches[:gap] = estimate_gap if flopts.include?('CONST_LENGTH')
 
@@ -72,10 +80,10 @@ module LilBlaster
 
         tlen = []
         tlen << @matches[:header] if @matches[:header]
-        tlen << Array.new(bit_size, @matches[:zero])
-        tlen = tlen.flatten.reduce(&:+)
+        tlen << Array.new(bit_size, @matches[:zero] || 0)
+        tlen = tlen.compact.flatten.reduce(&:+)
 
-        @matches[:gap] - tlen
+        @matches[:gap] - (tlen || 0)
       end
 
       # Returns just the arguments needed for the protocol
@@ -151,6 +159,25 @@ module LilBlaster
                                          .transform_keys { |k| sym_for_code(k) }
                                          .transform_values { |v| Integer(v) }
                                          .merge(repeat_code: - 1)
+      rescue ArgumentError => e
+        raise e unless e.message =~ /^Could not find/
+
+        nil
+      end
+
+      # Extracts the raw code blocks defined in +text+, and converts them to a transmission backed
+      # Codex
+      def extract_raw_codes(text)
+        code_rng = substring_range(text, 'begin raw_codes', 'end raw_codes')
+        @matches[:raw_codes] = text[code_rng].scan(/(?:name\s+)([\w\-+]+)[\s\n]+((\d+[\s\n]+)+)/i)
+                                             .map { |a, b, c| [a, b + c] }
+                                             .to_h
+                                             .transform_keys { |k| sym_for_code(k) }
+                                             .transform_values { |v| raw_code_block(v) }
+      rescue ArgumentError => e
+        raise e unless e.message =~ /^Could not find/
+
+        nil
       end
 
       # Provides string matchers for flag options related to protocols
@@ -161,16 +188,17 @@ module LilBlaster
           'RC6' => :RC6,
           'RCMM' => :RCMM,
           'SHIFT_ENC' => :RC5,
-          'SPACE_ENC' => :NEC
+          'SPACE_ENC' => :NEC,
+          'XMP' => :XMP
         }
       end
 
-      # Determines whether to use RCMM or Manchester based on protocol flag
+      # Determines what protocol to use based on protocol flag
       def proto_sym
         if %i[RC5 NEC].include?(@matches[:protocol_flag])
           :Manchester
-        elsif @matches[:protocol_flag] == :RCMM
-          :RCMM
+        elsif %i[RCMM raw].include?(@matches[:protocol_flag])
+          @matches[:protocol_flag]
         else
           :Manchester
         end
@@ -183,8 +211,13 @@ module LilBlaster
 
         sym = sym.split(/^(x_)?(key_|btn_)/).last if sym.match?(/^(x_)?(key_|btn_)/)
         sym = sym.scan(/(\w+)(up|down)/).join('_') if sym.match?(/[a-z](up|down)$/)
-        sym = NumbersInWords.in_words(Integer(sym)) if sym.match?(/^\d+$/)
+        sym = NumbersInWords.in_words(sym.to_i) if sym.match?(/^\d+$/)
         sym.to_sym
+      end
+
+      # Collects all the plens in +raw+ and converts them to a transmission
+      def raw_code_block(raw)
+        Transmission.new(data: raw.scan(/\d+/).map { |val| Integer(val) })
       end
 
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range
