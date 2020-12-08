@@ -46,6 +46,7 @@ module LilBlaster
         end
       end
 
+      # Extracts the codes and raw codes within +ctext+
       def handle_code_extracts(ctext)
         extract_codes(ctext)
         extract_raw_codes(ctext)
@@ -162,6 +163,8 @@ module LilBlaster
         nil
       end
 
+      # Extracts the raw code blocks defined in +text+, and converts them to a transmission backed
+      # Codex
       def extract_raw_codes(text)
         code_rng = substring_range(text, 'begin raw_codes', 'end raw_codes')
         @matches[:raw_codes] = text[code_rng].scan(/(?:name\s+)([\w\-+]+)[\s\n]+((\d+[\s\n]+)+)/i)
@@ -188,7 +191,7 @@ module LilBlaster
         }
       end
 
-      # Determines whether to use RCMM or Manchester based on protocol flag
+      # Determines what protocol to use based on protocol flag
       def proto_sym
         if %i[RC5 NEC].include?(@matches[:protocol_flag])
           :Manchester
@@ -210,6 +213,7 @@ module LilBlaster
         sym.to_sym
       end
 
+      # Collects all the plens in +raw+ and converts them to a transmission
       def raw_code_block(raw)
         Transmission.new(data: raw.scan(/\d+/).map { |val| Integer(val) })
       end

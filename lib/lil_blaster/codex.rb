@@ -84,7 +84,8 @@ module LilBlaster
       @protocol = interpret_protocol_arg(args)
     end
 
-    # Returns a Transmission representing the code identified by +key_sym+
+    # Returns a Transmission representing the code identified by +key_sym+. Can handle different
+    # return values for #[], raw code Transmissions, Arrays of data to encode, or datums
     def call(key_sym, repetitions = 1)
       if self[key_sym].is_a?(Transmission)
         self[key_sym] * repetitions
