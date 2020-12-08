@@ -75,7 +75,7 @@ RSpec.describe 'LIRC File parsing' do
     codex = LilBlaster::LircConfReader.call(@lirc_conf)
 
     expect(codex).to be_a(LilBlaster::Codex)
-    expect(codex.keys).to include(:key_power)
+    expect(codex.keys).to include(:power)
     expect(codex.protocol.pulse_values[:header]).to eq([4633, 4321])
   end
 
