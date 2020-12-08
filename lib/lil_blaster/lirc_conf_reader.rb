@@ -52,16 +52,18 @@ module LilBlaster
         extract_raw_codes(ctext)
       end
 
-      # Takes the +flopts+ and runs transformations based on them
+      # Takes the flag options and runs transformations based on them
       def handle_meta_options
         flopts = @matches[:flags]
-        return unless flopts
 
-        @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first
+        @matches[:protocol_flag] = flopts.map { |f| protocol_matchers[f] }.compact.first if flopts
 
         unless %i[RC5 NEC RCMM raw].include?(@matches[:protocol_flag])
-          raise TypeError, "Unimplemented protocol `#{@matches[:protocol_flag] || 'none'}`"
+          str = "Unparsable conf format `#{@matches[:protocol_flag] || @matches[:driver] || 'nil'}`"
+          raise TypeError, str
         end
+
+        return unless flopts
 
         @matches[:gap] = estimate_gap if flopts.include?('CONST_LENGTH')
 
