@@ -17,10 +17,7 @@ RSpec.describe 'LIRC File parsing' do
       @codex_dir = [@temp_dir, 'codexes'].join('/').tap { |dr| FileUtils.mkdir(dr) }
       @lirc_file_path = [@codex_dir, 'example.lircd.conf'].join('/')
       @config_path = [@temp_dir, 'lil_blaster_config.yml'].join('/')
-      @config_yaml = <<~DOC
-        ---
-        codexes_dir: #{@codex_dir}
-      DOC
+      @config_yaml = "---\ncodexes_dir: #{@codex_dir}"
 
       File.open(@config_path, 'w+') { |f| f << @config_yaml }
       File.open(@lirc_file_path, 'w+') { |f| f << @lirc_conf }
