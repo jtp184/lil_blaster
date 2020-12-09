@@ -12,16 +12,18 @@ module FactoryBot
 end
 
 FactoryBot.define do
-  factory :manchester_protocol do
+  factory :manchester_protocol, class: LilBlaster::Protocol::Manchester do
     gap { 80_000 }
     pulse_values { { header: [4511, 4540], one: [520, 1730], zero: [520, 600] } }
     system_data { 0xE0E0 }
     post_bit { 520 }
 
     factory :alternate_manchester do
-      pulse_values { { header: [4200, 4240], one: [560, 1720], zero: [560, 680] } }
+      pulse_values { { header: [4511, 4509], one: [560, 1720], zero: [560, 590] } }
       post_bit { 560 }
     end
+
+    initialize_with { new(**attributes) }
   end
 
   factory :codex do

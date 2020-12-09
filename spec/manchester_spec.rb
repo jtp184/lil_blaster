@@ -1,32 +1,12 @@
 RSpec.describe 'Manchester Protocol' do
   before :all do
     @klass = LilBlaster::Protocol::Manchester
-
-    @proto = LilBlaster::Protocol::Manchester.new(
-      gap: 47_000,
-      pulse_values: {
-        header: [4501, 4509],
-        zero: [520, 610],
-        one: [520, 1710]
-      },
-      system_data: 0xE0E0,
-      post_bit: 520
-    )
+    @proto = build(:manchester_protocol)
 
     @cmd = 0x40BF
 
     @tr = @proto.encode @cmd
-
-    @eq = LilBlaster::Protocol::Manchester.new(
-      gap: 47_000,
-      pulse_values: {
-        header: [4501, 4509],
-        zero: [509, 603],
-        one: [509, 1701]
-      },
-      system_data: 0xE0E0,
-      post_bit: 509
-    ).encode(@cmd)
+    @alt = build(:alternate_manchester).encode(@cmd)
   end
 
   describe 'Class functions' do
@@ -53,7 +33,7 @@ RSpec.describe 'Manchester Protocol' do
     end
 
     it 'can compare two different transmissions with the same data' do
-      compare = @klass.same_data?(@tr, @eq)
+      compare = @klass.same_data?(@tr, @alt)
 
       expect(compare).to be(true)
     end
