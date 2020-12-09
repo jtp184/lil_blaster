@@ -1,12 +1,12 @@
 RSpec.describe 'Manchester Protocol' do
   before :all do
     @klass = LilBlaster::Protocol::Manchester
-    @proto = build(:manchester_protocol)
+    @proto = FactoryBot.build(:manchester_protocol)
 
     @cmd = 0x40BF
 
     @tr = @proto.encode @cmd
-    @alt = build(:alternate_manchester).encode(@cmd)
+    @alt = FactoryBot.build(:alternate_manchester).encode(@cmd)
   end
 
   describe 'Class functions' do
