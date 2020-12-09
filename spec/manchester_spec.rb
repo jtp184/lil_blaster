@@ -24,7 +24,7 @@ RSpec.describe 'Manchester Protocol' do
     end
 
     it 'can return an instance based off a transmission' do
-      protocol, command = @klass.decode(@tr)
+      protocol, command = @proto.decode(@tr)
 
       expect(protocol).to be_a(LilBlaster::Protocol::Manchester)
       expect(command).to be_a(Integer)

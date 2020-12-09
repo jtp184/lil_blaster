@@ -91,7 +91,7 @@ module LilBlaster
       # Instance level decode which takes the +transmission+ and detects if it is a standard
       # or repeat code. Mostly useful with codexes for detecting repeat codes
       def decode(transmission)
-        if match?(transmission)
+        if self.class.match?(transmission)
           self.class.decode(transmission)
         elsif recognize_repeat(transmission)
           [self, -1]
