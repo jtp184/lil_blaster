@@ -81,7 +81,7 @@ module LilBlaster
 
         tr = [data_transmission(data)]
 
-        tr += Array.new(repititions - 1) do
+        tr += Array.new(repititions) do
           pulse_values[:repeat] ? repeat_transmission : data_transmission(data)
         end
 
