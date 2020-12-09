@@ -26,9 +26,35 @@ FactoryBot.define do
     initialize_with { new(**attributes) }
   end
 
-  factory :codex do
+  factory :codex, class: LilBlaster::Codex do
     remote_name { 'Samsung' }
     protocol factory: manchester_protocol
     codes { { power: 16_575, volume_up: 57_375, volume_down: 53_295 } }
+  end
+
+  factory :transmission, class: LilBlaster::Transmission do
+    data do
+      [
+        4511, 4540, 517, 1732,
+        517, 1732, 517, 1732,
+        517, 609, 517, 609,
+        517, 609, 517, 609,
+        517, 609, 517, 1732,
+        517, 1732, 517, 1732,
+        517, 609, 517, 609,
+        517, 609, 517, 609,
+        517, 609, 517, 609,
+        517, 1732, 517, 609,
+        517, 609, 517, 609,
+        517, 609, 517, 609,
+        517, 609, 517, 1732,
+        517, 609, 517, 1732,
+        517, 1732, 517, 1732,
+        517, 1732, 517, 1732,
+        517, 1732, 517, 47_312
+      ]
+    end
+
+    initialize_with { new(data: data) }
   end
 end
