@@ -1,30 +1,6 @@
 RSpec.describe LilBlaster::Codex do
   before :all do
-    @codex_yaml = <<~DOC
-      ---
-      :metadata:
-        :remote_name: Samsung
-        :protocol: :Manchester
-        :protocol_options:
-          :gap: 10000
-          :pulse_values:
-            :header:
-              - 4511
-              - 4540
-            :one:
-              - 520
-              - 1730
-            :zero:
-              - 520
-              - 600
-          :system_data: 57568
-          :post_bit: 520
-      :codes:
-        :power: 16575
-        :volume_up: 57375
-        :volume_down: 53295
-    DOC
-
+    @codex_yaml = FactoryBot.fixtures[:codex_yaml]
     @codex = LilBlaster::Codex.from_yaml(@codex_yaml)
   end
 
