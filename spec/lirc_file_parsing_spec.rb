@@ -1,6 +1,6 @@
 RSpec.describe 'LIRC File parsing' do
   before :all do
-    @lirc_conf = FactoryBot.fixtures[:lirc_conf]
+    @lirc_conf = FactoryBot.fixtures[:manchester_lirc_conf]
   end
 
   it 'can read a valid lircd.conf file' do
