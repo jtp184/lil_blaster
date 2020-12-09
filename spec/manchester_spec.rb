@@ -51,6 +51,16 @@ RSpec.describe 'Manchester Protocol' do
       expect(bytestrings.map { |x| x[16..-1] }.uniq.length).to eq(ex.length)
     end
 
+    it 'can determine whether it is shift or space encoded' do
+      shif = FactoryBot.build(:manchester_protocol)
+      spac = FactoryBot.build(:manchester_protocol)
+
+      %i[zero one].each { |i| spac.pulse_values[i].reverse! }
+
+      expect(shif.encoding).to eq(:shift)
+      expect(spac.encoding).to eq(:space)
+    end
+
     describe 'with a repeat code' do
       before :all do
         @repeat = FactoryBot.build(:manchester_protocol)
