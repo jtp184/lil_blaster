@@ -1,26 +1,7 @@
 RSpec.describe LilBlaster::Transmission do
   before :all do
-    @raw_data = [
-      4511, 4540, 517, 1732,
-      517, 1732, 517, 1732,
-      517, 609, 517, 609,
-      517, 609, 517, 609,
-      517, 609, 517, 1732,
-      517, 1732, 517, 1732,
-      517, 609, 517, 609,
-      517, 609, 517, 609,
-      517, 609, 517, 609,
-      517, 1732, 517, 609,
-      517, 609, 517, 609,
-      517, 609, 517, 609,
-      517, 609, 517, 1732,
-      517, 609, 517, 1732,
-      517, 1732, 517, 1732,
-      517, 1732, 517, 1732,
-      517, 1732, 517, 47_312
-    ]
-
-    @transmission = LilBlaster::Transmission.new(data: @raw_data)
+    @transmission = FactoryBot.build(:transmission)
+    @raw_data = @transmission.data
   end
 
   it 'can create a transmission from pulses' do

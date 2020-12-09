@@ -3,6 +3,7 @@ SimpleCov.start
 
 require 'pigpio' if Gem.platforms.last.os == 'linux' && File.read('/proc/cpuinfo') =~ /Raspberry Pi/
 require 'bundler/setup'
+require 'factory_bot'
 require 'lil_blaster'
 require 'pry'
 require 'fileutils'
@@ -19,5 +20,9 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.before(:suite) do
+    FactoryBot.find_definitions
   end
 end
