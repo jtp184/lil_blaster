@@ -112,6 +112,23 @@ RSpec.describe LilBlaster::ConfigFile do
           expect(LilBlaster::Codex.autoload!).not_to be_empty
         end
 
+        it 'memoizes autoloading' do
+          fpath = "#{@codex_dir}/#{SecureRandom.alphanumeric}_codex.yml"
+          File.open(fpath, 'w+') { |f| f << @codex_yaml }
+
+          LilBlaster::Codex.autoload!
+
+          expect(LilBlaster::Codex.autoload.first).not_to be_nil
+          obid = LilBlaster::Codex.autoload.first.object_id
+
+          FileUtils.rm(fpath)
+
+          expect(LilBlaster::Codex.autoload.first).not_to be_nil
+          expect(LilBlaster::Codex.autoload.first.object_id).to eq(obid)
+
+          expect(LilBlaster::Codex.autoload!).to be_empty
+        end
+
         it 'returns a blank if no codexes are present' do
           expect(LilBlaster::Codex.autoload).to be_empty
         end
