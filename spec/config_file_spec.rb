@@ -139,6 +139,22 @@ RSpec.describe LilBlaster::ConfigFile do
           expect(LilBlaster::ConfigFile[:codexes_dir]).to be_nil
           expect(LilBlaster::Codex.autoload).to be_empty
         end
+
+        it 'can be used to set a default codex' do
+          rand_name = SecureRandom.alphanumeric
+
+          fpath = "#{@codex_dir}/#{rand_name}_codex.yml"
+          File.open(fpath, 'w+') do |f|
+            f << FactoryBot.build(:codex, remote_name: rand_name).to_yaml
+          end
+
+          LilBlaster::ConfigFile[:default_codex] = rand_name
+          LilBlaster::ConfigFile.save
+          LilBlaster::Codex.autoload!
+
+          expect(LilBlaster::Codex.default).not_to be_nil
+          expect(LilBlaster::Codex.default.remote_name).to eq(rand_name)
+        end
       end
     end
   end
