@@ -74,7 +74,7 @@ RSpec.describe 'Manchester Protocol' do
       end
 
       it 'can encode repeats into the transmission' do
-        repeat_count = rand(1..10)
+        repeat_count = rand(2..10)
         trns = @repeat.encode(0xBEEF, repeat_count)
 
         expect(trns.tuples.count(@repeat_pulse)).to eq(repeat_count)
