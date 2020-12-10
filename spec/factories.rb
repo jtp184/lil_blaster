@@ -26,6 +26,36 @@ FactoryBot.define do
     initialize_with { new(**attributes) }
   end
 
+  factory :rcmm_protocol, class: LilBlaster::Protocol::RCMM do
+    gap { 95_562 }
+    post_bit { 167 }
+    pre_data { 229_414 }
+    pulse_values do
+      {
+        header: [417, 278],
+        zero: [167, 278],
+        one: [167, 444],
+        two: [167, 611],
+        three: [167, 778]
+      }
+    end
+
+    factory :alternate_rcmm do
+      post_bit { 187 }
+      pulse_values do
+        {
+          header: [437, 298],
+          zero: [187, 298],
+          one: [187, 464],
+          two: [187, 631],
+          three: [187, 798]
+        }
+      end
+    end
+
+    initialize_with { new(**attributes) }
+  end
+
   factory :codex, class: LilBlaster::Codex do
     remote_name { 'Samsung' }
     protocol factory: :manchester_protocol
