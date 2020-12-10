@@ -102,6 +102,7 @@ RSpec.describe LilBlaster::ConfigFile do
 
       describe 'with codexes folder' do
         before :each do
+          LilBlaster::Codex.autoload
           LilBlaster::Codex.autoload!
         end
 
