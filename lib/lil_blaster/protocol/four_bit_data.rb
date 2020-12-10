@@ -2,6 +2,9 @@ module LilBlaster
   module Protocol
     # Handles 4-bit data transmissions
     module FourBitData
+      # Max the gap out so that we don't end up with egregious results
+      MAXIMUM_GAP = 120_000
+
       # Methods to extend onto the base class
       module ClassMethods
         # Takes in the +transmission+ and returns a 4-bit string representation
