@@ -86,7 +86,7 @@ module LilBlaster
           @address = sys_mode[1]
         end
 
-        remove_instance_variable(:@pre_data)
+        @pre_data = @pre_data.to_s(4)[2..-1].to_i(4)
       end
 
       # Encodes the integer +data+ constructing the transmission, and specifying a number of
@@ -129,6 +129,7 @@ module LilBlaster
         pulses = []
         pulses += pulse_values[:header].clone
         pulses += mode_transmission
+        pulses += int_to_pulses(@pre_data)
         pulses += int_to_pulses(data)
 
         if post_bit
@@ -143,9 +144,9 @@ module LilBlaster
       # Returns an array to construct the mode bits
       def mode_transmission
         {
-          mouse: [pulse_values[:one], address].map(&:clone),
-          keyboard: [pulse_values[:two], address].map(&:clone),
-          gamepad: [pulse_values[:three], address].map(&:clone),
+          mouse: [pulse_values[:one], int_to_pulses(address)].map(&:clone),
+          keyboard: [pulse_values[:two], int_to_pulses(address)].map(&:clone),
+          gamepad: [pulse_values[:three], int_to_pulses(address)].map(&:clone),
           oem: [pulse_values[:zero], pulse_values[:zero]].map(&:clone),
           x_keyboard: [pulse_values[:zero], pulse_values[:one]].map(&:clone),
           x_gamepad: [pulse_values[:zero], pulse_values[:two]].map(&:clone),
