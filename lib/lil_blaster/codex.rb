@@ -170,12 +170,16 @@ module LilBlaster
     # Operates on the +args+, identifies the protocol in the provided transmission and sets it to
     # be the protocol for this instance if there is none, or if :replace_protocol is passed
     def protocol_from_transmission(args)
-      return nil unless args.key?(:transmission)
+      return nil unless protocol.nil? || args.key?(:replace_protocol)
 
       proto, code = LilBlaster::Protocol.identify!(args[:transmission])
-      self.protocol = proto if protocol.nil? || args.key?(:replace_protocol)
+      self.protocol = proto
 
       code
+    rescue ArgumentError => e
+      raise e unless e.message =~ /Unidentifiable transmission/i
+
+      args[:transmission]
     end
 
     # Runs +parse_yaml+ on the file at #path and sets instance variables
