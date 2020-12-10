@@ -39,7 +39,7 @@ module LilBlaster
           init_args = values || extract_mark_values(transmission)
 
           mode_one, mode_two = transmission.tuples[1..2].map do |pl|
-            pulses_to_int(pl, init_args[:pulse_values])
+            pulses_to_int([pl], init_args[:pulse_values])
           end
 
           return TWELVE_BIT_MODES[mode_one] unless mode_one.zero?
@@ -129,7 +129,7 @@ module LilBlaster
         pulses = []
         pulses += pulse_values[:header].clone
         pulses += mode_transmission
-        pulses += int_to_pulses(@pre_data)
+        pulses += int_to_pulses(@pre_data) if @pre_data
         pulses += int_to_pulses(data)
 
         if post_bit

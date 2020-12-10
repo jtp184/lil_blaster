@@ -16,7 +16,7 @@ RSpec.describe 'RCMM Protocol' do
     end
 
     it 'can determine the mode data of a transmission' do
-      expect(@klass.mode_data(@tr)).to eq(:oem)
+      expect(@klass.mode_data(@tr)).to eq(:keyboard)
     end
 
     xit 'can determine the address data of a transmission' do
