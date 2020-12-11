@@ -27,9 +27,9 @@ FactoryBot.define do
   end
 
   factory :rcmm_protocol, class: LilBlaster::Protocol::RCMM do
-    gap { 95_562 }
+    gap { 100_817 }
     post_bit { 167 }
-    pre_data { 229_414 }
+    pre_data { 0x240 }
     pulse_values do
       {
         header: [417, 278],
@@ -41,14 +41,14 @@ FactoryBot.define do
     end
 
     factory :alternate_rcmm do
-      post_bit { 187 }
+      post_bit { 180 }
       pulse_values do
         {
-          header: [437, 298],
-          zero: [187, 298],
-          one: [187, 464],
-          two: [187, 631],
-          three: [187, 798]
+          header: [450, 300],
+          zero: [180, 300],
+          one: [180, 480],
+          two: [180, 660],
+          three: [180, 840]
         }
       end
     end

@@ -12,16 +12,29 @@ module LilBlaster
       attr_reader :mode
       # The device address to avoid collisions
       attr_reader :address
+      # A customer ID for OEM mode
+      attr_reader :customer_id
 
+      # The pulse timings ratios for matching
+      DUTY_CYCLES = [6, 10, 15, 16, 22, 28].freeze
       # Modes for basic operation
       TWELVE_BIT_MODES = %i[extended mouse keyboard gamepad].freeze
       # Modes for extended operation
       TWENTY_FOUR_BIT_MODES = %i[oem x_mouse x_keyboard x_gamepad].freeze
 
       class << self
-        # Checks that the +data+ had five distinct tuples and 6 distinct datums
+        # Checks that the +data+ conforms to spec by checking against duty cycles
         def match?(data)
-          data.tuples.uniq.length == 5 && data.data.uniq.length == 6
+          return false unless data.data.uniq.length == DUTY_CYCLES.length + 1
+
+          data.data
+              .uniq
+              .reject { |r| r == data.data.max }
+              .sort
+              .zip(DUTY_CYCLES)
+              .map { |k| k.reduce(&:/) }
+              .uniq
+              .one?
         end
 
         # Takes in the +data+, ensures it passes the identity check, then returns an instance
@@ -36,10 +49,10 @@ module LilBlaster
 
         # Returns a symbol dependant on the values in the first two bits of +transmission+
         def mode_data(transmission, values = nil)
-          init_args = values || extract_mark_values(transmission)
+          init_args = values || extract_mark_values(transmission)[:pulse_values]
 
           mode_one, mode_two = transmission.tuples[1..2].map do |pl|
-            pulses_to_int([pl], init_args[:pulse_values])
+            pulses_to_int([pl], init_args)
           end
 
           return TWELVE_BIT_MODES[mode_one] unless mode_one.zero?
@@ -49,12 +62,28 @@ module LilBlaster
 
         # Returns an integer dependant on the value in the second bit of +transmission+
         def address_data(transmission, values = nil)
-          init_args = values || extract_mark_values(transmission)
-          md = mode_data(transmission, init_args[:pulse_values])
+          init_args = values || extract_mark_values(transmission)[:pulse_values]
+          md = mode_data(transmission, init_args)
 
           return unless %i[mouse keyboard gamepad].include?(md)
 
-          transmission.tuples[3..4].map { |pl| pulses_to_int(pl, init_args[:pulse_values]) }
+          pulses_to_int([transmission.tuples[2]], init_args)
+        end
+
+        def customer_id_data(transmission, values = nil)
+          init_args = values || extract_mark_values(transmission)[:pulse_values]
+          md = mode_data(transmission, init_args)
+
+          return unless md == :oem
+
+          pulses_to_int(transmission.tuples[4..6], init_args)
+        end
+
+        def command_data(transmission, values = nil)
+          init_args = values || extract_mark_values(transmission)[:pulse_values]
+          range = mode_data(transmission, init_args) == :oem ? 6..-2 : 3..-2
+
+          pulses_to_int(transmission.tuples[range], init_args)
         end
 
         private
@@ -65,6 +94,7 @@ module LilBlaster
 
           init_args[:mode] = mode_data(data)
           init_args[:address] = address_data(data)
+          init_args[:customer_id] = customer_id_data(data)
 
           init_args
         end
@@ -86,7 +116,8 @@ module LilBlaster
           @address = sys_mode[1]
         end
 
-        @pre_data = @pre_data.to_s(4)[2..-1].to_i(4)
+        rem_val = @pre_data.to_s(4)[2..-1].to_i(4)
+        rem_val.zero? ? remove_instance_variable(:@pre_data) : @pre_data = rem_val
       end
 
       # Encodes the integer +data+ constructing the transmission, and specifying a number of
@@ -110,7 +141,7 @@ module LilBlaster
 
       # Instance level decode which takes the +transmission+ and checks if it is a repeat
       def decode(transmission)
-        if match?(transmission)
+        if self.class.match?(transmission)
           self.class.decode(transmission)
         elsif recognize_repeat(transmission)
           [self, -1]

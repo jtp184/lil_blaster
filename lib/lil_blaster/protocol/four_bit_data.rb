@@ -57,7 +57,10 @@ module LilBlaster
           enc = [plens.map(&:first), plens.map(&:last)].map(&:uniq)
           enc = enc.index(enc.max)
 
-          %i[zero one two three].zip(plens.sort { |a, b| a[enc] <=> b[enc] }).to_h
+          data_plens = plens.reject { |pl| pl == plens.max { |l| l[1] } }
+                            .sort { |a, b| a[enc] <=> b[enc] }
+
+          %i[zero one two three].zip(data_plens).to_h
         end
 
         # Handles 4-bit data ranges, taking the +range+ of tuples out of +transmission+
