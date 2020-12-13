@@ -64,13 +64,17 @@ RSpec.describe LilBlaster::Transmission do
       @transmission.clone.tap do |t|
         t.data.map! { |d| d + rand(-100..100) }
       end
-    end.reduce(&:+)
+    end
+
+    offsetter << @transmission.clone
+    offsetter = offsetter.reduce(&:+)
 
     repl = LilBlaster::NoiseReducer.replacement_matrix(offsetter.data)
 
     result = @transmission % repl
 
-    expect(result.tuples[0]).to eq([4500, 4500])
-    expect(result.tuples[1]).to eq([545, 1750])
+    expect(result.data.uniq.count).to eq(6)
+    all_from_replacement = ->(d) { d.all? { |n| repl.reduce(&:merge).values.uniq.include?(n) } }
+    expect(result.data.uniq).to satisfy(&all_from_replacement)
   end
 end
