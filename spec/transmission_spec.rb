@@ -50,4 +50,12 @@ RSpec.describe LilBlaster::Transmission do
 
     expect(repeat.data.length).to eq(@transmission.data.length * 3)
   end
+
+  it 'can get the length of a transmission, in microts' do
+    expect(@transmission.length).to eq(@transmission.data.reduce(&:+))
+  end
+
+  it 'can get the count of a transmission, in number of pulses' do
+    expect(@transmission.length).to eq(@transmission.data.count)
+  end
 end
