@@ -33,6 +33,12 @@ RSpec.describe 'RCMM Protocol' do
 
       expect(command).to eq(@cmd)
     end
+
+    it 'can create 4bit bytestrings' do
+      str = @klass.bytestring_for(@tr)
+
+      expect(str).to(satisfy { |s| (s.chars.uniq - %w[0 1 2 3]).empty? })
+    end
   end
 
   describe 'Instance functions' do
