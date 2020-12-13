@@ -2,6 +2,21 @@ RSpec.describe 'RCMM Protocol' do
   before :all do
     @klass = LilBlaster::Protocol::RCMM
     @proto = FactoryBot.build(:rcmm_protocol)
+
+    @ch_mode = proc do |t, m|
+      t.data[2] = @proto.pulse_values[m][0]
+      t.data[3] = @proto.pulse_values[m][1]
+      t
+    end
+
+    @x_mode = proc do |t, m|
+      t.data[2] = @proto.pulse_values[:zero][0]
+      t.data[3] = @proto.pulse_values[:zero][1]
+
+      t.data[4] = @proto.pulse_values[m][0]
+      t.data[5] = @proto.pulse_values[m][1]
+      t
+    end
   end
 
   before :each do
@@ -18,7 +33,14 @@ RSpec.describe 'RCMM Protocol' do
     end
 
     it 'can determine the mode data of a transmission' do
-      expect(@klass.mode_data(@tr)).to eq(:keyboard)
+      expect(@klass.mode_data(@ch_mode[@tr, :one])).to eq(:mouse)
+      expect(@klass.mode_data(@ch_mode[@tr, :two])).to eq(:keyboard)
+      expect(@klass.mode_data(@ch_mode[@tr, :three])).to eq(:gamepad)
+
+      expect(@klass.mode_data(@x_mode[@tr, :zero])).to eq(:oem)
+      expect(@klass.mode_data(@x_mode[@tr, :one])).to eq(:x_mouse)
+      expect(@klass.mode_data(@x_mode[@tr, :two])).to eq(:x_keyboard)
+      expect(@klass.mode_data(@x_mode[@tr, :three])).to eq(:x_gamepad)
     end
 
     it 'can determine the address data of a transmission' do
