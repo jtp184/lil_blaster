@@ -45,10 +45,10 @@ RSpec.describe 'Hardware driver spec' do
     begin
       LilBlaster::GPIO.gpio_success(val)
     rescue IOError => e
-      expect(err.message).to match(/hardware driver error/i)
+      expect(e.message).to match(/hardware driver error/i)
     end
 
-    expect(err).not_to be_nil
-    expect(err.message).to match(/#{sym}/)
+    expect(e).not_to be_nil
+    expect(e.message).to match(/#{sym}/)
   end
 end
