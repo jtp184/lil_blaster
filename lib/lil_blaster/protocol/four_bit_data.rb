@@ -79,20 +79,6 @@ module LilBlaster
       def self.included(base_class)
         base_class.extend(ClassMethods)
       end
-
-      # Takes the +plen+ comparing it to +args+ to return a 4-bit value
-      def plen_to_int(plen, args)
-        case plen
-        when args[:zero]
-          0
-        when args[:one]
-          1
-        when args[:two]
-          2
-        when args[:three]
-          3
-        end
-      end
     end
   end
 end
