@@ -59,7 +59,7 @@ FactoryBot.define do
   factory :codex, class: LilBlaster::Codex do
     remote_name { 'Samsung' }
     protocol factory: :manchester_protocol
-    codes { { power: 16_575, volume_up: 57_375, volume_down: 53_295 } }
+    codes { { power: 16_575, volume_up: 57_375, volume_down: 53_295, test: 23_190 } }
     initialize_with { new(**attributes) }
   end
 
