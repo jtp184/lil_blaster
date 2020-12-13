@@ -43,10 +43,6 @@ LilBlaster::Protocol::FourBitData
 <ol>
 <li><a href="#method-c-included">included</a></li>
 </ol>
-<h3>Public Instance</h3>
-<ol>
-<li><a href="#method-i-plen_to_int">plen_to_int</a></li>
-</ol>
 </div>
 <div id='context'>
 </div>
@@ -57,12 +53,29 @@ LilBlaster::Protocol::FourBitData
 </ol>
 </div>
 <div id='section'>
+<div id='constants-list'>
+<h2>Constants</h2>
+<div class='name-list'>
+<table summary='Constants'>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>MAXIMUM_GAP</td>
+<td>=</td>
+<td class='context-item-value'>120_000</td>
+<td>&nbsp;</td>
+<td class='context-item-desc'>
+<p>Max the gap out so that we don&#39;t end up with egregious results</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
 <div id='methods'>
 <h2>Public Class methods</h2>
 <div class='method public-class' id='method-method-c-included'>
 <a name='method-c-included'></a>
 <div class='synopsis'>
-<span class='name'>included</span><span class='arguments'>(base_class)</span>
+<span class='name'>included</span>
+<span class='arguments'>(base_class)</span>
 
 </div>
 <div class='description'>
@@ -74,27 +87,7 @@ LilBlaster::Protocol::FourBitData
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-included-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-included-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">included</span>(<span class="ruby-identifier">base_class</span>)&#x000A;  <span class="ruby-identifier">base_class</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">ClassMethods</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
-</div>
-</div>
-<h2>Public Instance methods</h2>
-<div class='method public-instance' id='method-method-i-plen_to_int'>
-<a name='method-i-plen_to_int'></a>
-<div class='synopsis'>
-<span class='name'>plen_to_int</span><span class='arguments'>(plen, args)</span>
-
-</div>
-<div class='description'>
-
-<p>Takes the <code>plen</code> comparing it to <code>args</code> to return a
-4-bit value</p>
-
-</div>
-<div class='source'>
-<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-plen_to_int-source&#39;); return false'>
-[show source]
-</a>
-<pre id='method-i-plen_to_int-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 78</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">plen_to_int</span>(<span class="ruby-identifier">plen</span>, <span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">plen</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:zero</span>]&#x000A;    <span class="ruby-value">0</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:one</span>]&#x000A;    <span class="ruby-value">1</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:two</span>]&#x000A;    <span class="ruby-value">2</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:three</span>]&#x000A;    <span class="ruby-value">3</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-included-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 79</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">included</span>(<span class="ruby-identifier">base_class</span>)&#x000A;  <span class="ruby-identifier">base_class</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">ClassMethods</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
