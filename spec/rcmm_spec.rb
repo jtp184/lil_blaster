@@ -2,9 +2,10 @@ RSpec.describe 'RCMM Protocol' do
   before :all do
     @klass = LilBlaster::Protocol::RCMM
     @proto = FactoryBot.build(:rcmm_protocol)
+  end
 
-    @cmd = 27
-
+  before :each do
+    @cmd = rand(1..1000)
     @tr = @proto.encode(@cmd)
     @alt = FactoryBot.build(:alternate_rcmm).encode(@cmd)
     @wr = LilBlaster::Transmission.new(data: Array.new(32) { rand(200..1000) })
@@ -21,7 +22,7 @@ RSpec.describe 'RCMM Protocol' do
     end
 
     it 'can determine the address data of a transmission' do
-      expect(@klass.address_data(@tr)).to eq(0)
+      expect(@klass.address_data(@tr)).to eq(1)
     end
 
     it 'can return an instance based off a transmission' do
@@ -29,8 +30,6 @@ RSpec.describe 'RCMM Protocol' do
 
       expect(protocol).to be_a(LilBlaster::Protocol::RCMM)
       expect(command).to be_a(Integer)
-
-      # binding.pry
 
       expect(command).to eq(@cmd)
     end
