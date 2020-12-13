@@ -60,17 +60,13 @@ RSpec.describe LilBlaster::Transmission do
   end
 
   it 'can recalculate a transmission based on a replacement matrix' do
-    repl = [
-      {
-        4511 => 4500,
-        517 => 545
-      },
-      {
-        4540 => 4500,
-        1732 => 1750,
-        609 => 600
-      }
-    ]
+    offsetter = Array.new(10) do
+      @transmission.clone.tap do |t|
+        t.data.map! { |d| d + rand(-100..100) }
+      end
+    end.reduce(&:+)
+
+    repl = LilBlaster::NoiseReducer.replacement_matrix(offsetter.data)
 
     result = @transmission % repl
 
