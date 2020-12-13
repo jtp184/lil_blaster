@@ -76,6 +76,20 @@ RSpec.describe LilBlaster::Codex do
     expect(sym_ex.protocol.to_sym).to eq(proto_sym)
   end
 
+  it 'can handle codes which are numeric, array, or Transmission' do
+    cdx = FactoryBot.build(:codex)
+    cdx.codes[:transmission] = FactoryBot.build(:transmission)
+    cdx.codes[:array] = [cdx[:power], cdx[:power]]
+    cdx.codes[:standard] = cdx[:power]
+
+    %i[transmission array standard].each do |sym|
+      expect(cdx.call(sym)).to be_a(LilBlaster::Transmission)
+    end
+
+    expect(cdx.call(:transmission).data).to eq(FactoryBot.build(:transmission).data)
+    expect(cdx.call(:array).count).to eq(cdx.call(:power).count * 2)
+  end
+
   describe 'appending data' do
     before :each do
       @codex = FactoryBot.build(:codex)
