@@ -28,7 +28,7 @@ RSpec.describe LilBlaster::Transmission do
     ex_two = LilBlaster::Transmission.new(
       data: @raw_data,
       carrier_wave: { frequency: 38.0, cycle_length: 2000 }
-    )
+      )
 
     expect(ex_one.carrier_wave?).to eq(true)
     expect(ex_two.carrier_wave?).to eq(true)
@@ -56,6 +56,25 @@ RSpec.describe LilBlaster::Transmission do
   end
 
   it 'can get the count of a transmission, in number of pulses' do
-    expect(@transmission.length).to eq(@transmission.data.count)
+    expect(@transmission.count).to eq(@transmission.data.count)
+  end
+
+  it 'can recalculate a transmission based on a replacement matrix' do
+    repl = [
+      {
+        4511 => 4500,
+        517 => 545
+      },
+      {
+        4540 => 4500,
+        1732 => 1750,
+        609 => 600
+      }
+    ]
+
+    result = @transmission % repl
+
+    expect(result.tuples[0]).to eq([4500, 4500])
+    expect(result.tuples[1]).to eq([545, 1750])
   end
 end
