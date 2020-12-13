@@ -11,6 +11,13 @@ RSpec.describe 'LIRC File parsing' do
     expect(codex.protocol.pulse_values[:header]).to eq([4633, 4321])
   end
 
+  it 'can read a lircd.conf file with raw codes' do
+    codex = LilBlaster::LircConfReader.call(FactoryBot.fixtures[:raw_codes_lirc_conf])
+
+    expect(codex.keys).to include(:power)
+    expect(codex.codes.values.sample).to be_a(LilBlaster::Transmission)
+  end
+
   describe 'with a present lircd.conf file' do
     before :each do
       @temp_dir = Dir.mktmpdir("lil_blaster_test_#{Time.now.to_i}")

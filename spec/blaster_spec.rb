@@ -13,4 +13,10 @@ RSpec.describe LilBlaster::Blaster, :hardware do
   it 'can check its active status' do
     expect(LilBlaster::Blaster.on?).not_to eq(LilBlaster::Blaster.off?)
   end
+
+  it 'can send codes from a codex' do
+    cdx = FactoryBot.build(:codex)
+
+    expect(LilBlaster::Blaster.send_code(:test, codex: cdx)).to eq(0)
+  end
 end

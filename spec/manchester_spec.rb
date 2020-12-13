@@ -24,7 +24,7 @@ RSpec.describe 'Manchester Protocol' do
     end
 
     it 'can return an instance based off a transmission' do
-      protocol, command = @klass.decode(@tr)
+      protocol, command = @proto.decode(@tr)
 
       expect(protocol).to be_a(LilBlaster::Protocol::Manchester)
       expect(command).to be_a(Integer)
@@ -49,6 +49,36 @@ RSpec.describe 'Manchester Protocol' do
       expect(transmissions.map { |x| @klass.command_data(x) }).to eq(ex)
       expect(bytestrings.map { |x| x[0..15] }.uniq.length).to eq(1)
       expect(bytestrings.map { |x| x[16..-1] }.uniq.length).to eq(ex.length)
+    end
+
+    it 'can determine whether it is shift or space encoded' do
+      shif = FactoryBot.build(:manchester_protocol)
+      spac = FactoryBot.build(:manchester_protocol)
+
+      %i[zero one].each { |i| spac.pulse_values[i].reverse! }
+
+      expect(shif.encoding).to eq(:shift)
+      expect(spac.encoding).to eq(:space)
+    end
+
+    describe 'with a repeat code' do
+      before :all do
+        @repeat = FactoryBot.build(:manchester_protocol)
+        @repeat.pulse_values[:repeat] = @repeat_pulse = [4500, 2800]
+
+        @repeat_transmission = LilBlaster::Transmission.new(data: [4500, 2800, 520, 80_000])
+      end
+
+      it 'can detect a repeat transmission' do
+        expect(@repeat.decode(@repeat_transmission)[1]).to eq(-1)
+      end
+
+      it 'can encode repeats into the transmission' do
+        repeat_count = rand(2..10)
+        trns = @repeat.encode(0xBEEF, repeat_count)
+
+        expect(trns.tuples.count(@repeat_pulse)).to eq(repeat_count)
+      end
     end
   end
 end

@@ -102,6 +102,7 @@ RSpec.describe LilBlaster::ConfigFile do
 
       describe 'with codexes folder' do
         before :each do
+          LilBlaster::Codex.autoload
           LilBlaster::Codex.autoload!
         end
 
@@ -110,6 +111,23 @@ RSpec.describe LilBlaster::ConfigFile do
           File.open(fpath, 'w+') { |f| f << @codex_yaml }
 
           expect(LilBlaster::Codex.autoload!).not_to be_empty
+        end
+
+        it 'memoizes autoloading' do
+          fpath = "#{@codex_dir}/#{SecureRandom.alphanumeric}_codex.yml"
+          File.open(fpath, 'w+') { |f| f << @codex_yaml }
+
+          LilBlaster::Codex.autoload!
+
+          expect(LilBlaster::Codex.autoload.first).not_to be_nil
+          obid = LilBlaster::Codex.autoload.first.object_id
+
+          FileUtils.rm(fpath)
+
+          expect(LilBlaster::Codex.autoload.first).not_to be_nil
+          expect(LilBlaster::Codex.autoload.first.object_id).to eq(obid)
+
+          expect(LilBlaster::Codex.autoload!).to be_empty
         end
 
         it 'returns a blank if no codexes are present' do
@@ -121,6 +139,22 @@ RSpec.describe LilBlaster::ConfigFile do
 
           expect(LilBlaster::ConfigFile[:codexes_dir]).to be_nil
           expect(LilBlaster::Codex.autoload).to be_empty
+        end
+
+        it 'can be used to set a default codex' do
+          rand_name = SecureRandom.alphanumeric
+
+          fpath = "#{@codex_dir}/#{rand_name}_codex.yml"
+          File.open(fpath, 'w+') do |f|
+            f << FactoryBot.build(:codex, remote_name: rand_name).to_yaml
+          end
+
+          LilBlaster::ConfigFile[:default_codex] = rand_name
+          LilBlaster::ConfigFile.save
+          LilBlaster::Codex.autoload!
+
+          expect(LilBlaster::Codex.default).not_to be_nil
+          expect(LilBlaster::Codex.default.remote_name).to eq(rand_name)
         end
       end
     end

@@ -81,7 +81,7 @@ module LilBlaster
 
         tr = [data_transmission(data)]
 
-        tr += Array.new(repititions - 1) do
+        tr += Array.new(repititions) do
           pulse_values[:repeat] ? repeat_transmission : data_transmission(data)
         end
 
@@ -91,7 +91,7 @@ module LilBlaster
       # Instance level decode which takes the +transmission+ and detects if it is a standard
       # or repeat code. Mostly useful with codexes for detecting repeat codes
       def decode(transmission)
-        if match?(transmission)
+        if self.class.match?(transmission)
           self.class.decode(transmission)
         elsif recognize_repeat(transmission)
           [self, -1]

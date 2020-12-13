@@ -2,6 +2,9 @@ module LilBlaster
   module Protocol
     # Handles 4-bit data transmissions
     module FourBitData
+      # Max the gap out so that we don't end up with egregious results
+      MAXIMUM_GAP = 120_000
+
       # Methods to extend onto the base class
       module ClassMethods
         # Takes in the +transmission+ and returns a 4-bit string representation
@@ -54,7 +57,10 @@ module LilBlaster
           enc = [plens.map(&:first), plens.map(&:last)].map(&:uniq)
           enc = enc.index(enc.max)
 
-          %i[zero one two three].zip(plens.sort { |a, b| a[enc] <=> b[enc] }).to_h
+          data_plens = plens.reject { |pl| pl == plens.max { |l| l[1] } }
+                            .sort { |a, b| a[enc] <=> b[enc] }
+
+          %i[zero one two three].zip(data_plens).to_h
         end
 
         # Handles 4-bit data ranges, taking the +range+ of tuples out of +transmission+
@@ -72,20 +78,6 @@ module LilBlaster
       # Extends the class methods onto +base_class+
       def self.included(base_class)
         base_class.extend(ClassMethods)
-      end
-
-      # Takes the +plen+ comparing it to +args+ to return a 4-bit value
-      def plen_to_int(plen, args)
-        case plen
-        when args[:zero]
-          0
-        when args[:one]
-          1
-        when args[:two]
-          2
-        when args[:three]
-          3
-        end
       end
     end
   end

@@ -28,7 +28,7 @@ RSpec.describe LilBlaster::Transmission do
     ex_two = LilBlaster::Transmission.new(
       data: @raw_data,
       carrier_wave: { frequency: 38.0, cycle_length: 2000 }
-    )
+      )
 
     expect(ex_one.carrier_wave?).to eq(true)
     expect(ex_two.carrier_wave?).to eq(true)
@@ -49,5 +49,32 @@ RSpec.describe LilBlaster::Transmission do
     repeat = @transmission * 3
 
     expect(repeat.data.length).to eq(@transmission.data.length * 3)
+  end
+
+  it 'can get the length of a transmission, in microts' do
+    expect(@transmission.length).to eq(@transmission.data.reduce(&:+))
+  end
+
+  it 'can get the count of a transmission, in number of pulses' do
+    expect(@transmission.count).to eq(@transmission.data.count)
+  end
+
+  it 'can recalculate a transmission based on a replacement matrix' do
+    offsetter = Array.new(10) do
+      @transmission.clone.tap do |t|
+        t.data.map! { |d| d + rand(-100..100) }
+      end
+    end
+
+    offsetter << @transmission.clone
+    offsetter = offsetter.reduce(&:+)
+
+    repl = LilBlaster::NoiseReducer.replacement_matrix(offsetter.data)
+
+    result = @transmission % repl
+
+    expect(result.data.uniq.count).to eq(6)
+    all_from_replacement = ->(d) { d.all? { |n| repl.reduce(&:merge).values.uniq.include?(n) } }
+    expect(result.data.uniq).to satisfy(&all_from_replacement)
   end
 end
