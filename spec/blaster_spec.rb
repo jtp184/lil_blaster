@@ -17,6 +17,6 @@ RSpec.describe LilBlaster::Blaster, :hardware do
   it 'can send codes from a codex' do
     cdx = FactoryBot.build(:codex)
 
-    expect(LilBlaster::Blaster.send_code(:test, codex: cdx)).to be(true)
+    expect(LilBlaster::Blaster.send_code(:test, codex: cdx)).to eq(0)
   end
 end
