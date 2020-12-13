@@ -25,16 +25,16 @@ module LilBlaster
       class << self
         # Checks that the +data+ conforms to spec by checking against duty cycles
         def match?(data)
-          return false unless data.data.uniq.length == DUTY_CYCLES.length + 1
+          return false unless data.data.uniq.length <= DUTY_CYCLES.length + 1
 
-          data.data
-              .uniq
-              .reject { |r| r == data.data.max }
-              .sort
-              .zip(DUTY_CYCLES)
-              .map { |k| k.reduce(&:/) }
-              .uniq
-              .one?
+          base = data.data
+                     .each_with_object(Hash.new(0)) { |i, a| a.tap { a[i] += 1 } }
+                     .max_by { |_k, v| v }
+                     .first
+                     ./(6.0)
+                     .to_i
+
+          data.tuples.first.zip([15 * base, 10 * base]).all? { |a, b| (a - b).abs < 20 }
         end
 
         # Takes in the +data+, ensures it passes the identity check, then returns an instance
@@ -49,7 +49,7 @@ module LilBlaster
 
         # Returns a symbol dependant on the values in the first two bits of +transmission+
         def mode_data(transmission, values = nil)
-          init_args = values || extract_mark_values(transmission)[:pulse_values]
+          init_args = values || determine_marks(transmission)[:pulse_values]
 
           mode_one, mode_two = transmission.tuples[1..2].map do |pl|
             pulses_to_int([pl], init_args)
@@ -62,7 +62,7 @@ module LilBlaster
 
         # Returns an integer dependant on the value in the second bit of +transmission+
         def address_data(transmission, values = nil)
-          init_args = values || extract_mark_values(transmission)[:pulse_values]
+          init_args = values || determine_marks(transmission)[:pulse_values]
           md = mode_data(transmission, init_args)
 
           return unless %i[mouse keyboard gamepad].include?(md)
@@ -70,8 +70,9 @@ module LilBlaster
           pulses_to_int([transmission.tuples[2]], init_args)
         end
 
+        # Returns the customer_id data in a +transmission+ if one exists
         def customer_id_data(transmission, values = nil)
-          init_args = values || extract_mark_values(transmission)[:pulse_values]
+          init_args = values || determine_marks(transmission)[:pulse_values]
           md = mode_data(transmission, init_args)
 
           return unless md == :oem
@@ -79,8 +80,9 @@ module LilBlaster
           pulses_to_int(transmission.tuples[4..6], init_args)
         end
 
+        # Returns the command data in the +transmission+
         def command_data(transmission, values = nil)
-          init_args = values || extract_mark_values(transmission)[:pulse_values]
+          init_args = values || determine_marks(transmission)[:pulse_values]
           range = mode_data(transmission, init_args) == :oem ? 6..-2 : 3..-2
 
           pulses_to_int(transmission.tuples[range], init_args)
@@ -90,13 +92,39 @@ module LilBlaster
 
         # Extracts the mode
         def extract_values(data)
-          init_args = extract_mark_values(data)
+          init_args = determine_marks(data)
 
           init_args[:mode] = mode_data(data)
           init_args[:address] = address_data(data)
           init_args[:customer_id] = customer_id_data(data)
 
           init_args
+        end
+
+        # Uses .extract_mark_values on the +data+, using .calculate_pulses to fill in missing bits
+        def determine_marks(data)
+          init_args = extract_mark_values(data)
+
+          if init_args[:pulse_values].slice(:header, :zero, :one, :two, :three).values.any?(&:nil?)
+            init_args[:pulse_values] = calculate_pulses(data)
+          end
+
+          init_args
+        end
+
+        # Uses the +data+ to infer the pulse values from duty cycles, returns pulse_values
+        def calculate_pulses(data)
+          six_cycle = data.data
+                          .each_with_object(Hash.new(0)) { |i, a| a.tap { a[i] += 1 } }
+                          .max_by { |_k, v| v }[0]
+
+          base_num = six_cycle / 6.0
+
+          j = { header: [15, 10], zero: [6, 10], one: [6, 16], two: [6, 22], three: [6, 28] }
+          j.transform_values! { |x| x.map { |y| y * base_num }.map(&:to_i) }
+
+          k = j.values.flatten.uniq.map { |i| [i, data.data.find { |f| (f - i).abs < 20 }] }.to_h
+          j.transform_values { |x| x.map { |y| k[y] || y } }
         end
       end
 
