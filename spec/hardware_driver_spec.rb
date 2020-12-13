@@ -29,4 +29,11 @@ RSpec.describe 'Hardware driver spec' do
     $stderr = og_stderr
     Pigpio = backup
   end
+
+  it 'can memoize and return a hash of constants from the driver' do
+    cns = LilBlaster::GPIO.pi_constants
+
+    expect(cns).to be_a(Hash)
+    expect(LilBlaster::GPIO.pi_constants.object_id).to eq(cns.object_id)
+  end
 end
