@@ -31,10 +31,14 @@ module LilBlaster
     map %w[--version -v] => :version
 
     desc 'config', 'Initialize, set, and get configuration options'
-    method_option :interactive, aliases: '-i', type: :boolean, desc: 'Edit settings with an interactive prompt'
-    method_option :set, aliases: '-s', type: :array, desc: 'Set a configuration value'
-    method_option :get, aliases: '-g', type: :string, desc: 'Get the current value of a config setting'
-    method_option :unset, aliases: '-u', type: :string, desc: 'Unset a configuration value'
+    method_option :interactive, aliases: '-i', type: :boolean,
+                                desc: 'Edit settings with an interactive prompt'
+    method_option :set, aliases: '-s', type: :array,
+                        desc: 'Set a configuration value'
+    method_option :get, aliases: '-g', type: :string,
+                        desc: 'Get the current value of a config setting'
+    method_option :unset, aliases: '-u', type: :string,
+                          desc: 'Unset a configuration value'
 
     # Initialize, set, and get configuration options
     def config
@@ -48,10 +52,14 @@ module LilBlaster
     end
 
     desc 'send_code [SYMBOLS...]', 'Send a code from a codex'
-    method_option :codex, aliases: '-c', type: :string, desc: 'Pass a codex name or filepath for the codex'
-    method_option :raw, aliases: '-r', type: :string, desc: 'Provide a raw number value instead of a symbol'
-    method_option :interactive, aliases: '-i', type: :boolean, desc: 'Choose what to send interactively'
-    method_option :times, aliases: '-t', type: :numeric, desc: 'Send the provided symbols multiple times'
+    method_option :codex, aliases: '-c', type: :string,
+                          desc: 'Pass a codex name or filepath for the codex'
+    method_option :raw, aliases: '-r', type: :string,
+                        desc: 'Provide a raw number value instead of a symbol'
+    method_option :interactive, aliases: '-i', type: :boolean,
+                                desc: 'Choose what to send interactively'
+    method_option :times, aliases: '-t', type: :numeric,
+                          desc: 'Send the provided symbols multiple times'
 
     # Sends the code defined by the +symbol+ in a +codex+
     def send_code(*symbols)
@@ -61,6 +69,19 @@ module LilBlaster
         require_relative 'commands/send_code'
 
         LilBlaster::Commands::SendCode.new(options, { symbols: symbols }).execute
+      end
+    end
+
+    desc 'learn', 'Learn a new remote or code and save it out'
+    method_option :interactive, aliases: '-i', type: :boolean, desc: 'Interactively choose options'
+
+    def learn
+      if options[:help]
+        invoke :help, [:learn]
+      else
+        require_relative 'commands/learn'
+
+        LilBlaster::Commands::Learn.new(options).execute
       end
     end
   end
