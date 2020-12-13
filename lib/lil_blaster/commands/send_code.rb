@@ -69,13 +69,8 @@ module LilBlaster
                               end
                             elsif @options[:raw] && @options[:interactive]
                               interactive_codex_choice
-                            elsif LilBlaster::ConfigFile[:default_codex]
-                              LilBlaster::Codex.autoload.find do |codex|
-                                [
-                                  codex.remote_name,
-                                  LilBlaster::ConfigFile[:default_codex] || ''
-                                ].map(&:downcase).reduce(&:==)
-                              end
+                            elsif LilBlaster::Codex.default
+                              LilBlaster::Codex.default
                             elsif @options[:interactive]
                               interactive_codex_choice
                             end
