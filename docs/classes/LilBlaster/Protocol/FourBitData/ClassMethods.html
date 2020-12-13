@@ -57,7 +57,8 @@ LilBlaster::Protocol::FourBitData::ClassMethods
 <div class='method public-instance' id='method-method-i-bytestring_for'>
 <a name='method-i-bytestring_for'></a>
 <div class='synopsis'>
-<span class='name'>bytestring_for</span><span class='arguments'>(transmission)</span>
+<span class='name'>bytestring_for</span>
+<span class='arguments'>(transmission)</span>
 
 </div>
 <div class='description'>
@@ -70,13 +71,14 @@ representation</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-bytestring_for-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-bytestring_for-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 8</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bytestring_for</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">ident</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses_to_int</span>(<span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>, <span class="ruby-identifier">ident</span>[<span class="ruby-value">:pulse_values</span>]).<span class="ruby-identifier">to_s</span>(<span class="ruby-value">4</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-bytestring_for-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 11</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bytestring_for</span>(<span class="ruby-identifier">transmission</span>)&#x000A;  <span class="ruby-identifier">ident</span> = <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses_to_int</span>(<span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>, <span class="ruby-identifier">ident</span>[<span class="ruby-value">:pulse_values</span>]).<span class="ruby-identifier">to_s</span>(<span class="ruby-value">4</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-data_range'>
 <a name='method-i-data_range'></a>
 <div class='synopsis'>
-<span class='name'>data_range</span><span class='arguments'>(transmission, range, args = nil)</span>
+<span class='name'>data_range</span>
+<span class='arguments'>(transmission, range, args = nil)</span>
 
 </div>
 <div class='description'>
@@ -90,13 +92,14 @@ complexity</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-data_range-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-data_range-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 62</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">range</span>, <span class="ruby-identifier">args</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">args</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses_to_int</span>(&#x000A;    <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-identifier">range</span>],&#x000A;    <span class="ruby-identifier">args</span>[<span class="ruby-value">:pulse_values</span>]&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-data_range-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 68</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">data_range</span>(<span class="ruby-identifier">transmission</span>, <span class="ruby-identifier">range</span>, <span class="ruby-identifier">args</span> = <span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">args</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">extract_mark_values</span>(<span class="ruby-identifier">transmission</span>)&#x000A;&#x000A;  <span class="ruby-identifier">pulses_to_int</span>(&#x000A;    <span class="ruby-identifier">transmission</span>.<span class="ruby-identifier">tuples</span>[<span class="ruby-identifier">range</span>],&#x000A;    <span class="ruby-identifier">args</span>[<span class="ruby-value">:pulse_values</span>]&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-extract_data_values'>
 <a name='method-i-extract_data_values'></a>
 <div class='synopsis'>
-<span class='name'>extract_data_values</span><span class='arguments'>(plens)</span>
+<span class='name'>extract_data_values</span>
+<span class='arguments'>(plens)</span>
 
 </div>
 <div class='description'>
@@ -108,13 +111,14 @@ complexity</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-extract_data_values-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-extract_data_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 53</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_data_values</span>(<span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">enc</span> = [<span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>), <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:last</span>)].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:uniq</span>)&#x000A;  <span class="ruby-identifier">enc</span> = <span class="ruby-identifier">enc</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">enc</span>.<span class="ruby-identifier">max</span>)&#x000A;&#x000A;  <span class="ruby-node">%i[zero one two three]</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">plens</span>.<span class="ruby-identifier">sort</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>[<span class="ruby-identifier">enc</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">enc</span>] }).<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-extract_data_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 56</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_data_values</span>(<span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">enc</span> = [<span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>), <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:last</span>)].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:uniq</span>)&#x000A;  <span class="ruby-identifier">enc</span> = <span class="ruby-identifier">enc</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">enc</span>.<span class="ruby-identifier">max</span>)&#x000A;&#x000A;  <span class="ruby-identifier">data_plens</span> = <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> <span class="ruby-identifier">l</span>[<span class="ruby-value">1</span>] } }&#x000A;                    .<span class="ruby-identifier">sort</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>[<span class="ruby-identifier">enc</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">enc</span>] }&#x000A;&#x000A;  <span class="ruby-node">%i[zero one two three]</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">data_plens</span>).<span class="ruby-identifier">to_h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-extract_mark_values'>
 <a name='method-i-extract_mark_values'></a>
 <div class='synopsis'>
-<span class='name'>extract_mark_values</span><span class='arguments'>(data)</span>
+<span class='name'>extract_mark_values</span>
+<span class='arguments'>(data)</span>
 
 </div>
 <div class='description'>
@@ -126,13 +130,14 @@ complexity</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-extract_mark_values-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-extract_mark_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 31</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_mark_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">uniq</span>&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span> = {&#x000A;    <span class="ruby-value">gap:</span> [<span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">1</span>] }[<span class="ruby-value">1</span>], <span class="ruby-constant">MAXIMUM_GAP</span>].<span class="ruby-identifier">min</span>,&#x000A;    <span class="ruby-value">post_bit:</span> <span class="ruby-identifier">plens</span>[<span class="ruby-value">-2</span>][<span class="ruby-value">0</span>]&#x000A;  }&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:pulse_values</span>] = <span class="ruby-identifier">extract_pulse_values</span>(<span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">init_args</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-extract_mark_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 34</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_mark_values</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">plens</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">uniq</span>&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span> = {&#x000A;    <span class="ruby-value">gap:</span> [<span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">1</span>] }[<span class="ruby-value">1</span>], <span class="ruby-constant">MAXIMUM_GAP</span>].<span class="ruby-identifier">min</span>,&#x000A;    <span class="ruby-value">post_bit:</span> <span class="ruby-identifier">plens</span>[<span class="ruby-value">-2</span>][<span class="ruby-value">0</span>]&#x000A;  }&#x000A;&#x000A;  <span class="ruby-identifier">init_args</span>[<span class="ruby-value">:pulse_values</span>] = <span class="ruby-identifier">extract_pulse_values</span>(<span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">init_args</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-extract_pulse_values'>
 <a name='method-i-extract_pulse_values'></a>
 <div class='synopsis'>
-<span class='name'>extract_pulse_values</span><span class='arguments'>(plens)</span>
+<span class='name'>extract_pulse_values</span>
+<span class='arguments'>(plens)</span>
 
 </div>
 <div class='description'>
@@ -144,13 +149,14 @@ complexity</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-extract_pulse_values-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-extract_pulse_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 44</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_pulse_values</span>(<span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">pulse_values</span> = { <span class="ruby-value">header:</span> <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">0</span>] } }&#x000A;&#x000A;  <span class="ruby-identifier">remain</span> = <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:header</span>] }&#x000A;&#x000A;  <span class="ruby-identifier">pulse_values</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">extract_data_values</span>(<span class="ruby-identifier">remain</span>))&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-extract_pulse_values-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 47</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_pulse_values</span>(<span class="ruby-identifier">plens</span>)&#x000A;  <span class="ruby-identifier">pulse_values</span> = { <span class="ruby-value">header:</span> <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">max</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>[<span class="ruby-value">0</span>] } }&#x000A;&#x000A;  <span class="ruby-identifier">remain</span> = <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:header</span>] }&#x000A;&#x000A;  <span class="ruby-identifier">pulse_values</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">extract_data_values</span>(<span class="ruby-identifier">remain</span>))&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-pulses_to_int'>
 <a name='method-i-pulses_to_int'></a>
 <div class='synopsis'>
-<span class='name'>pulses_to_int</span><span class='arguments'>(plens, values)</span>
+<span class='name'>pulses_to_int</span>
+<span class='arguments'>(plens, values)</span>
 
 </div>
 <div class='description'>
@@ -163,7 +169,7 @@ consolidates into a 4-bit int</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-pulses_to_int-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-pulses_to_int-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 15</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulses_to_int</span>(<span class="ruby-identifier">plens</span>, <span class="ruby-identifier">values</span>)&#x000A;  <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">pl</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:zero</span>]&#x000A;      <span class="ruby-string">&#39;0&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:one</span>]&#x000A;      <span class="ruby-string">&#39;1&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:two</span>]&#x000A;      <span class="ruby-string">&#39;2&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:three</span>]&#x000A;      <span class="ruby-string">&#39;3&#39;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">4</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-pulses_to_int-source'><span class="ruby-comment"># File lib/lil_blaster/protocol/four_bit_data.rb, line 18</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pulses_to_int</span>(<span class="ruby-identifier">plens</span>, <span class="ruby-identifier">values</span>)&#x000A;  <span class="ruby-identifier">plens</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pl</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">pl</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:zero</span>]&#x000A;      <span class="ruby-string">&#39;0&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:one</span>]&#x000A;      <span class="ruby-string">&#39;1&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:two</span>]&#x000A;      <span class="ruby-string">&#39;2&#39;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-identifier">values</span>[<span class="ruby-value">:three</span>]&#x000A;      <span class="ruby-string">&#39;3&#39;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">4</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
