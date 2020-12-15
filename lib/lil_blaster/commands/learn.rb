@@ -11,6 +11,7 @@ module LilBlaster
 
       def current_codex
         return @current_codex if @current_codex
+        raise ArgumentError, 'No Codex provided' unless @options[:codex]
 
         srch = @options[:codex]
 
