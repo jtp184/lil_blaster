@@ -15,7 +15,7 @@ module LilBlaster
         srch = @options[:codex]
 
         matched = LilBlaster::Codex.autoload.find do |cdx|
-          cdx.remote_name.downcase =~ /#{srch}/
+          cdx.remote_name.downcase =~ /^#{srch}$/
         end
 
         @current_codex = matched || LilBlaster::Codex.new(remote_name: srch)
