@@ -113,15 +113,18 @@ module LilBlaster
                          end
       end
 
+      # Defines and memoizes groups of keys to present as options
       def key_bundles
         @key_bundles ||= {
           minimal: %i[ok],
           basic: %i[power up down left right],
           audio: %i[volume_up volume_down mute],
-          seeking: %i[pause fast_forward rewind]
+          seeking: %i[pause fast_forward rewind],
+          numbers: %i[one two three four five six seven eight nine zero]
         }
       end
 
+      # Presents a prompt to choose which bundles to use
       def pick_key_bundle_interactive
         bundles = key_bundles.map { |k, v| "#{k}: (#{v.join(', ')})" }
         chosen = prompt.multi_select('Choose keys to learn: ', bundles)
