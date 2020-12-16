@@ -5,6 +5,7 @@ module LilBlaster
   module Commands #:nodoc:
     # Learning new remotes and codes
     class Learn < LilBlaster::Command
+      # Primary command runner
       def execute(_input: $stdin, _output: $stdout)
         if current_codex.protocol.nil?
           learn_protocol
@@ -23,6 +24,7 @@ module LilBlaster
         puts "Codex saved to #{current_codex.path}"
       end
 
+      # Identifies the protocol from a sampling of buttons
       def learn_protocol
         puts 'Ready to capture protocol information'
         puts 'Please single-press 5-10 random buttons on the remote now'
@@ -35,6 +37,7 @@ module LilBlaster
         current_codex.protocol = LilBlaster::Protocol.identify!(proto_data.first % smoothing)[0]
       end
 
+      # Identifies any present repeat code from a held button
       def learn_repeats
         puts 'Please press and hold one button on the remote now'
 
@@ -46,6 +49,7 @@ module LilBlaster
         current_codex.protocol.pulse_values[:repeat] = id if id
       end
 
+      # Given a +sym+ it captures a transmission and decodes it, then adds to the current codex
       def learn_new_symbol(sym)
         puts "Ready to capture `#{pastel.yellow(sym.to_s)}`"
         sleep 0.5
@@ -60,6 +64,7 @@ module LilBlaster
 
       private
 
+      # Takes in an array of transmissions +burst+, and extracts a protocol, command, and repeat
       def identify_code(burst)
         u = burst.uniq(&:count)
 
@@ -76,6 +81,7 @@ module LilBlaster
         { protocol: proto, command: code, repeat: rpt }
       end
 
+      # Memoizes keys based on either the flags, interactive pick, or default key bundle
       def current_keys
         @current_keys ||= if @options[:keys]
                             @options[:keys].map(&:to_sym)
@@ -86,6 +92,7 @@ module LilBlaster
                           end
       end
 
+      # Finds the codex specified by the flag, creating it if necessary
       def current_codex
         return @current_codex if @current_codex
         raise ArgumentError, 'No Codex provided' unless @options[:codex]
@@ -96,7 +103,14 @@ module LilBlaster
           cdx.remote_name.downcase =~ /^#{srch}$/
         end
 
-        @current_codex = matched || LilBlaster::Codex.new(remote_name: srch)
+        @current_codex = if matched.nil?
+                           LilBlaster::Codex.new(
+                             remote_name: srch,
+                             path: LilBlaster::ConfigFile[:codexes_dir] + "/#{srch}_codex.yml"
+                           )
+                         else
+                           matched
+                         end
       end
 
       def key_bundles
