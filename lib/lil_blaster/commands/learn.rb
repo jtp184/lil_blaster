@@ -65,7 +65,7 @@ module LilBlaster
           puts pastel.red('Key already present, use --overwrite to replace it')
         elsif current_codex.value?(id)
           puts pastel.red('Duplicate key detected, retrying')
-          retry
+          redo
         else
           current_codex.codes[sym] = id
         end
