@@ -104,7 +104,7 @@ module LilBlaster
     # @api public
     def prompt(**options)
       require 'tty-prompt'
-      TTY::Prompt.new(options)
+      TTY::Prompt.new(options.merge(interrupt: -> { puts; puts; puts "Canceled".magenta; abort }))
     end
 
     # Get terminal screen properties
@@ -115,6 +115,24 @@ module LilBlaster
     def screen
       require 'tty-screen'
       TTY::Screen
+    end
+
+    # Animated spinner for non deterministic tasks
+    #
+    # @see http://www.rubydoc.info/gems/tty-spinner
+    #
+    # @api public
+    def spinner(message, opts = {})
+      require 'tty-spinner'
+      TTY::Spinner.new(
+        message,
+        opts.merge(
+          success_mark: '✅',
+          error_mark: '❗️',
+          frames: '🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛🕐🕑',
+          interval: 24
+        )
+      )
     end
 
     # The unix which utility
