@@ -8,10 +8,8 @@ module LilBlaster
       # Primary command runner
       def execute(_input: $stdin, _output: $stdout)
         if current_codex.protocol.nil?
-          learn_protocol
-          sleep 1
-          learn_repeats
-          sleep 1
+          learn_protocol && sleep(1)
+          learn_repeats && sleep(1)
           puts pastel.green('Protocol identified')
         end
 
