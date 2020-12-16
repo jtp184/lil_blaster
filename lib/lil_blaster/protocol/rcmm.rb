@@ -152,7 +152,6 @@ module LilBlaster
       # +repititions+
       def encode(data = 0x0, repititions = 1)
         raise TypeError, 'data is not an integer' unless data.is_a?(Integer)
-        raise IndexError, 'data is out of bounds' unless (-1..(2**24)).cover?(data)
 
         return repeat_transmission if data == -1 && repititions == 1
         return repeat_transmission * repititions if data == -1

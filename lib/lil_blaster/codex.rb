@@ -6,9 +6,9 @@ module LilBlaster
   class Codex
     extend Forwardable
 
-    # The designation for this remote
+    # The designation for this codex
     attr_accessor :remote_name
-    # What protocol to use to control the remote
+    # What protocol to use to encode the data
     attr_accessor :protocol
     # The file path on the system to save to
     attr_accessor :path
@@ -128,7 +128,7 @@ module LilBlaster
     # Adds the code content of +other+ and returns a new codex, preserving the other
     # attributes of this codex
     def +(other)
-      raise TypeError, 'Not a codex' unless other.class == self.class
+      raise TypeError, 'Not a codex' unless other.instance_of?(self.class)
 
       self.class.new(
         remote_name: remote_name,

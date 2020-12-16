@@ -10,7 +10,8 @@ module LilBlaster
         end
       end
 
-      # Sends Codex#call to the +codex+ with the +sym+ argument, then runs #transmit on the result
+      # Passed a codex in the +args+ (or using the default), runs Codex#call on the +sym+
+      # and #transmit on the result
       def send_code(sym, args = {})
         dex = args.fetch(:codex, nil) || LilBlaster::Codex.default
         raise ArgumentError 'No codex provided' unless dex
