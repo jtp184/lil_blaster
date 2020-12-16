@@ -49,9 +49,10 @@ module LilBlaster
         puts "Ready to capture `#{pastel.yellow(sym.to_s)}`"
         sleep 0.5
         puts 'Please press and hold the key'
-        puts pastel.green('Done!')
 
         burst = LilBlaster::Reader.record(first: 4)
+
+        puts pastel.green('Done!')
 
         current_codex.codes[sym] = convert_transmissions(burst)[:command]
       end
