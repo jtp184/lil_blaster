@@ -52,12 +52,7 @@ module LilBlaster
       # Given a +sym+ it captures a transmission and decodes it, then adds to the current codex
       def learn_new_symbol(sym)
         print "Ready to capture `#{pastel.yellow(sym.to_s)}`"
-
-        5.times do
-          print '.'
-          sleep 0.2
-        end
-
+        sleep 2
         puts
         puts 'Please press and hold the key'
 
