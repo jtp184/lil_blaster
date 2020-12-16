@@ -83,7 +83,7 @@ module LilBlaster
 
           proto, code = LilBlaster::Protocol.identify!(data)
         else
-          proto, code = LilBlaster::Protocol.identify!(u.first)
+          proto, code = LilBlaster::Protocol.identify!(data.first)
           rpt = nil
         end
 
