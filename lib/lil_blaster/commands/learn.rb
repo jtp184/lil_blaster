@@ -1,5 +1,4 @@
 require_relative '../command'
-require 'pry'
 
 module LilBlaster
   module Commands #:nodoc:
@@ -19,7 +18,7 @@ module LilBlaster
         end
 
         current_codex.save_file
-        puts "Codex saved to #{current_codex.path}"
+        puts "Codex saved to #{pastel.yellow current_codex.path}"
       end
 
       # Identifies the protocol from a sampling of buttons
@@ -56,7 +55,7 @@ module LilBlaster
 
         burst = LilBlaster::Reader.record(first: 4)
 
-        puts pastel.yellow('Release the key now')
+        puts pastel.cyan('Release the key now')
 
         id = identify_code(burst)[:command]
         pr = current_codex.value?(id)
