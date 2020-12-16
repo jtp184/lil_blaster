@@ -103,6 +103,7 @@ module LilBlaster
       # Finds the codex specified by the flag, creating it if necessary
       def current_codex
         return @current_codex if @current_codex
+        return @current_codex ||= pick_codex_interactive if @options[:interactive]
         raise ArgumentError, 'No Codex provided' unless @options[:codex]
 
         srch = @options[:codex]
@@ -140,6 +141,32 @@ module LilBlaster
         chosen.map { |x| x.split(':')[0].to_sym }
               .map { |y| key_bundles[y] }
               .reduce(&:+)
+      end
+
+      # Present a prompt to select the codex
+      def pick_codex_interactive
+        existing = LilBlaster::Codex.autoload
+
+        return new_codex_interactive if existing.empty?
+
+        choices = existing.map(&:remote_name) << pastel.yellow('New Codex')
+        chosen = prompt.select('Choose codex to add to: ', choices)
+
+        if chosen =~ /New Codex/
+          new_codex_interactive
+        else
+          LilBlaster::Codex.autoload.find { |c| c.remote_name == chosen }
+        end
+      end
+
+      # Prompt for a name for a new codex, instantiate and return
+      def new_codex_interactive
+        rn = prompt.ask('New Codex name: ').downcase
+
+        LilBlaster::Codex.new(
+          remote_name: rn,
+          path: LilBlaster::ConfigFile[:codexes_dir] + "/#{rn}_codex.yml"
+        )
       end
     end
   end
