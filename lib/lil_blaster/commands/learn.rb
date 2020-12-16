@@ -27,7 +27,7 @@ module LilBlaster
         puts 'Ready to capture protocol information'
         puts 'Please single-press 5-10 random buttons on the remote now'
 
-        proto_data = LilBlaster::Reader.record(seconds: -1, first: 8)
+        proto_data = LilBlaster::Reader.record(seconds: -1, first: 10)
 
         puts pastel.green('Done!')
 
