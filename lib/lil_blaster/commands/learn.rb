@@ -23,7 +23,7 @@ module LilBlaster
         proto_data = []
 
         spinner('Please single-press 5-10 random buttons on the remote now').run('Done!') do |_spin|
-          proto_data += LilBlaster::Reader.record(seconds: 10)
+          proto_data += LilBlaster::Reader.record(first: 10)
         end
 
         smoothing = LilBlaster::NoiseReducer.replacement_matrix(proto_data.map(&:data).flatten)
