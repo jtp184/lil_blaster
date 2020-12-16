@@ -79,16 +79,14 @@ module LilBlaster
 
       # Takes in an array of transmissions +burst+, and extracts a protocol, command, and repeat
       def identify_code(burst)
-        u = burst.uniq(&:count)
-
-        if u.one?
-          proto, code = LilBlaster::Protocol.identify!(u.first)
-          rpt = nil
-        else
-          data = u.max_by(&:count)
-          rpt = u.min_by(&:count).tuples.first
+        if burst.any? { |t| t.count == 4 }
+          data = burst.max_by(&:count)
+          rpt = burst.min_by(&:count).tuples.first
 
           proto, code = LilBlaster::Protocol.identify!(data)
+        else
+          proto, code = LilBlaster::Protocol.identify!(u.first)
+          rpt = nil
         end
 
         { protocol: proto, command: code, repeat: rpt }
