@@ -51,9 +51,8 @@ module LilBlaster
 
       # Given a +sym+ it captures a transmission and decodes it, then adds to the current codex
       def learn_new_symbol(sym)
-        print "Ready to capture `#{pastel.yellow(sym.to_s)}`"
         sleep 2
-        puts
+        puts "Ready to capture `#{pastel.yellow(sym.to_s)}`"
         puts 'Please press and hold the key'
 
         burst = LilBlaster::Reader.record(first: 4)
