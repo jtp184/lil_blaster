@@ -117,6 +117,24 @@ module LilBlaster
       TTY::Screen
     end
 
+    # Animated spinner for non deterministic tasks
+    #
+    # @see http://www.rubydoc.info/gems/tty-spinner
+    #
+    # @api public
+    def spinner(message, opts = {})
+      require 'tty-spinner'
+      TTY::Spinner.new(
+        message,
+        opts.merge(
+          success_mark: '✅',
+          error_mark: '❗️',
+          frames: '🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛🕐🕑',
+          interval: 24
+        )
+      )
+    end
+
     # The unix which utility
     #
     # @see http://www.rubydoc.info/gems/tty-which
