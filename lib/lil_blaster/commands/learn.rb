@@ -6,7 +6,10 @@ module LilBlaster
     # Learning new remotes and codes
     class Learn < LilBlaster::Command
       def execute(_input: $stdin, _output: $stdout)
-        learn_protocol && learn_repeats if current_codex.protocol.nil?
+        if current_codex.protocol.nil?
+          learn_protocol && learn_repeats
+          puts pastel.green('Protocol identified')
+        end
 
         current_keys.each do |key|
           learn_new_symbol(key)
