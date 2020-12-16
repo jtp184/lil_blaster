@@ -23,7 +23,7 @@ module LilBlaster
         proto_data = []
 
         spinner('Please single-press 5-10 random buttons on the remote now').run('Done!') do |_spin|
-          proto_data += LilBlaster::Reader.record(first: 10)
+          proto_data += LilBlaster::Reader.record(seconds: -1, first: 10)
         end
 
         smoothing = LilBlaster::NoiseReducer.replacement_matrix(proto_data.map(&:data).flatten)
@@ -34,7 +34,7 @@ module LilBlaster
         rpt_data = []
 
         spinner('Please press and hold one button on the remote now').run('Done!') do |_spin|
-          rpt_data += LilBlaster::Reader.record(first: 5)
+          rpt_data += LilBlaster::Reader.record(seconds: -1, first: 5)
         end
 
         current_codex.protocol.repeat = identify_code(rpt_data)[:repeat]
