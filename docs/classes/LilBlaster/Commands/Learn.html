@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>LilBlaster::Commands::Learn</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='class' id='wrapper'>
+<div class='header'>
+<h1 class='name'><span class='type'>class</span>
+LilBlaster::Commands::Learn
+</h1>
+<ol class='paths'>
+<li>
+<a href="../../../files/lib/lil_blaster/commands/learn_rb.html">lib/lil_blaster/commands/learn.rb</a>
+</li>
+</ol>
+<div class='parent'>
+Superclass:
+<strong><a href="../Command.html">Command</a></strong>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<p>Learning new remotes and codes</p>
+</div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Instance</h3>
+<ol>
+<li><a href="#method-i-execute">execute</a></li>
+<li><a href="#method-i-learn_new_symbol">learn_new_symbol</a></li>
+<li><a href="#method-i-learn_protocol">learn_protocol</a></li>
+<li><a href="#method-i-learn_repeats">learn_repeats</a></li>
+</ol>
+<h3>Private Instance</h3>
+<ol>
+<li><a href="#method-i-current_codex">current_codex</a></li>
+<li><a href="#method-i-current_keys">current_keys</a></li>
+<li><a href="#method-i-identify_code">identify_code</a></li>
+<li><a href="#method-i-key_bundles">key_bundles</a></li>
+<li><a href="#method-i-new_codex_interactive">new_codex_interactive</a></li>
+<li><a href="#method-i-pick_codex_interactive">pick_codex_interactive</a></li>
+<li><a href="#method-i-pick_key_bundle_interactive">pick_key_bundle_interactive</a></li>
+</ol>
+</div>
+<div id='context'>
+</div>
+<div id='section'>
+<div id='methods'>
+<h2>Public Instance methods</h2>
+<div class='method public-instance' id='method-method-i-execute'>
+<a name='method-i-execute'></a>
+<div class='synopsis'>
+<span class='name'>execute</span><span class='arguments'>(_input: $stdin, _output: $stdout)</span>
+
+</div>
+<div class='description'>
+
+<p>Primary command runner</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-execute-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-execute-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 8</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">execute</span>(<span class="ruby-value">_input:</span> <span class="ruby-identifier">$stdin</span>, <span class="ruby-value">_output:</span> <span class="ruby-identifier">$stdout</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">current_codex</span>.<span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">nil?</span>&#x000A;    <span class="ruby-identifier">learn_protocol</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">sleep</span>(<span class="ruby-value">1</span>)&#x000A;    <span class="ruby-identifier">learn_repeats</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">sleep</span>(<span class="ruby-value">1</span>)&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39;Protocol identified&#39;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">current_keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">learn_new_symbol</span>(<span class="ruby-identifier">key</span>)&#x000A;    <span class="ruby-identifier">puts</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">sleep</span> <span class="ruby-value">1</span>&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39;Codes identified&#39;</span>)&#x000A;&#x000A;  <span class="ruby-identifier">current_codex</span>.<span class="ruby-identifier">save_file</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Codex saved to #{pastel.yellow current_codex.path}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-learn_new_symbol'>
+<a name='method-i-learn_new_symbol'></a>
+<div class='synopsis'>
+<span class='name'>learn_new_symbol</span><span class='arguments'>(sym)</span>
+
+</div>
+<div class='description'>
+
+<p>Given a <code>sym</code> it captures a transmission and decodes it, then
+adds to the current codex</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-learn_new_symbol-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-learn_new_symbol-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 54</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">learn_new_symbol</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-identifier">sleep</span> <span class="ruby-value">2</span>&#x000A;  <span class="ruby-identifier">puts</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Ready to capture `#{pastel.yellow(sym.to_s)}`&quot;</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-string">&#39;Please press and hold the key&#39;</span>&#x000A;&#x000A;  <span class="ruby-identifier">burst</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Reader</span>.<span class="ruby-identifier">record</span>(<span class="ruby-value">first:</span> <span class="ruby-value">4</span>)&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">cyan</span>(<span class="ruby-string">&#39;Release the key now&#39;</span>)&#x000A;&#x000A;  <span class="ruby-identifier">id</span> = <span class="ruby-identifier">identify_code</span>(<span class="ruby-identifier">burst</span>)[<span class="ruby-value">:command</span>]&#x000A;  <span class="ruby-identifier">pr</span> = <span class="ruby-identifier">current_codex</span>.<span class="ruby-identifier">value?</span>(<span class="ruby-identifier">id</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">current_codex</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">sym</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@options</span>[<span class="ruby-value">:overwrite</span>]&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">red</span>(<span class="ruby-string">&#39;Key already present, use --overwrite to replace it&#39;</span>)&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">pr</span>&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">IndexError</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">current_codex</span>.<span class="ruby-identifier">codes</span>[<span class="ruby-identifier">sym</span>] = <span class="ruby-identifier">id</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">rescue</span> <span class="ruby-constant">IndexError</span>&#x000A;  <span class="ruby-identifier">puts</span>(<span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">red</span>(<span class="ruby-string">&#39;Duplicate key detected, retrying&#39;</span>))&#x000A;  <span class="ruby-keyword">retry</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-learn_protocol'>
+<a name='method-i-learn_protocol'></a>
+<div class='synopsis'>
+<span class='name'>learn_protocol</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Identifies the protocol from a sampling of buttons</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-learn_protocol-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-learn_protocol-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 29</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">learn_protocol</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-string">&#39;Ready to capture protocol information&#39;</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-string">&#39;Please single-press 5-10 random buttons on the remote now&#39;</span>&#x000A;&#x000A;  <span class="ruby-identifier">proto_data</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Reader</span>.<span class="ruby-identifier">record</span>(<span class="ruby-value">seconds:</span> <span class="ruby-value">-1</span>, <span class="ruby-value">first:</span> <span class="ruby-value">10</span>)&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39;Done!&#39;</span>)&#x000A;&#x000A;  <span class="ruby-identifier">smoothing</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">NoiseReducer</span>.<span class="ruby-identifier">replacement_matrix</span>(<span class="ruby-identifier">proto_data</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:data</span>).<span class="ruby-identifier">flatten</span>)&#x000A;  <span class="ruby-identifier">current_codex</span>.<span class="ruby-identifier">protocol</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Protocol</span>.<span class="ruby-identifier">identify!</span>(<span class="ruby-identifier">proto_data</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">smoothing</span>)[<span class="ruby-value">0</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-learn_repeats'>
+<a name='method-i-learn_repeats'></a>
+<div class='synopsis'>
+<span class='name'>learn_repeats</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Identifies any present repeat code from a held button</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-learn_repeats-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-learn_repeats-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 42</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">learn_repeats</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-string">&#39;Please press and hold one button on the remote now&#39;</span>&#x000A;&#x000A;  <span class="ruby-identifier">rpt_data</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Reader</span>.<span class="ruby-identifier">record</span>(<span class="ruby-value">seconds:</span> <span class="ruby-value">-1</span>, <span class="ruby-value">first:</span> <span class="ruby-value">4</span>)&#x000A;&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39;Done!&#39;</span>)&#x000A;&#x000A;  <span class="ruby-identifier">id</span> = <span class="ruby-identifier">identify_code</span>(<span class="ruby-identifier">rpt_data</span>)[<span class="ruby-value">:repeat</span>]&#x000A;  <span class="ruby-identifier">current_codex</span>.<span class="ruby-identifier">protocol</span>.<span class="ruby-identifier">pulse_values</span>[<span class="ruby-value">:repeat</span>] = <span class="ruby-identifier">id</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Private Instance methods</h2>
+<div class='method private-instance' id='method-method-i-current_codex'>
+<a name='method-i-current_codex'></a>
+<div class='synopsis'>
+<span class='name'>current_codex</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Finds the codex specified by the flag, creating it if necessary</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-current_codex-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-current_codex-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 108</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">current_codex</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@current_codex</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@current_codex</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@current_codex</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">pick_codex_interactive</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;No Codex provided&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>]&#x000A;&#x000A;  <span class="ruby-identifier">srch</span> = <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>]&#x000A;&#x000A;  <span class="ruby-identifier">matched</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cdx</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">cdx</span>.<span class="ruby-identifier">remote_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^#{srch}$/</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-ivar">@current_codex</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">matched</span>.<span class="ruby-identifier">nil?</span>&#x000A;                     <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">new</span>(&#x000A;                       <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">srch</span>,&#x000A;                       <span class="ruby-value">path:</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:codexes_dir</span>] <span class="ruby-operator">+</span> <span class="ruby-node">&quot;/#{srch}_codex.yml&quot;</span>&#x000A;                     )&#x000A;                   <span class="ruby-keyword">else</span>&#x000A;                     <span class="ruby-identifier">matched</span>&#x000A;                   <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-current_keys'>
+<a name='method-i-current_keys'></a>
+<div class='synopsis'>
+<span class='name'>current_keys</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Memoizes keys based on either the flags, interactive pick, or default key
+bundle</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-current_keys-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-current_keys-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 97</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">current_keys</span>&#x000A;  <span class="ruby-ivar">@current_keys</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:keys</span>]&#x000A;                      <span class="ruby-ivar">@options</span>[<span class="ruby-value">:keys</span>].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_sym</span>)&#x000A;                    <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;                      <span class="ruby-identifier">pick_key_bundle_interactive</span>&#x000A;                    <span class="ruby-keyword">else</span>&#x000A;                      <span class="ruby-identifier">key_bundles</span>[<span class="ruby-value">:minimal</span>]&#x000A;                    <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-identify_code'>
+<a name='method-i-identify_code'></a>
+<div class='synopsis'>
+<span class='name'>identify_code</span><span class='arguments'>(burst)</span>
+
+</div>
+<div class='description'>
+
+<p>Takes in an array of transmissions <code>burst</code>, and extracts a
+protocol, command, and repeat</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-identify_code-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-identify_code-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 82</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">identify_code</span>(<span class="ruby-identifier">burst</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">burst</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">==</span> <span class="ruby-value">4</span> }&#x000A;    <span class="ruby-identifier">data</span> = <span class="ruby-identifier">burst</span>.<span class="ruby-identifier">max_by</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:count</span>)&#x000A;    <span class="ruby-identifier">rpt</span> = <span class="ruby-identifier">burst</span>.<span class="ruby-identifier">min_by</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:count</span>).<span class="ruby-identifier">tuples</span>.<span class="ruby-identifier">first</span>&#x000A;&#x000A;    <span class="ruby-identifier">proto</span>, <span class="ruby-identifier">code</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Protocol</span>.<span class="ruby-identifier">identify!</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">proto</span>, <span class="ruby-identifier">code</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Protocol</span>.<span class="ruby-identifier">identify!</span>(<span class="ruby-identifier">burst</span>.<span class="ruby-identifier">first</span>)&#x000A;    <span class="ruby-identifier">rpt</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  { <span class="ruby-value">protocol:</span> <span class="ruby-identifier">proto</span>, <span class="ruby-value">command:</span> <span class="ruby-identifier">code</span>, <span class="ruby-value">repeat:</span> <span class="ruby-identifier">rpt</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-key_bundles'>
+<a name='method-i-key_bundles'></a>
+<div class='synopsis'>
+<span class='name'>key_bundles</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Defines and memoizes groups of keys to present as options</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-key_bundles-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-key_bundles-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 130</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">key_bundles</span>&#x000A;  <span class="ruby-ivar">@key_bundles</span> <span class="ruby-operator">||=</span> {&#x000A;    <span class="ruby-value">minimal:</span> <span class="ruby-node">%i[ok]</span>,&#x000A;    <span class="ruby-value">basic:</span> <span class="ruby-node">%i[power up down left right]</span>,&#x000A;    <span class="ruby-value">audio:</span> <span class="ruby-node">%i[volume_up volume_down mute]</span>,&#x000A;    <span class="ruby-value">seeking:</span> <span class="ruby-node">%i[pause fast_forward rewind]</span>,&#x000A;    <span class="ruby-value">numbers:</span> <span class="ruby-node">%i[one two three four five six seven eight nine zero]</span>&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-new_codex_interactive'>
+<a name='method-i-new_codex_interactive'></a>
+<div class='synopsis'>
+<span class='name'>new_codex_interactive</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Prompt for a name for a new codex, instantiate and return</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-new_codex_interactive-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-new_codex_interactive-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 167</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_codex_interactive</span>&#x000A;  <span class="ruby-identifier">rn</span> = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-string">&#39;New Codex name: &#39;</span>).<span class="ruby-identifier">downcase</span>&#x000A;&#x000A;  <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">new</span>(&#x000A;    <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">rn</span>,&#x000A;    <span class="ruby-value">path:</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:codexes_dir</span>] <span class="ruby-operator">+</span> <span class="ruby-node">&quot;/#{rn}_codex.yml&quot;</span>&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-pick_codex_interactive'>
+<a name='method-i-pick_codex_interactive'></a>
+<div class='synopsis'>
+<span class='name'>pick_codex_interactive</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Present a prompt to select the codex</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-pick_codex_interactive-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-pick_codex_interactive-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 151</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pick_codex_interactive</span>&#x000A;  <span class="ruby-identifier">existing</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">new_codex_interactive</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing</span>.<span class="ruby-identifier">empty?</span>&#x000A;&#x000A;  <span class="ruby-identifier">choices</span> = <span class="ruby-identifier">existing</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:remote_name</span>) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">yellow</span>(<span class="ruby-string">&#39;New Codex&#39;</span>)&#x000A;  <span class="ruby-identifier">chosen</span> = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">select</span>(<span class="ruby-string">&#39;Choose codex to add to: &#39;</span>, <span class="ruby-identifier">choices</span>)&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">chosen</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/New Codex/</span>&#x000A;    <span class="ruby-identifier">new_codex_interactive</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">remote_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">chosen</span> }&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method private-instance' id='method-method-i-pick_key_bundle_interactive'>
+<a name='method-i-pick_key_bundle_interactive'></a>
+<div class='synopsis'>
+<span class='name'>pick_key_bundle_interactive</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Presents a prompt to choose which bundles to use</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-pick_key_bundle_interactive-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-pick_key_bundle_interactive-source'><span class="ruby-comment"># File lib/lil_blaster/commands/learn.rb, line 141</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pick_key_bundle_interactive</span>&#x000A;  <span class="ruby-identifier">bundles</span> = <span class="ruby-identifier">key_bundles</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{k}: (#{v.join(&#39;, &#39;)})&quot;</span> }&#x000A;  <span class="ruby-identifier">chosen</span> = <span class="ruby-identifier">prompt</span>.<span class="ruby-identifier">multi_select</span>(<span class="ruby-string">&#39;Choose keys to learn: &#39;</span>, <span class="ruby-identifier">bundles</span>)&#x000A;&#x000A;  <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;:&#39;</span>)[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_sym</span> }&#x000A;        .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">key_bundles</span>[<span class="ruby-identifier">y</span>] }&#x000A;        .<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:+</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

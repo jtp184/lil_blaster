@@ -67,8 +67,7 @@ Superclass:
 <div class='method public-instance' id='method-method-i-execute'>
 <a name='method-i-execute'></a>
 <div class='synopsis'>
-<span class='name'>execute</span>
-<span class='arguments'>(_input: $stdin, _output: $stdout)</span>
+<span class='name'>execute</span><span class='arguments'>(_input: $stdin, _output: $stdout)</span>
 
 </div>
 <div class='description'>
@@ -87,8 +86,7 @@ Superclass:
 <div class='method private-instance' id='method-method-i-codex_responding_to'>
 <a name='method-i-codex_responding_to'></a>
 <div class='synopsis'>
-<span class='name'>codex_responding_to</span>
-<span class='arguments'>(sym)</span>
+<span class='name'>codex_responding_to</span><span class='arguments'>(sym)</span>
 
 </div>
 <div class='description'>
@@ -100,14 +98,13 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-codex_responding_to-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-codex_responding_to-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 85</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">codex_responding_to</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-identifier">fc</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find_all</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">empty?</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">first</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">one?</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;    <span class="ruby-identifier">interactive_codex_choice</span>(<span class="ruby-identifier">fc</span>)&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">default</span> = <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">remote_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:default_codex</span>].<span class="ruby-identifier">downcase</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">default</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">first</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-codex_responding_to-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 80</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">codex_responding_to</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-identifier">fc</span> = <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find_all</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">sym</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">empty?</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">first</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">one?</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;    <span class="ruby-identifier">interactive_codex_choice</span>(<span class="ruby-identifier">fc</span>)&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">default</span> = <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">remote_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:default_codex</span>].<span class="ruby-identifier">downcase</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">default</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">fc</span>.<span class="ruby-identifier">first</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-collect_symbols'>
 <a name='method-i-collect_symbols'></a>
 <div class='synopsis'>
-<span class='name'>collect_symbols</span>
-<span class='arguments'>()</span>
+<span class='name'>collect_symbols</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -125,8 +122,7 @@ Superclass:
 <div class='method private-instance' id='method-method-i-interactive_codex_choice'>
 <a name='method-i-interactive_codex_choice'></a>
 <div class='synopsis'>
-<span class='name'>interactive_codex_choice</span>
-<span class='arguments'>(codexes = LilBlaster::Codex.autoload)</span>
+<span class='name'>interactive_codex_choice</span><span class='arguments'>(codexes = LilBlaster::Codex.autoload)</span>
 
 </div>
 <div class='description'>
@@ -144,8 +140,7 @@ Superclass:
 <div class='method private-instance' id='method-method-i-interactive_symbol_choice'>
 <a name='method-i-interactive_symbol_choice'></a>
 <div class='synopsis'>
-<span class='name'>interactive_symbol_choice</span>
-<span class='arguments'>(symbs)</span>
+<span class='name'>interactive_symbol_choice</span><span class='arguments'>(symbs)</span>
 
 </div>
 <div class='description'>
@@ -163,8 +158,7 @@ Superclass:
 <div class='method private-instance' id='method-method-i-numberize_raw_value'>
 <a name='method-i-numberize_raw_value'></a>
 <div class='synopsis'>
-<span class='name'>numberize_raw_value</span>
-<span class='arguments'>()</span>
+<span class='name'>numberize_raw_value</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -176,14 +170,13 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-numberize_raw_value-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-numberize_raw_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 105</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">numberize_raw_value</span>&#x000A;  <span class="ruby-constant">Integer</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:raw</span>])&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-numberize_raw_value-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 100</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">numberize_raw_value</span>&#x000A;  <span class="ruby-constant">Integer</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:raw</span>])&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-rept_str'>
 <a name='method-i-rept_str'></a>
 <div class='synopsis'>
-<span class='name'>rept_str</span>
-<span class='arguments'>()</span>
+<span class='name'>rept_str</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -195,14 +188,13 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-rept_str-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-rept_str-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 110</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rept_str</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@rept_str</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@rept_str</span>&#x000A;&#x000A;  <span class="ruby-ivar">@rept_str</span> = <span class="ruby-operator">+</span><span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39;Sent code &#39;</span>)&#x000A;  <span class="ruby-ivar">@rept_str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;%&lt;sym&gt;s&#39;</span>&#x000A;  <span class="ruby-ivar">@rept_str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39; using &#39;</span>)&#x000A;  <span class="ruby-ivar">@rept_str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;%&lt;rem&gt;s&#39;</span>.<span class="ruby-identifier">freeze</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-rept_str-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 105</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rept_str</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@rept_str</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@rept_str</span>&#x000A;&#x000A;  <span class="ruby-ivar">@rept_str</span> = <span class="ruby-operator">+</span><span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39;Sent code &#39;</span>)&#x000A;  <span class="ruby-ivar">@rept_str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;%&lt;sym&gt;s&#39;</span>&#x000A;  <span class="ruby-ivar">@rept_str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">pastel</span>.<span class="ruby-identifier">green</span>(<span class="ruby-string">&#39; using &#39;</span>)&#x000A;  <span class="ruby-ivar">@rept_str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;%&lt;rem&gt;s&#39;</span>.<span class="ruby-identifier">freeze</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-resolved_codex'>
 <a name='method-i-resolved_codex'></a>
 <div class='synopsis'>
-<span class='name'>resolved_codex</span>
-<span class='arguments'>()</span>
+<span class='name'>resolved_codex</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -214,14 +206,13 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-resolved_codex-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-resolved_codex-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 63</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">resolved_codex</span>&#x000A;  <span class="ruby-ivar">@resolved_codex</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>])&#x000A;                        <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">load</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>])&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>]&#x000A;                        <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;                          <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">remote_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>].<span class="ruby-identifier">downcase</span>&#x000A;                        <span class="ruby-keyword">end</span>&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:raw</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;                        <span class="ruby-identifier">interactive_codex_choice</span>&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:default_codex</span>]&#x000A;                        <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;                          [&#x000A;                            <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">remote_name</span>,&#x000A;                            <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigFile</span>[<span class="ruby-value">:default_codex</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&#39;&#39;</span>&#x000A;                          ].<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:downcase</span>).<span class="ruby-identifier">reduce</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:==</span>)&#x000A;                        <span class="ruby-keyword">end</span>&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;                        <span class="ruby-identifier">interactive_codex_choice</span>&#x000A;                      <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-resolved_codex-source'><span class="ruby-comment"># File lib/lil_blaster/commands/send_code.rb, line 63</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">resolved_codex</span>&#x000A;  <span class="ruby-ivar">@resolved_codex</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>])&#x000A;                        <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">load</span>(<span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>])&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>]&#x000A;                        <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">autoload</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">codex</span><span class="ruby-operator">|</span>&#x000A;                          <span class="ruby-identifier">codex</span>.<span class="ruby-identifier">remote_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:codex</span>].<span class="ruby-identifier">downcase</span>&#x000A;                        <span class="ruby-keyword">end</span>&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:raw</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;                        <span class="ruby-identifier">interactive_codex_choice</span>&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">default</span>&#x000A;                        <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Codex</span>.<span class="ruby-identifier">default</span>&#x000A;                      <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@options</span>[<span class="ruby-value">:interactive</span>]&#x000A;                        <span class="ruby-identifier">interactive_codex_choice</span>&#x000A;                      <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method private-instance' id='method-method-i-send_code_and_report'>
 <a name='method-i-send_code_and_report'></a>
 <div class='synopsis'>
-<span class='name'>send_code_and_report</span>
-<span class='arguments'>(sym)</span>
+<span class='name'>send_code_and_report</span><span class='arguments'>(sym)</span>
 
 </div>
 <div class='description'>

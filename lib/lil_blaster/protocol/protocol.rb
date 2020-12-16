@@ -17,12 +17,12 @@ module LilBlaster
         proto.last.decode(transmission)
       end
 
-      # Takes in a +sym+ for the protocol, and uses const_get to return it
+      # Takes in a +sym+ for the protocol, and searches for it in available protocols
       def [](sym)
         available_protocols.find { |s, _pr| s.to_s.downcase == sym.to_s.downcase }.last
       end
 
-      # Constants on this class which are protocols, returned as symbol => protocl hash
+      # Descendents of the BaseProtocol class, returned as symbol => protocl hash
       def available_protocols
         BaseProtocol.descendants.map { |cl| [cl.to_sym, cl] }.to_h
       end
@@ -55,7 +55,7 @@ module LilBlaster
           name.split('::').last.to_sym
         end
 
-        # An empty array to start with
+        # An empty set to start with
         def export_options
           @export_options ||= Set.new
         end
