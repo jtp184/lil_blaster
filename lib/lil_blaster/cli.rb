@@ -78,6 +78,7 @@ module LilBlaster
     method_option :keys, aliases: '-k', type: :array, desc: 'The codes to add to the codex'
     method_option :overwrite, aliases: '-o', type: :boolean, desc: 'Overwrite existant codes'
 
+    # Learns new codes and codexes by example
     def learn
       if options[:help]
         invoke :help, [:learn]
