@@ -22,24 +22,20 @@ module LilBlaster
 
       def learn_protocol
         puts 'Ready to capture protocol information'
+        puts 'Please single-press 1-4 random buttons on the remote now'
 
-        proto_data = []
+        proto_data = LilBlaster::Reader.record(seconds: -1, first: 3)
 
-        spinner('Please single-press 1-4 random buttons on the remote now').run('Done!') do |_spin|
-          proto_data += LilBlaster::Reader.record(seconds: -1, first: 3)
-        end
+        puts pastel.green('Done!')
 
         smoothing = LilBlaster::NoiseReducer.replacement_matrix(proto_data.map(&:data).flatten)
         current_codex.protocol = LilBlaster::Protocol.identify!(proto_data.first % smoothing)[0]
       end
 
       def learn_repeats
-        rpt_data = []
+        puts 'Please press and hold one button on the remote now'
 
-        spinner('Please press and hold one button on the remote now').run('Done!') do |_spin|
-          rpt_data += LilBlaster::Reader.record(seconds: -1, first: 3)
-        end
-
+        rpt_data = LilBlaster::Reader.record(seconds: -1, first: 3)
         current_codex.protocol.pulse_values[:repeat] = identify_code(rpt_data)[:repeat]
       end
 
