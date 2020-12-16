@@ -20,6 +20,8 @@ module LilBlaster
     attr_writer :transmitter_pin
     # Allows changing which pin is used to read on, defaults to 18
     attr_writer :reader_pin
+    # Allows changing which pins are used to read the buttons, defaults to [27, 22]
+    attr_writer :button_pins
 
     # Defaults to 17
     def transmitter_pin
@@ -29,6 +31,11 @@ module LilBlaster
     # Defaults to 18
     def reader_pin
       @reader_pin ||= 18
+    end
+
+    # Defaults to [27, 22] in keeping with the numbering on the faceplate
+    def button_pins
+      @button_pins ||= [27, 22]
     end
 
     # Examines the RUBY_PLATFORM constant to determine what OS we are running on.
