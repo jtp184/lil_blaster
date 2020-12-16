@@ -42,11 +42,10 @@ module LilBlaster
       def learn_new_symbol(sym)
         puts "Ready to capture `#{pastel.yellow(sym.to_s)}`"
 
-        burst = []
+        puts 'Please press and hold the key'
+        puts pastel.green('Done!')
 
-        spinner('Please press and hold the key').run('Done!') do |_spin|
-          burst += LilBlaster::Reader.record(first: 4)
-        end
+        burst = LilBlaster::Reader.record(first: 4)
 
         current_codex.codes[sym] = convert_transmissions(burst)[:command]
       end
