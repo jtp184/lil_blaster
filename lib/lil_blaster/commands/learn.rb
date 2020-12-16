@@ -42,7 +42,8 @@ module LilBlaster
 
         puts pastel.green('Done!')
 
-        current_codex.protocol.pulse_values[:repeat] = identify_code(rpt_data)[:repeat]
+        id = identify_code(rpt_data)[:repeat]
+        current_codex.protocol.pulse_values[:repeat] = id if id
       end
 
       def learn_new_symbol(sym)
