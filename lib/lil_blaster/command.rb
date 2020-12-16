@@ -104,7 +104,7 @@ module LilBlaster
     # @api public
     def prompt(**options)
       require 'tty-prompt'
-      TTY::Prompt.new(options)
+      TTY::Prompt.new(options.merge(interrupt: -> { puts; puts; puts "Canceled".magenta; abort }))
     end
 
     # Get terminal screen properties
