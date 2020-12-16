@@ -37,7 +37,7 @@ module LilBlaster
           rpt_data += LilBlaster::Reader.record(seconds: -1, first: 3)
         end
 
-        current_codex.protocol.repeat = identify_code(rpt_data)[:repeat]
+        current_codex.protocol.pulse_values[:repeat] = identify_code(rpt_data)[:repeat]
       end
 
       def learn_new_symbol(sym)
