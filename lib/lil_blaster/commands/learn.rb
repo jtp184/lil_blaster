@@ -7,7 +7,10 @@ module LilBlaster
     class Learn < LilBlaster::Command
       def execute(_input: $stdin, _output: $stdout)
         if current_codex.protocol.nil?
-          learn_protocol && learn_repeats
+          learn_protocol
+          sleep 1
+          learn_repeats
+          sleep 1
           puts pastel.green('Protocol identified')
         end
 
@@ -22,9 +25,9 @@ module LilBlaster
 
       def learn_protocol
         puts 'Ready to capture protocol information'
-        puts 'Please single-press 1-4 random buttons on the remote now'
+        puts 'Please single-press 5-10 random buttons on the remote now'
 
-        proto_data = LilBlaster::Reader.record(seconds: -1, first: 3)
+        proto_data = LilBlaster::Reader.record(seconds: -1, first: 8)
 
         puts pastel.green('Done!')
 
@@ -35,13 +38,16 @@ module LilBlaster
       def learn_repeats
         puts 'Please press and hold one button on the remote now'
 
-        rpt_data = LilBlaster::Reader.record(seconds: -1, first: 3)
+        rpt_data = LilBlaster::Reader.record(seconds: -1, first: 4)
+
+        puts pastel.green('Done!')
+
         current_codex.protocol.pulse_values[:repeat] = identify_code(rpt_data)[:repeat]
       end
 
       def learn_new_symbol(sym)
         puts "Ready to capture `#{pastel.yellow(sym.to_s)}`"
-
+        sleep 0.5
         puts 'Please press and hold the key'
         puts pastel.green('Done!')
 
