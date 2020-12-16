@@ -61,8 +61,8 @@ module LilBlaster
           proto, code = LilBlaster::Protocol.identify!(u.first)
           rpt = nil
         else
-          data = rec.max_by(&:count)
-          rpt = rec.min_by(&:count).tuples.first
+          data = u.max_by(&:count)
+          rpt = u.min_by(&:count).tuples.first
 
           proto, code = LilBlaster::Protocol.identify!(data)
         end
