@@ -54,7 +54,7 @@ module LilBlaster
 
         puts pastel.green('Done!')
 
-        current_codex.codes[sym] = convert_transmissions(burst)[:command]
+        current_codex.codes[sym] = identify_code(burst)[:command]
       end
 
       private
