@@ -17,6 +17,8 @@ module LilBlaster
           puts
         end
 
+        sleep 1
+
         puts pastel.green('Codes identified')
 
         current_codex.save_file
