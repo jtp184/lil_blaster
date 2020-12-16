@@ -59,7 +59,11 @@ module LilBlaster
 
         puts pastel.green('Done!')
 
-        current_codex.codes[sym] = identify_code(burst)[:command]
+        if current_codex.key?(sym) && !@options[:overwrite]
+          puts pastel.red('Key already present, use --overwrite to replace it')
+        else
+          current_codex.codes[sym] = identify_code(burst)[:command]
+        end
       end
 
       private
