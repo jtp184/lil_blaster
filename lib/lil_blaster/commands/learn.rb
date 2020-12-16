@@ -62,13 +62,16 @@ module LilBlaster
         id = identify_code(burst)[:command]
         pr = current_codex.value?(id)
 
-        puts(pastel.red('Duplicate key detected, retrying')) && retry if pr
-
         if current_codex.key?(sym) && !@options[:overwrite]
           puts pastel.red('Key already present, use --overwrite to replace it')
+        elsif pr
+          raise IndexError
         else
           current_codex.codes[sym] = id
         end
+      rescue IndexError
+        puts(pastel.red('Duplicate key detected, retrying'))
+        retry
       end
 
       private
