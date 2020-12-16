@@ -17,6 +17,8 @@ module LilBlaster
           puts
         end
 
+        puts pastel.green('Codes identified')
+
         current_codex.save_file
         puts "Codex saved to #{pastel.yellow current_codex.path}"
       end
