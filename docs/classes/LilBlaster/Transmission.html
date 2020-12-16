@@ -94,8 +94,7 @@ Superclass:
 <div class='method public-class' id='method-method-c-new'>
 <a name='method-c-new'></a>
 <div class='synopsis'>
-<span class='name'>new</span>
-<span class='arguments'>(args = {})</span>
+<span class='name'>new</span><span class='arguments'>(args = {})</span>
 
 </div>
 <div class='description'>
@@ -107,15 +106,14 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/transmission.rb, line 10</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:data</span>, [])&#x000A;  <span class="ruby-ivar">@carrier_wave</span> = (<span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:carrier_wave</span>, <span class="ruby-keyword">true</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword">false</span>)&#x000A;  <span class="ruby-ivar">@carrier_wave_options</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:carrier_wave</span>, <span class="ruby-keyword">nil</span>)&#x000A;                          <span class="ruby-keyword">when</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">o</span>) { <span class="ruby-identifier">o</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>) }&#x000A;                            <span class="ruby-identifier">args</span>[<span class="ruby-value">:carrier_wave</span>]&#x000A;                          <span class="ruby-keyword">when</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">o</span>) { <span class="ruby-identifier">o</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Float</span>) }&#x000A;                            { <span class="ruby-value">frequency:</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:carrier_wave</span>] }&#x000A;                          <span class="ruby-keyword">else</span>&#x000A;                            {}&#x000A;                          <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-new-source'><span class="ruby-comment"># File lib/lil_blaster/transmission.rb, line 10</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">args</span> = {})&#x000A;  <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:data</span>, []).<span class="ruby-identifier">compact</span>&#x000A;  <span class="ruby-ivar">@carrier_wave</span> = (<span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:carrier_wave</span>, <span class="ruby-keyword">true</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword">false</span>)&#x000A;  <span class="ruby-ivar">@carrier_wave_options</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:carrier_wave</span>, <span class="ruby-keyword">nil</span>)&#x000A;                          <span class="ruby-keyword">when</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">o</span>) { <span class="ruby-identifier">o</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>) }&#x000A;                            <span class="ruby-identifier">args</span>[<span class="ruby-value">:carrier_wave</span>]&#x000A;                          <span class="ruby-keyword">when</span> <span class="ruby-operator">-&gt;</span>(<span class="ruby-identifier">o</span>) { <span class="ruby-identifier">o</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Float</span>) }&#x000A;                            { <span class="ruby-value">frequency:</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:carrier_wave</span>] }&#x000A;                          <span class="ruby-keyword">else</span>&#x000A;                            {}&#x000A;                          <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Public Instance methods</h2>
 <div class='method public-instance' id='method-method-i-25'>
 <a name='method-i-25'></a>
 <div class='synopsis'>
-<span class='name'>%</span>
-<span class='arguments'>(other)</span>
+<span class='name'>%</span><span class='arguments'>(other)</span>
 
 </div>
 <div class='description'>
@@ -135,8 +133,7 @@ to create a new transmission that has been recalculated with it</p>
 <div class='method public-instance' id='method-method-i-2A'>
 <a name='method-i-2A'></a>
 <div class='synopsis'>
-<span class='name'>*</span>
-<span class='arguments'>(other)</span>
+<span class='name'>*</span><span class='arguments'>(other)</span>
 
 </div>
 <div class='description'>
@@ -154,8 +151,7 @@ to create a new transmission that has been recalculated with it</p>
 <div class='method public-instance' id='method-method-i-2B'>
 <a name='method-i-2B'></a>
 <div class='synopsis'>
-<span class='name'>+</span>
-<span class='arguments'>(other)</span>
+<span class='name'>+</span><span class='arguments'>(other)</span>
 
 </div>
 <div class='description'>
@@ -174,8 +170,7 @@ transmission</p>
 <div class='method public-instance' id='method-method-i-carrier_wave-3F'>
 <a name='method-i-carrier_wave-3F'></a>
 <div class='synopsis'>
-<span class='name'>carrier_wave?</span>
-<span class='arguments'>()</span>
+<span class='name'>carrier_wave?</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -193,8 +188,7 @@ transmission</p>
 <div class='method public-instance' id='method-method-i-count'>
 <a name='method-i-count'></a>
 <div class='synopsis'>
-<span class='name'>count</span>
-<span class='arguments'>()</span>
+<span class='name'>count</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -212,8 +206,7 @@ transmission</p>
 <div class='method public-instance' id='method-method-i-initialize_copy'>
 <a name='method-i-initialize_copy'></a>
 <div class='synopsis'>
-<span class='name'>initialize_copy</span>
-<span class='arguments'>(original)</span>
+<span class='name'>initialize_copy</span><span class='arguments'>(original)</span>
 
 </div>
 <div class='description'>
@@ -231,8 +224,7 @@ transmission</p>
 <div class='method public-instance' id='method-method-i-length'>
 <a name='method-i-length'></a>
 <div class='synopsis'>
-<span class='name'>length</span>
-<span class='arguments'>()</span>
+<span class='name'>length</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -251,8 +243,7 @@ transmission</p>
 <div class='method public-instance' id='method-method-i-tuples'>
 <a name='method-i-tuples'></a>
 <div class='synopsis'>
-<span class='name'>tuples</span>
-<span class='arguments'>()</span>
+<span class='name'>tuples</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
