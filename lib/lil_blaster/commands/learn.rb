@@ -57,12 +57,17 @@ module LilBlaster
 
         burst = LilBlaster::Reader.record(first: 4)
 
-        puts pastel.green('Done!')
+        puts pastel.yellow('Please release the key now')
+
+        id = identify_code(burst)[:command]
 
         if current_codex.key?(sym) && !@options[:overwrite]
           puts pastel.red('Key already present, use --overwrite to replace it')
+        elsif current_codex.value?(id)
+          puts pastel.red('Duplicate key detected, retrying')
+          retry
         else
-          current_codex.codes[sym] = identify_code(burst)[:command]
+          current_codex.codes[sym] = id
         end
       end
 
