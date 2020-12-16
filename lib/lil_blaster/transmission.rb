@@ -8,7 +8,7 @@ module LilBlaster
 
     # Takes in +args+ for data, and carrier_wave
     def initialize(args = {})
-      @data = args.fetch(:data, [])
+      @data = args.fetch(:data, []).compact
       @carrier_wave = (args.fetch(:carrier_wave, true) != false)
       @carrier_wave_options = case args.fetch(:carrier_wave, nil)
                               when ->(o) { o.is_a?(Hash) }
