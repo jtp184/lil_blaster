@@ -58,7 +58,7 @@ module LilBlaster
 
         burst = LilBlaster::Reader.record(first: 4)
 
-        puts pastel.yellow('Please release the key now')
+        puts pastel.yellow('Release the key now')
 
         id = identify_code(burst)[:command]
         pr = current_codex.value?(id)
