@@ -27,7 +27,7 @@ module LilBlaster
         end
 
         smoothing = LilBlaster::NoiseReducer.replacement_matrix(proto_data.map(&:data).flatten)
-        current_codex.protocol = LilBlaster::Protocol.identify!(proto_data.first % smoothing)
+        current_codex.protocol = LilBlaster::Protocol.identify!(proto_data.first % smoothing)[0]
       end
 
       def learn_repeats
