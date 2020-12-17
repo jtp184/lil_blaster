@@ -174,7 +174,53 @@ c3.remote_name.match?(ConfigFile[:default_codex]) # => true
 
 ```
 
-### Buttons
 ### Blaster
 ### Reader
+### Buttons
+
+Reading from the two physical buttons on the HAT is done with the `Buttons` class.
+
+```ruby
+# Basic input from buttons. With no argument, blocks until you press a button then returns an index
+LilBlaster::Buttons.get_input # => 0
+
+# With arguments for seconds, it will timeout if no button is pressed
+Inkblot::Buttons.get_input(seconds: 10) # => nil if no button is pressed for 10 seconds
+
+# It's also possible to get chords instead of single presses
+Inkblot::Buttons.get_chord_input(count: 2, seconds: 5) # => [0, 1] or nil if none pressed in 5s
+
+# Returning multiple distinct presses in a row
+Inkblot::Buttons.get_multi_input(count: 5) # => [0, 1, 1, 1, 0]
+
+# You can also record all button activity within a timeframe
+Inkblot::Buttons.get_raw_input(samples: 2000, seconds: 10) # => [[0], [0, 1]...]
+
+```
+
+It's also possible to supply callback functions to the buttons to be run when they're pressed
+
+```ruby
+# Callback will run every time button is released after being pressed
+LilBlaster::Buttons.start_callback(0) do |tick, level, pin, value|
+  puts 'Button 1 Pressed!'
+end
+
+# For simple one liners, you can also use this syntax
+LilBlaster::Buttons[0] = ->(*a) { puts 'Button 1 Pressed' }
+
+# To stop a callback, run stop_callback
+LilBlaster::Buttons.stop_callback(0)
+
+# Callback functions are stored, so you can resume a callback which has been stopped with
+LilBlaster::Buttons.resume_callback(0)
+
+# And remove a callback entirely with
+LilBlaster::Buttons.remove_callback(0)
+
+# You can also stop and remove a callback all in one with the #[]= syntax and a nil value
+LilBlaster::Buttons[0] = nil
+
+```
+
 ### Configuration
