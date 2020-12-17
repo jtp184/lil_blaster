@@ -33,7 +33,7 @@ All methods and classes are RDoc documented at https://jtp184.github.io/lil_blas
 
 ### Transmissions
 
-A Transmission wraps a collection of pulse timings, with methods to help analyze them
+A `Transmission` wraps a collection of pulse timings, with methods to help analyze them
 
 ```ruby
 data = [500, 1000, 600, 2000]
@@ -60,9 +60,49 @@ t3.tuples # => [[500, 1000],[600, 2000],[700, 4000],[800, 8000]]
 # Multiply a Transmission by an integer to repeat its data
 t4 = t3 * 3
 t4.count # => 24
+
 ```
 
 ### Protocols
+
+The `Protocol` module collects different protocol implementations, which are subclasses of the `BaseProtocol` class. The module itself serves as an interface for matching transmissions to those protocols.
+
+```ruby
+# A Transmission in RC5 format
+pulses = [
+  4511, 4540, 517, 1732, 517, 1732, 517, 1732,
+  517, 609, 517, 609, 517, 609, 517, 609,
+  517, 609, 517, 1732, 517, 1732, 517, 1732,
+  517, 609, 517, 609, 517, 609, 517, 609,
+  517, 609, 517, 609, 517, 1732, 517, 609,
+  517, 609, 517, 609, 517, 609, 517, 609,
+  517, 609, 517, 1732, 517, 609, 517, 1732,
+  517, 1732, 517, 1732, 517, 1732, 517, 1732,
+  517, 1732, 517, 47_312
+]
+
+tr1 = LilBlaster::Transmission.new(data: pulses)
+
+# Determine protocol from the data and return a symbol
+LilBlaster::Protocol.identify(tr1) # => :Manchester
+
+# Or directly decode with #identify!
+protocol, command = LilBlaster::Protocol.identify!(tr1)
+
+protocol.class # => LilBlaster::Protocol::Manchester
+protocol.pulse_values # => {:header => [4511, 4540], :zero => [517, 609], :one => [517, 1732]}
+
+command.to_s(16) # => "40bf"
+
+# Once a protocol is derived, you can encode data using it
+tr2 = protocol.encode(command)
+tr1 == tr2 # => true
+
+# Or get a string representation
+protocol.to_bytestring(command) # => "11100000111000000100000010111111"
+
+```
+
 ### Codexes
 ### Buttons
 ### Blaster
