@@ -39,20 +39,21 @@ module LilBlaster
         st = Time.now
         presses = []
 
+        pins.each do |pn|
+          pn.start_callback(:rising) do
+            next if timeout?(args.merge(start_time: st))
+            next if presses.count == args.fetch(:count, Float::INFINITY)
+
+            presses << pin_val(pn)
+          end
+        end
+
         loop do
           break if timeout?(args.merge(start_time: st))
           break if presses.count == args.fetch(:count, Float::INFINITY)
-
-          pn = pins.find_all(&:on?)
-
-          next if pn.empty?
-
-          presses << if args.fetch(:chords, false)
-                       pn
-                     else
-                       pn.first
-                     end
         end
+
+        pins.each(&:stop_callback)
 
         presses
       end
