@@ -23,6 +23,8 @@ For help setting up your pi for use with this gem, check out the [RASPI_SETUP](h
 
 This gem was developed using a generically available [IR Expansion Board](http://raspberrypiwiki.com/Raspberry_Pi_IR_Control_Expansion_Board) on the Raspberry Pi 3+, and various remotes including the Samsung BN59-01006A.
 
+## LIRC
+
 ## CLI
 
 ## Usage
