@@ -106,6 +106,9 @@ protocol.to_bytestring(command) # => "11100000111000000100000010111111"
 ```
 
 ### Codexes
+
+The `Codex` class provides a way to collect codes that use the same protocol, allowing the organizing and sharing of codes for devices.
+
 ### Buttons
 ### Blaster
 ### Reader
