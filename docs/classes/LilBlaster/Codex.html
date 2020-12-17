@@ -125,7 +125,7 @@ Superclass:
 </td>
 <td class='context-item-value'>[RW]</td>
 <td class='context-item-desc'>
-<p>What protocol to use to control the remote</p>
+<p>What protocol to use to encode the data</p>
 </td>
 </tr>
 <tr class='top-aligned-row context-row'>
@@ -134,7 +134,7 @@ Superclass:
 </td>
 <td class='context-item-value'>[RW]</td>
 <td class='context-item-desc'>
-<p>The designation for this remote</p>
+<p>The designation for this codex</p>
 </td>
 </tr>
 </table>
@@ -308,7 +308,7 @@ preserving the other attributes of this codex</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-2B-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-2B-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 130</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">+</span>(<span class="ruby-identifier">other</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-string">&#39;Not a codex&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>(&#x000A;    <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">remote_name</span>,&#x000A;    <span class="ruby-value">protocol:</span> <span class="ruby-identifier">protocol</span>,&#x000A;    <span class="ruby-value">path:</span> <span class="ruby-identifier">path</span>,&#x000A;    <span class="ruby-value">codes:</span> <span class="ruby-identifier">codes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">other</span>.<span class="ruby-identifier">codes</span>)&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-2B-source'><span class="ruby-comment"># File lib/lil_blaster/codex.rb, line 130</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">+</span>(<span class="ruby-identifier">other</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-string">&#39;Not a codex&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">instance_of?</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>)&#x000A;&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>(&#x000A;    <span class="ruby-value">remote_name:</span> <span class="ruby-identifier">remote_name</span>,&#x000A;    <span class="ruby-value">protocol:</span> <span class="ruby-identifier">protocol</span>,&#x000A;    <span class="ruby-value">path:</span> <span class="ruby-identifier">path</span>,&#x000A;    <span class="ruby-value">codes:</span> <span class="ruby-identifier">codes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">other</span>.<span class="ruby-identifier">codes</span>)&#x000A;  )&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-3D-3D'>
