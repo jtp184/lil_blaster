@@ -4330,8 +4330,10 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
 Element.addMethods();
 var search_index = [
+  { method: '[]', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-5B-5D"><span class="method_name">::[]</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: '[]', module: 'lilblaster::configfile', html: '<a href="classes/LilBlaster/ConfigFile.html#method-c-5B-5D"><span class="method_name">::[]</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a>' },
   { method: '[]', module: 'lilblaster::protocol', html: '<a href="classes/LilBlaster/Protocol.html#method-c-5B-5D"><span class="method_name">::[]</span> <span class="module_name">(LilBlaster::Protocol)</span></a>' },
+  { method: '[]=', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-5B-5D-3D"><span class="method_name">::[]=</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: '[]=', module: 'lilblaster::configfile', html: '<a href="classes/LilBlaster/ConfigFile.html#method-c-5B-5D-3D"><span class="method_name">::[]=</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a>' },
   { method: 'accum_pulses', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-accum_pulses"><span class="method_name">::accum_pulses</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'add_code_observers', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-add_code_observers"><span class="method_name">::add_code_observers</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
@@ -4346,9 +4348,11 @@ var search_index = [
   { method: 'average_values', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-average_values"><span class="method_name">::average_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
   { method: 'begin_wave', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-begin_wave"><span class="method_name">::begin_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'busy?', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-busy-3F"><span class="method_name">::busy?</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
+  { method: 'button_pins', module: 'lilblaster', html: '<a href="classes/LilBlaster.html#method-c-button_pins"><span class="method_name">::button_pins</span> <span class="module_name">(LilBlaster)</span></a>' },
   { method: 'calculate_pulses', module: 'lilblaster::protocol::rcmm', html: '<a href="classes/LilBlaster/Protocol/RCMM.html#method-c-calculate_pulses"><span class="method_name">::calculate_pulses</span> <span class="module_name">(LilBlaster::Protocol::RCMM)</span></a>' },
   { method: 'call', module: 'lilblaster::lircconfreader', html: '<a href="classes/LilBlaster/LircConfReader.html#method-c-call"><span class="method_name">::call</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a>' },
   { method: 'call', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-call"><span class="method_name">::call</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
+  { method: 'callbacks', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-callbacks"><span class="method_name">::callbacks</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'carrier', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-carrier"><span class="method_name">::carrier</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'chain_waves', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-chain_waves"><span class="method_name">::chain_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'clear_waves', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-clear_waves"><span class="method_name">::clear_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
@@ -4391,6 +4395,10 @@ var search_index = [
   { method: 'freeze_for_reading', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-freeze_for_reading"><span class="method_name">::freeze_for_reading</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'from_yaml', module: 'lilblaster::codex', html: '<a href="classes/LilBlaster/Codex.html#method-c-from_yaml"><span class="method_name">::from_yaml</span> <span class="module_name">(LilBlaster::Codex)</span></a>' },
   { method: 'fuzz', module: 'lilblaster::protocol::morse', html: '<a href="classes/LilBlaster/Protocol/Morse.html#method-c-fuzz"><span class="method_name">::fuzz</span> <span class="module_name">(LilBlaster::Protocol::Morse)</span></a>' },
+  { method: 'get_chord_input', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-get_chord_input"><span class="method_name">::get_chord_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
+  { method: 'get_input', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-get_input"><span class="method_name">::get_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
+  { method: 'get_multi_input', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-get_multi_input"><span class="method_name">::get_multi_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
+  { method: 'get_raw_input', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-get_raw_input"><span class="method_name">::get_raw_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'gpio_success', module: 'lilblaster::gpio', html: '<a href="classes/LilBlaster/GPIO.html#method-c-gpio_success"><span class="method_name">::gpio_success</span> <span class="module_name">(LilBlaster::GPIO)</span></a>' },
   { method: 'granulate_notifications', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-granulate_notifications"><span class="method_name">::granulate_notifications</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'group_values', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-group_values"><span class="method_name">::group_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
@@ -4434,7 +4442,9 @@ var search_index = [
   { method: 'pin', module: 'lilblaster::blaster', html: '<a href="classes/LilBlaster/Blaster.html#method-c-pin"><span class="method_name">::pin</span> <span class="module_name">(LilBlaster::Blaster)</span></a>' },
   { method: 'pin', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-pin"><span class="method_name">::pin</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'pin_callback', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-pin_callback"><span class="method_name">::pin_callback</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
+  { method: 'pin_val', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-pin_val"><span class="method_name">::pin_val</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'pinout_config', module: 'lilblaster::configfile', html: '<a href="classes/LilBlaster/ConfigFile.html#method-c-pinout_config"><span class="method_name">::pinout_config</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a>' },
+  { method: 'pins', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-pins"><span class="method_name">::pins</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'proto_sym', module: 'lilblaster::lircconfreader', html: '<a href="classes/LilBlaster/LircConfReader.html#method-c-proto_sym"><span class="method_name">::proto_sym</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a>' },
   { method: 'protocol_matchers', module: 'lilblaster::lircconfreader', html: '<a href="classes/LilBlaster/LircConfReader.html#method-c-protocol_matchers"><span class="method_name">::protocol_matchers</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a>' },
   { method: 'protocol_options', module: 'lilblaster::lircconfreader', html: '<a href="classes/LilBlaster/LircConfReader.html#method-c-protocol_options"><span class="method_name">::protocol_options</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a>' },
@@ -4447,9 +4457,11 @@ var search_index = [
   { method: 'reading_block', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-reading_block"><span class="method_name">::reading_block</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'record', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-record"><span class="method_name">::record</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'reload', module: 'lilblaster::configfile', html: '<a href="classes/LilBlaster/ConfigFile.html#method-c-reload"><span class="method_name">::reload</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a>' },
+  { method: 'remove_callback', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-remove_callback"><span class="method_name">::remove_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'replace_values', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-replace_values"><span class="method_name">::replace_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
   { method: 'replacement_matrix', module: 'lilblaster::noisereducer', html: '<a href="classes/LilBlaster/NoiseReducer.html#method-c-replacement_matrix"><span class="method_name">::replacement_matrix</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a>' },
   { method: 'respond_to_missing?', module: 'lilblaster::configfile', html: '<a href="classes/LilBlaster/ConfigFile.html#method-c-respond_to_missing-3F"><span class="method_name">::respond_to_missing?</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a>' },
+  { method: 'resume_callback', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-resume_callback"><span class="method_name">::resume_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'resume_scan', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-resume_scan"><span class="method_name">::resume_scan</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'safe_read_config', module: 'lilblaster::configfile', html: '<a href="classes/LilBlaster/ConfigFile.html#method-c-safe_read_config"><span class="method_name">::safe_read_config</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a>' },
   { method: 'save', module: 'lilblaster::configfile', html: '<a href="classes/LilBlaster/ConfigFile.html#method-c-save"><span class="method_name">::save</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a>' },
@@ -4457,10 +4469,13 @@ var search_index = [
   { method: 'send_code', module: 'lilblaster::blaster', html: '<a href="classes/LilBlaster/Blaster.html#method-c-send_code"><span class="method_name">::send_code</span> <span class="module_name">(LilBlaster::Blaster)</span></a>' },
   { method: 'split_for_max', module: 'lilblaster::gpio::wave', html: '<a href="classes/LilBlaster/GPIO/Wave.html#method-c-split_for_max"><span class="method_name">::split_for_max</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a>' },
   { method: 'standard_codexes', module: 'lilblaster::codex', html: '<a href="classes/LilBlaster/Codex.html#method-c-standard_codexes"><span class="method_name">::standard_codexes</span> <span class="module_name">(LilBlaster::Codex)</span></a>' },
+  { method: 'start_callback', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-start_callback"><span class="method_name">::start_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
+  { method: 'stop_callback', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-stop_callback"><span class="method_name">::stop_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'stop_scan', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-stop_scan"><span class="method_name">::stop_scan</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'substring_range', module: 'lilblaster::lircconfreader', html: '<a href="classes/LilBlaster/LircConfReader.html#method-c-substring_range"><span class="method_name">::substring_range</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a>' },
   { method: 'sym_for_code', module: 'lilblaster::lircconfreader', html: '<a href="classes/LilBlaster/LircConfReader.html#method-c-sym_for_code"><span class="method_name">::sym_for_code</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a>' },
   { method: 'system_data', module: 'lilblaster::protocol::manchester', html: '<a href="classes/LilBlaster/Protocol/Manchester.html#method-c-system_data"><span class="method_name">::system_data</span> <span class="module_name">(LilBlaster::Protocol::Manchester)</span></a>' },
+  { method: 'timeout?', module: 'lilblaster::buttons', html: '<a href="classes/LilBlaster/Buttons.html#method-c-timeout-3F"><span class="method_name">::timeout?</span> <span class="module_name">(LilBlaster::Buttons)</span></a>' },
   { method: 'timer_reached?', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-timer_reached-3F"><span class="method_name">::timer_reached?</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
   { method: 'to_sym', module: 'lilblaster::protocol::baseprotocol', html: '<a href="classes/LilBlaster/Protocol/BaseProtocol.html#method-c-to_sym"><span class="method_name">::to_sym</span> <span class="module_name">(LilBlaster::Protocol::BaseProtocol)</span></a>' },
   { method: 'transmission_bound', module: 'lilblaster::reader', html: '<a href="classes/LilBlaster/Reader.html#method-c-transmission_bound"><span class="method_name">::transmission_bound</span> <span class="module_name">(LilBlaster::Reader)</span></a>' },
@@ -4596,6 +4611,7 @@ var search_index = [
   { method: 'version', module: 'lilblaster::cli', html: '<a href="classes/LilBlaster/CLI.html#method-i-version"><span class="method_name">#version</span> <span class="module_name">(LilBlaster::CLI)</span></a>' },
   { method: 'wait', module: 'lilblaster::gpio::pin', html: '<a href="classes/LilBlaster/GPIO/Pin.html#method-i-wait"><span class="method_name">#wait</span> <span class="module_name">(LilBlaster::GPIO::Pin)</span></a>' },
   { method: 'which', module: 'lilblaster::command', html: '<a href="classes/LilBlaster/Command.html#method-i-which"><span class="method_name">#which</span> <span class="module_name">(LilBlaster::Command)</span></a>' },
+  { method: 'button_pins', module: 'lilblaster', html: '<a href="classes/LilBlaster.html#attribute-c-button_pins"><span class="method_name">::button_pins</span> <span class="module_name">(LilBlaster)</span></a>' },
   { method: 'descendants', module: 'lilblaster::protocol::baseprotocol', html: '<a href="classes/LilBlaster/Protocol/BaseProtocol.html#attribute-c-descendants"><span class="method_name">::descendants</span> <span class="module_name">(LilBlaster::Protocol::BaseProtocol)</span></a>' },
   { method: 'reader_pin', module: 'lilblaster', html: '<a href="classes/LilBlaster.html#attribute-c-reader_pin"><span class="method_name">::reader_pin</span> <span class="module_name">(LilBlaster)</span></a>' },
   { method: 'transmitter_pin', module: 'lilblaster', html: '<a href="classes/LilBlaster.html#attribute-c-transmitter_pin"><span class="method_name">::transmitter_pin</span> <span class="module_name">(LilBlaster)</span></a>' },
@@ -4687,6 +4703,7 @@ function performSearch() {
 </form>
 <ol class='methods' id='search-results' style='display: none'></ol>
 <ol class='methods' id='index-entries'>
+<li><a href="classes/LilBlaster.html#attribute-c-button_pins"><span class="method_name">::button_pins</span> <span class="module_name">(LilBlaster)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/BaseProtocol.html#attribute-c-descendants"><span class="method_name">::descendants</span> <span class="module_name">(LilBlaster::Protocol::BaseProtocol)</span></a></li>
 <li><a href="classes/LilBlaster.html#attribute-c-reader_pin"><span class="method_name">::reader_pin</span> <span class="module_name">(LilBlaster)</span></a></li>
 <li><a href="classes/LilBlaster.html#attribute-c-transmitter_pin"><span class="method_name">::transmitter_pin</span> <span class="module_name">(LilBlaster)</span></a></li>
@@ -4707,8 +4724,10 @@ function performSearch() {
 <li><a href="classes/LilBlaster/Codex.html#attribute-i-protocol"><span class="method_name">#protocol</span> <span class="module_name">(LilBlaster::Codex)</span></a></li>
 <li><a href="classes/LilBlaster/Codex.html#attribute-i-remote_name"><span class="method_name">#remote_name</span> <span class="module_name">(LilBlaster::Codex)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/Manchester.html#attribute-i-system_data"><span class="method_name">#system_data</span> <span class="module_name">(LilBlaster::Protocol::Manchester)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-5B-5D"><span class="method_name">::[]</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/ConfigFile.html#method-c-5B-5D"><span class="method_name">::[]</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol.html#method-c-5B-5D"><span class="method_name">::[]</span> <span class="module_name">(LilBlaster::Protocol)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-5B-5D-3D"><span class="method_name">::[]=</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/ConfigFile.html#method-c-5B-5D-3D"><span class="method_name">::[]=</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-accum_pulses"><span class="method_name">::accum_pulses</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-add_code_observers"><span class="method_name">::add_code_observers</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
@@ -4723,9 +4742,11 @@ function performSearch() {
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-average_values"><span class="method_name">::average_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-begin_wave"><span class="method_name">::begin_wave</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-busy-3F"><span class="method_name">::busy?</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
+<li><a href="classes/LilBlaster.html#method-c-button_pins"><span class="method_name">::button_pins</span> <span class="module_name">(LilBlaster)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/RCMM.html#method-c-calculate_pulses"><span class="method_name">::calculate_pulses</span> <span class="module_name">(LilBlaster::Protocol::RCMM)</span></a></li>
 <li><a href="classes/LilBlaster/LircConfReader.html#method-c-call"><span class="method_name">::call</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a></li>
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-call"><span class="method_name">::call</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-callbacks"><span class="method_name">::callbacks</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-carrier"><span class="method_name">::carrier</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-chain_waves"><span class="method_name">::chain_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-clear_waves"><span class="method_name">::clear_waves</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
@@ -4768,6 +4789,10 @@ function performSearch() {
 <li><a href="classes/LilBlaster/Reader.html#method-c-freeze_for_reading"><span class="method_name">::freeze_for_reading</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/Codex.html#method-c-from_yaml"><span class="method_name">::from_yaml</span> <span class="module_name">(LilBlaster::Codex)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/Morse.html#method-c-fuzz"><span class="method_name">::fuzz</span> <span class="module_name">(LilBlaster::Protocol::Morse)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-get_chord_input"><span class="method_name">::get_chord_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-get_input"><span class="method_name">::get_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-get_multi_input"><span class="method_name">::get_multi_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-get_raw_input"><span class="method_name">::get_raw_input</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO.html#method-c-gpio_success"><span class="method_name">::gpio_success</span> <span class="module_name">(LilBlaster::GPIO)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-granulate_notifications"><span class="method_name">::granulate_notifications</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-group_values"><span class="method_name">::group_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
@@ -4811,7 +4836,9 @@ function performSearch() {
 <li><a href="classes/LilBlaster/Blaster.html#method-c-pin"><span class="method_name">::pin</span> <span class="module_name">(LilBlaster::Blaster)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-pin"><span class="method_name">::pin</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-pin_callback"><span class="method_name">::pin_callback</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-pin_val"><span class="method_name">::pin_val</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/ConfigFile.html#method-c-pinout_config"><span class="method_name">::pinout_config</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-pins"><span class="method_name">::pins</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/LircConfReader.html#method-c-proto_sym"><span class="method_name">::proto_sym</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a></li>
 <li><a href="classes/LilBlaster/LircConfReader.html#method-c-protocol_matchers"><span class="method_name">::protocol_matchers</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a></li>
 <li><a href="classes/LilBlaster/LircConfReader.html#method-c-protocol_options"><span class="method_name">::protocol_options</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a></li>
@@ -4824,9 +4851,11 @@ function performSearch() {
 <li><a href="classes/LilBlaster/Reader.html#method-c-reading_block"><span class="method_name">::reading_block</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-record"><span class="method_name">::record</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/ConfigFile.html#method-c-reload"><span class="method_name">::reload</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-remove_callback"><span class="method_name">::remove_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-replace_values"><span class="method_name">::replace_values</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
 <li><a href="classes/LilBlaster/NoiseReducer.html#method-c-replacement_matrix"><span class="method_name">::replacement_matrix</span> <span class="module_name">(LilBlaster::NoiseReducer)</span></a></li>
 <li><a href="classes/LilBlaster/ConfigFile.html#method-c-respond_to_missing-3F"><span class="method_name">::respond_to_missing?</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-resume_callback"><span class="method_name">::resume_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-resume_scan"><span class="method_name">::resume_scan</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/ConfigFile.html#method-c-safe_read_config"><span class="method_name">::safe_read_config</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a></li>
 <li><a href="classes/LilBlaster/ConfigFile.html#method-c-save"><span class="method_name">::save</span> <span class="module_name">(LilBlaster::ConfigFile)</span></a></li>
@@ -4834,10 +4863,13 @@ function performSearch() {
 <li><a href="classes/LilBlaster/Blaster.html#method-c-send_code"><span class="method_name">::send_code</span> <span class="module_name">(LilBlaster::Blaster)</span></a></li>
 <li><a href="classes/LilBlaster/GPIO/Wave.html#method-c-split_for_max"><span class="method_name">::split_for_max</span> <span class="module_name">(LilBlaster::GPIO::Wave)</span></a></li>
 <li><a href="classes/LilBlaster/Codex.html#method-c-standard_codexes"><span class="method_name">::standard_codexes</span> <span class="module_name">(LilBlaster::Codex)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-start_callback"><span class="method_name">::start_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-stop_callback"><span class="method_name">::stop_callback</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-stop_scan"><span class="method_name">::stop_scan</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/LircConfReader.html#method-c-substring_range"><span class="method_name">::substring_range</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a></li>
 <li><a href="classes/LilBlaster/LircConfReader.html#method-c-sym_for_code"><span class="method_name">::sym_for_code</span> <span class="module_name">(LilBlaster::LircConfReader)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/Manchester.html#method-c-system_data"><span class="method_name">::system_data</span> <span class="module_name">(LilBlaster::Protocol::Manchester)</span></a></li>
+<li><a href="classes/LilBlaster/Buttons.html#method-c-timeout-3F"><span class="method_name">::timeout?</span> <span class="module_name">(LilBlaster::Buttons)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-timer_reached-3F"><span class="method_name">::timer_reached?</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
 <li><a href="classes/LilBlaster/Protocol/BaseProtocol.html#method-c-to_sym"><span class="method_name">::to_sym</span> <span class="module_name">(LilBlaster::Protocol::BaseProtocol)</span></a></li>
 <li><a href="classes/LilBlaster/Reader.html#method-c-transmission_bound"><span class="method_name">::transmission_bound</span> <span class="module_name">(LilBlaster::Reader)</span></a></li>
