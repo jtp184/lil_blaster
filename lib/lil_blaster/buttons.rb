@@ -88,7 +88,9 @@ module LilBlaster
       # Sets the callback function for button +idx+ to +func+, or stops and clears if it is nil
       def []=(idx, func)
         if func.nil?
-          stop_callback(idx) && remove_callback(idx)
+          stop_callback(idx)
+          remove_callback(idx)
+          nil
         else
           start_callback(idx, function: func)
         end
