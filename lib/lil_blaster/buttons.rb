@@ -44,6 +44,9 @@ module LilBlaster
           break if presses.length >= args.fetch(:samples, Float::INFINITY)
 
           cur = Array(pins.find_all(&:on?).map { |n| pin_val(n) })
+
+          next if cur.empty? && !args.fetch(:spaces, false)
+
           yield cur if block_given?
 
           presses << cur
