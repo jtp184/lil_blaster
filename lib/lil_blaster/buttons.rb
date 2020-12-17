@@ -97,9 +97,9 @@ module LilBlaster
       # Takes in a function argument to +args+ or a +blk+, sets the button at +idx+
       # to callback that function on a user provided callback_edge
       def start_callback(idx, args = {}, &blk)
-        callbacks[idx] = args[:function] || blk
+        cbf = callbacks[idx] = args[:function] || blk
 
-        @pins[idx].start_callback(args.fetch(:callback_edge, :either), &callbacks[idx])
+        @pins[idx].start_callback(args.fetch(:callback_edge, :either), &cbf)
         callbacks[idx]
       end
 
@@ -107,7 +107,8 @@ module LilBlaster
       def resume_callback(idx, args = {})
         raise ArgumentError, 'No current callback' unless callbacks[idx]
 
-        @pins[idx].start_callback(args.fetch(:callback_edge, :either), &callbacks[idx])
+        cbf = callbacks[idx]
+        @pins[idx].start_callback(args.fetch(:callback_edge, :either), &cbf)
       end
 
       # Stops the callback running for button +idx+
