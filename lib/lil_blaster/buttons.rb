@@ -80,7 +80,52 @@ module LilBlaster
         presses
       end
 
+      # Retrieves a set callback for button indexed at +idx+
+      def [](idx)
+        callbacks[idx]
+      end
+
+      # Sets the callback function for button +idx+ to +func+, or stops and clears if it is nil
+      def []=(idx, func)
+        if func.nil?
+          stop_callback(idx) && remove_callback(idx)
+        else
+          start_callback(idx, function: func)
+        end
+      end
+
+      # Takes in a function argument to +args+ or a +blk+, sets the button at +idx+
+      # to callback that function on a user provided callback_edge
+      def start_callback(idx, args = {}, &blk)
+        callbacks[idx] = args[:function] || blk
+
+        @pins[idx].start_callback(args.fetch(:callback_edge, :either), &callbacks[idx])
+        callbacks[idx]
+      end
+
+      # Given a button +idx+, starts the callback set for that index
+      def resume_callback(idx, args = {})
+        raise ArgumentError, 'No current callback' unless callbacks[idx]
+
+        @pins[idx].start_callback(args.fetch(:callback_edge, :either), &callbacks[idx])
+      end
+
+      # Stops the callback running for button +idx+
+      def stop_callback(idx)
+        @pins[idx].stop_callback
+      end
+
+      # Removes the callback for button +idx+
+      def remove_callback(idx)
+        callbacks[idx] = nil
+      end
+
       private
+
+      # An array to hold callback functions
+      def callbacks
+        @callbacks ||= Array.new(LilBlaster.button_pins.count)
+      end
 
       # Takes in +args+ for seconds and start_time, returns true when the time has ellapsed
       def timeout?(args = {})
