@@ -40,7 +40,7 @@ module LilBlaster
         presses = []
 
         pins.each do |pn|
-          pn.start_callback(:rising) do
+          pn.start_callback(:falling) do
             next if timeout?(args.merge(start_time: st))
             next if presses.count == args.fetch(:count, Float::INFINITY)
 
@@ -99,7 +99,7 @@ module LilBlaster
       def start_callback(idx, args = {}, &blk)
         callbacks[idx] = args[:function] || blk
 
-        pins[idx].start_callback(args.fetch(:callback_edge, :rising), &callbacks[idx])
+        pins[idx].start_callback(args.fetch(:callback_edge, :falling), &callbacks[idx])
         callbacks[idx]
       end
 
@@ -107,7 +107,7 @@ module LilBlaster
       def resume_callback(idx, args = {})
         raise ArgumentError, 'No current callback' unless callbacks[idx]
 
-        pins[idx].start_callback(args.fetch(:callback_edge, :rising), &callbacks[idx])
+        pins[idx].start_callback(args.fetch(:callback_edge, :falling), &callbacks[idx])
       end
 
       # Stops the callback running for button +idx+
