@@ -151,6 +151,27 @@ codex.call(:b4).class # => LilBlaster::Transmission
 codex.call(:twofer).count == (codex.(power).length * 2) # => true
 # Other argument types are passed to the #encode method on the protocol and the result returned
 codex.call(:power) # => #<LilBlaster::Transmission data=[4511, 4540, 517, 1732...]>
+
+```
+
+Also on this class are functions for saving, loading, and automatic loading of codexes based on configured values.
+
+```ruby
+# Codexes can be loaded from a filepath, and saved out again
+c1 = LilBlaster::Codex.load('/path/on/system/example_codex.yml')
+c1.save_file # => <File:/path/on/system/example_codex.yml (closed)>
+
+# Codexes can be passed in as a YAML string and exported to one as well
+c2 = LilBlaster::Codex.from_yaml(...)
+c2.to_yaml # => "---\n..."
+
+# Autoload based on the value set in ConfigFile for :codexes_dir
+LilBlaster::Codex.autoload # => [<LilBlaster::Codex...>,...]
+
+# Return a specific default codex based on the value set in ConfigFile
+c3 = LilBlaster::Codex.default
+c3.remote_name.match?(ConfigFile[:default_codex]) # => true
+
 ```
 
 ### Buttons
