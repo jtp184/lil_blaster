@@ -19,7 +19,7 @@ module LilBlaster
 
       # Takes in +args+ for seconds and a count of how many simultaneous button presses to watch
       # for, loops until they are found, and returns an array
-      def get_multi_input(args = {})
+      def get_chord_input(args = {})
         st = Time.now
 
         loop do
@@ -31,6 +31,30 @@ module LilBlaster
 
           return pn.map { |n| pin_val(n) }
         end
+      end
+
+      # Takes in +args+ for seconds, a count, and optional chords. Loops and collects pin status,
+      # then returns the collection.
+      def get_multi_input(args = {})
+        st = Time.now
+        presses = []
+
+        loop do
+          break if timeout?(args.merge(start_time: st))
+          break if presses.count == args.fetch(:count, Float::INFINITY)
+
+          pn = pins.find_all(&:on?)
+
+          next if pn.empty?
+
+          presses << if args.fetch(:chords, false)
+                       pn
+                     else
+                       pn.first
+                     end
+        end
+
+        presses
       end
 
       # Takes in +args+ for samples or seconds, loops and collects pin status.
