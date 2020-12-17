@@ -41,7 +41,7 @@ module LilBlaster
 
         loop do
           break if timeout?(args.merge(start_time: st))
-          break if presses.length >= args.fetch(:samples, 3000)
+          break if presses.length >= args.fetch(:samples, Float::INFINITY)
 
           cur = Array(pins.find_all(&:on?).map { |n| pin_val(n) })
           yield cur if block_given?
