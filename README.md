@@ -214,7 +214,8 @@ c3.remote_name.match?(ConfigFile[:default_codex]) # => true
 Reading from the two physical buttons on the HAT is done with the `Buttons` class.
 
 ```ruby
-# Basic input from buttons. With no argument, blocks until you press a button then returns an index
+# Basic input from buttons. With no argument, blocks until you press
+# a button then returns an index
 LilBlaster::Buttons.get_input 
 # => 0
 
