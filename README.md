@@ -256,7 +256,7 @@ LilBlaster::Buttons.resume_callback(0)
 # And remove a callback entirely with
 LilBlaster::Buttons.remove_callback(0)
 
-# You can also stop and remove a callback with the #[]= syntax and a nil value
+# You can also stop and remove a callback with #[]= and nil
 LilBlaster::Buttons[0] = nil
 
 ```
