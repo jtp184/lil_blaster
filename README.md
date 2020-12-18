@@ -121,7 +121,11 @@ codex = LilBlaster::Codex.new(remote_name: 'example')
 # You can manually specify a protocol by passing in arguments
 proto_sym = :Manchester
 proto_opts = {
-  pulse_values: {:header => [4511, 4540], :zero => [517, 609], :one => [517, 1732]},
+  pulse_values: {
+    header: [4511, 4540],
+    zero: [517, 609],
+    one: [517, 1732]
+  },
   gap: 47_312,
   system_data: 57_568
 }
@@ -134,23 +138,36 @@ codex = LilBlaster::Codex.new(
 
 # Or directly passing an instance
 proto_obj = LilBlaster::Protocol[proto_sym].new(proto_opts)
-codex = LilBlaster::Codex.new(remote_name: 'example', protocol: proto_obj)
+codex = LilBlaster::Codex.new(
+  remote_name: 'example',
+  protocol: proto_obj
+)
 
 # Codes can be added directly
 codex[:power] = 16_575
 
 # Or by using the #append method, which accepts multiple data formats
 
-raw = LilBlaster::Transmission.new(data: [39, 325, 1128, 203, 159, 324, 39, 39])
+raw = LilBlaster::Transmission.new(
+  data: [39, 325, 1128, 203, 159, 324, 39, 39]
+)
 
 codex.append(transmission: proto_obj.encode(57_375), as: :volume_up)
 codex.append(data: 14_025, key: :red)
 codex.append(raw_transmission: raw, name: :b1)
 
 # Using #append can also automatically infer a protocol from a transmission
-LilBlaster::Codex.new.append(transmission: proto_obj.encode(53_805)).protocol.nil? # => false
+LilBlaster::Codex.new
+                 .append(transmission: proto_obj.encode(53_805))
+                 .protocol
+                 .nil? # => false
+
 # Or manually apply / overwrite one
-codex.append(transmission: proto_obj.encode(2295), as: :channel_down, replace_protocol: true)
+codex.append(
+  transmission: proto_obj.encode(2295),
+  as: :channel_down,
+  replace_protocol: true
+)
 
 # Array values for codes are also supported, and are turned into a joined transmission
 codex[:twofer] = [4096, 4112]
@@ -161,8 +178,11 @@ codex[:twofer] = [4096, 4112]
 codex.call(:b1).class # => LilBlaster::Transmission
 # Arrays are turned into Transmissions which are then joined
 codex.call(:twofer).count == (codex.(power).length * 2) # => true
-# Other argument types are passed to the #encode method on the protocol and the result returned
-codex.call(:power) # => #<LilBlaster::Transmission data=[4511, 4540, 517, 1732...]>
+# Other types are passed to the #encode method on the protocol and the result returned
+LilBlaster::Protocol::Manchester.same_data?(
+  codex.call(:power),
+  proto_obj.encode(codex[:power])
+) # => true
 
 ```
 
