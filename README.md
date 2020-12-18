@@ -169,7 +169,7 @@ codex.append(
   replace_protocol: true
 )
 
-# Array values for codes are also supported, which joins the two transmissions
+# An array value implies sending both codes
 codex[:twofer] = [4096, 4112]
 
 # To generate transmissions, pass the corresponding key to #call,
