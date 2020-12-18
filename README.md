@@ -169,16 +169,17 @@ codex.append(
   replace_protocol: true
 )
 
-# Array values for codes are also supported, and are turned into a joined transmission
+# Array values for codes are also supported, which joins the two transmissions
 codex[:twofer] = [4096, 4112]
 
-# To generate transmissions, pass the corresponding key to #call, values in codes will be handled based on type
+# To generate transmissions, pass the corresponding key to #call,
+# values in codes will be handled based on type
 
 # Transmissions are returned directly
 codex.call(:b1).class # => LilBlaster::Transmission
 # Arrays are turned into Transmissions which are then joined
 codex.call(:twofer).count == (codex.(power).length * 2) # => true
-# Other types are passed to the #encode method on the protocol and the result returned
+# Others are passed to the protocol to encode and the result returned
 LilBlaster::Protocol::Manchester.same_data?(
   codex.call(:power),
   proto_obj.encode(codex[:power])
@@ -214,19 +215,24 @@ Reading from the two physical buttons on the HAT is done with the `Buttons` clas
 
 ```ruby
 # Basic input from buttons. With no argument, blocks until you press a button then returns an index
-LilBlaster::Buttons.get_input # => 0
+LilBlaster::Buttons.get_input 
+# => 0
 
 # With arguments for seconds, it will timeout if no button is pressed
-Inkblot::Buttons.get_input(seconds: 10) # => nil if no button is pressed for 10 seconds
+Inkblot::Buttons.get_input(seconds: 10) 
+# => nil if no button is pressed for 10 seconds
 
 # It's also possible to get chords instead of single presses
-Inkblot::Buttons.get_chord_input(count: 2, seconds: 5) # => [0, 1] or nil if none pressed in 5s
+Inkblot::Buttons.get_chord_input(count: 2, seconds: 5) 
+# => [0, 1] or nil if none pressed in 5s
 
 # Returning multiple distinct presses in a row
-Inkblot::Buttons.get_multi_input(count: 5) # => [0, 1, 1, 1, 0]
+Inkblot::Buttons.get_multi_input(count: 5) 
+# => [0, 1, 1, 1, 0]
 
 # You can also record all button activity within a timeframe
-Inkblot::Buttons.get_raw_input(samples: 2000, seconds: 10) # => [[0], [0, 1]...]
+Inkblot::Buttons.get_raw_input(samples: 2000, seconds: 10) 
+# => [[0], [0, 1]...]
 
 ```
 
@@ -244,13 +250,13 @@ LilBlaster::Buttons[0] = ->(*a) { puts 'Button 1 Pressed' }
 # To stop a callback, run stop_callback
 LilBlaster::Buttons.stop_callback(0)
 
-# Callback functions are stored, so you can resume a callback which has been stopped with
+# Callback functions are stored, so you can resume a callback with
 LilBlaster::Buttons.resume_callback(0)
 
 # And remove a callback entirely with
 LilBlaster::Buttons.remove_callback(0)
 
-# You can also stop and remove a callback all in one with the #[]= syntax and a nil value
+# You can also stop and remove a callback with the #[]= syntax and a nil value
 LilBlaster::Buttons[0] = nil
 
 ```
