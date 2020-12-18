@@ -42,7 +42,8 @@ data = [500, 1000, 600, 2000]
 
 t1 = LilBlaster::Transmission.new(data: d)
 
-# You can optionally specify a carrier wave frequency in kHz, with 38.0 being the default
+# You can optionally specify a carrier wave frequency in kHz, 
+# with 38.0 being the default
 t2 = LilBlaster::Transmission.new(data: d, carrier_wave: 44.0)
 
 # Transmissions can return their count, the number of pulses
@@ -50,7 +51,7 @@ t1.count # => 4
 # As well as their length in micros
 t2.length # => 4100
 
-# Transmissions can be split into their respective mark/spaces with #tuples
+# Transmissions can be split into mark/spaces with #tuples
 t1.tuples # => [[500, 1000],[600, 2000]]
 
 # Mathematical operators are implemented to simplify transformation
@@ -92,7 +93,11 @@ LilBlaster::Protocol.identify(tr1) # => :Manchester
 protocol, command = LilBlaster::Protocol.identify!(tr1)
 
 protocol.class # => LilBlaster::Protocol::Manchester
-protocol.pulse_values # => {:header => [4511, 4540], :zero => [517, 609], :one => [517, 1732]}
+protocol.pulse_values # => {
+                      #      :header => [4511, 4540],
+                      #      :zero => [517, 609],
+                      #      :one => [517, 1732]
+                      #    }
 
 command.to_s(16) # => "40bf"
 
@@ -113,7 +118,7 @@ The `Codex` class provides a way to collect codes that use the same protocol, al
 # Creating a codex without a protocol
 codex = LilBlaster::Codex.new(remote_name: 'example')
 
-# You can manually specify a protocol by passing in arguments to construct it
+# You can manually specify a protocol by passing in arguments
 proto_sym = :Manchester
 proto_opts = {
   pulse_values: {:header => [4511, 4540], :zero => [517, 609], :one => [517, 1732]},
@@ -121,24 +126,31 @@ proto_opts = {
   system_data: 57_568
 }
 
-codex = LilBlaster::Codex.new(remote_name: 'example', protocol: proto_sym, protocol_options: proto_opts)
+codex = LilBlaster::Codex.new(
+  remote_name: 'example',
+  protocol: proto_sym,
+  protocol_options: proto_opts
+)
 
 # Or directly passing an instance
 proto_obj = LilBlaster::Protocol[proto_sym].new(proto_opts)
 codex = LilBlaster::Codex.new(remote_name: 'example', protocol: proto_obj)
 
 # Codes can be added directly
-codex[:power] = 16575
+codex[:power] = 16_575
 
 # Or by using the #append method, which accepts multiple data formats
-codex.append(transmission: LilBlaster::Transmission.new(data: ...), as: :volume_up)
-codex.append(data: 8756, key: :ok)
-codex.append(raw_transmission: LilBlaster::Transmission.new(data: ...), name: :b4)
+
+raw = LilBlaster::Transmission.new(data: [39, 325, 1128, 203, 159, 324, 39, 39])
+
+codex.append(transmission: proto_obj.encode(57_375), as: :volume_up)
+codex.append(data: 14_025, key: :red)
+codex.append(raw_transmission: raw, name: :b1)
 
 # Using #append can also automatically infer a protocol from a transmission
-LilBlaster::Codex.new.append(transmission: LilBlaster::Transmission.new(data: ...)).protocol.nil? # => false
+LilBlaster::Codex.new.append(transmission: proto_obj.encode(53_805)).protocol.nil? # => false
 # Or manually apply / overwrite one
-codex.append(transmission: LilBlaster::Transmission.new(data: ...), as: :input, replace_protocol: true)
+codex.append(transmission: proto_obj.encode(2295), as: :channel_down, replace_protocol: true)
 
 # Array values for codes are also supported, and are turned into a joined transmission
 codex[:twofer] = [4096, 4112]
@@ -146,7 +158,7 @@ codex[:twofer] = [4096, 4112]
 # To generate transmissions, pass the corresponding key to #call, values in codes will be handled based on type
 
 # Transmissions are returned directly
-codex.call(:b4).class # => LilBlaster::Transmission
+codex.call(:b1).class # => LilBlaster::Transmission
 # Arrays are turned into Transmissions which are then joined
 codex.call(:twofer).count == (codex.(power).length * 2) # => true
 # Other argument types are passed to the #encode method on the protocol and the result returned
