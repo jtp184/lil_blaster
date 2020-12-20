@@ -208,6 +208,84 @@ c3.remote_name.match?(ConfigFile[:default_codex]) # => true
 ```
 ### Reader
 
+Capturing transmissions is done with the `Reader` class, which handles interacting with the IR Receiver. At its most basic, you can block and record for a number of seconds or captured transmissions.
+
+```ruby
+# Everything captured in 4 seconds (including potential partials)
+captures = LilBlaster::Reader.record(seconds: 4)
+
+# Capture whole transmissions, splitting on the gaps
+captures << LilBlaster::Reader.record(first: 4)
+
+```
+
+There are also functions for asynchronous polling, where captured transmissions are dumped into a buffer on the reader class. They can also optionally be yielded to observer objects, either raw or cooked.
+
+```ruby
+# Begin scanning with #continuous_scan
+LilBlaster::Reader.continuous_scan
+
+# Internally, transmissions remain stored in a buffer as they come in
+LilBlaster::Reader.transmission_buffer.count # => 8
+
+# Stop the scan with #stop_scan
+LilBlaster::Reader.stop_scan
+
+# You can also attach observers to the reader
+class Watcher
+  attr_reader :prefix
+
+  def initialize(pr)
+    @prefix = pr
+  end
+
+  def update(transmission)
+    str = "Transmission received for #{prefix},"
+    str += " length: #{transmission.length}"
+
+    puts str
+  end
+end
+
+w1 = Watcher.new('Alpha')
+
+# Any object with a defined #update method is sent transmissions
+LilBlaster::Reader.continuous_scan(observe_transmissions: w1)
+
+# You can pass one or more watchers and they will all be sent updates.
+# Any Method object can be a watcher, which will receive the transmission
+
+ot = [
+  Math.method(:log),
+  proc { |t| $last = t }.method(:call),
+  Watcher.new('Beta')
+]
+
+LilBlaster::Reader.continuous_scan(observe_transmissions: ot)
+
+# Pausing the scan will retain the observers, but not poll for transmissions
+LilBlaster::Reader.pause_scan && LilBlaster::Reader.scanning? # => false
+
+# Paused scans can be resumed, and their observers start up again
+LilBlaster::Reader.resume_scan && LilBlaster::Reader.scanning? # => true
+
+# Stopping the scan clears the observers
+LilBlaster::Reader.stop_scan && LilBlaster::Reader.scanning? # => nil
+
+# You can also respond to codes instead of raw transmissions, by passing
+# in a codex to handle them or using the default codex
+
+seen = []
+
+LilBlaster::Reader.continuous_scan(
+  observe_codes: [seen.method(:<<), Kernel.method(:puts)],
+  codex: LilBlaster::Codex.autoload.last
+)
+
+seen # => [:volume_up, :volume_up, :prev_channel]
+
+```
+
 ### Blaster
 
 The `Blaster` class handles sending out IR data from the LED, and handles codexes and transmissions as data sources.
@@ -229,6 +307,7 @@ LilBlaster::Blaster.send_code(:power)
 # Also handles basic on, off and checking functions
 LilBlaster::Blaster.turn_on? && LilBlaster::Blaster.on? # => true
 LilBlaster::Blaster.turn_off? && LilBlaster::Blaster.off? # => true
+
 ```
 
 ### Buttons
