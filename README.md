@@ -25,6 +25,8 @@ This gem was developed using a generically available [IR Expansion Board](http:/
 
 ## LIRC
 
+This gem tries for basic interoperability with the [Linux Infrared Remote Control](https://www.lirc.org/) project. You can search for remote configurations on the [LIRC Database](http://lirc-remotes.sourceforge.net/remotes-table.html), and copy them into the codexes directory right alongside codexes created with this gem. Currently supported are shift and space encoded, raw, and RCMM remote definitions. Many options, but not all are implemented, so feel free to open an [issue](https://github.com/jtp184/lil_blaster/issues/new) if you'd like to see a LIRC feature supported that currently isn't.
+
 ## CLI
 
 LilBlaster comes with a command line program to enable sending, receiving, identifying, and cataloging the IR transmissions from devices. 
@@ -252,7 +254,7 @@ LilBlaster::Protocol::Manchester.same_data?(
 
 ```
 
-Also on this class are functions for saving, loading, and automatic loading of codexes based on configured values.
+Also on this class are functions for saving, loading, and automatic loading of codexes based on configured values. Codexes saved in the codexes directory can be autoloaded by the gem.
 
 ```ruby
 # Codexes can be loaded from a filepath, and saved out again
