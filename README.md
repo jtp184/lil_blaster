@@ -31,9 +31,66 @@ LilBlaster comes with a command line program to enable sending, receiving, ident
 
 ### `config`
 
+You can use the config subcommand to view and set configuration options, which will then be accessible by the library for defaults
+
+```bash
+# Get all config options
+lil_blaster config --get
+# =>
+# default_codex => samsung
+# default_code => power
+
+# Or just one
+lil_blaster config --get default_codex
+# default_codex => samsung
+
+# Set options
+lil_blaster config --set codexes_dir /path/to/directory
+# default_codex => /path/to/directory
+
+# Unset them
+lil_blaster config --unset default_codex
+# default_codex => nil
+
+# You can also set values interactively
+lil_blaster config --interactive
+
+```
+
 ### `send_code`
 
+When codexes are available, the send_code command will generate and send a transmission based on the passed symbol
+
+```bash
+# By default, sends the value of ConfigFile[:default_code]
+lil_blaster send_code
+
+# And uses the default codex for passed symbols
+lil_blaster send_code power
+
+# You can override codex choice with a filepath, or a codex name
+lil_blaster send_code power --codex television
+lil_blaster send_code power -c /path/to/new/codex
+
+# Send multiple instances of a code or code sequence
+lil_blaster send_code volume_up --times 4
+
+```
+
 ### `learn`
+
+Adding new code listings is easiest accomplished by pointing the device at the Raspberry Pi and running the `learn` command. Provide a codex name, and keys to learn. A new codex will ask you to identify the protocol with a precursor session, then launch into learning the new codes
+
+```bash
+lil_blaster learn --codex television --keys power volume_up volume_down input
+
+```
+
+<!-- Image of learn codex -->
+
+When run interactively, you can choose from some default options for keys, as well as select an existing codex from a drop down. Codexes are saved and loaded to the codexes directory defined by the config file.
+
+<!-- Image of learn interactively -->
 
 ## Usage
 
