@@ -206,9 +206,31 @@ c3 = LilBlaster::Codex.default
 c3.remote_name.match?(ConfigFile[:default_codex]) # => true
 
 ```
+### Reader
 
 ### Blaster
-### Reader
+
+The `Blaster` class handles sending out IR data from the LED, and handles codexes and transmissions as data sources.
+
+```ruby
+tr = LilBlaster::Transmission.new(data: Array.new(10, 500))
+
+# Directly send a transmission
+LilBlaster::Blaster.transmit(tr)
+
+# Or send a code from a codex
+cx = LilBlaster::Codex.new(codes: { power: 16575 }, protocol: ...)
+
+LilBlaster::Blaster.send_code(:power, codex: cx)
+
+# Without a codex argmument, attempts to use the default codex
+LilBlaster::Blaster.send_code(:power)
+
+# Also handles basic on, off and checking functions
+LilBlaster::Blaster.turn_on? && LilBlaster::Blaster.on? # => true
+LilBlaster::Blaster.turn_off? && LilBlaster::Blaster.off? # => true
+```
+
 ### Buttons
 
 Reading from the two physical buttons on the HAT is done with the `Buttons` class.
