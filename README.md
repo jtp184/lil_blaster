@@ -27,6 +27,14 @@ This gem was developed using a generically available [IR Expansion Board](http:/
 
 ## CLI
 
+LilBlaster comes with a command line program to enable sending, receiving, identifying, and cataloging the IR transmissions from devices. 
+
+### `config`
+
+### `send_code`
+
+### `learn`
+
 ## Usage
 
 ### Documentation
