@@ -249,15 +249,14 @@ end
 
 w1 = Watcher.new('Alpha')
 
-# Any object with a defined #update method is sent transmissions
+# Any object with a defined #update method has transmissions sent to it
 LilBlaster::Reader.continuous_scan(observe_transmissions: w1)
 
-# You can pass one or more watchers and they will all be sent updates.
-# Any Method object can be a watcher, which will receive the transmission
+# You can pass one or more observers and they will all be sent updates.
+# Any Method object can be a observer, which will receive the transmission
 
 ot = [
-  Math.method(:log),
-  proc { |t| $last = t }.method(:call),
+  proc { |t| @last = t }.method(:call),
   Watcher.new('Beta')
 ]
 
