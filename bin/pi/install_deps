@@ -124,8 +124,6 @@ if tasks.include?(:lil_blaster)
   cmds << 'cd ~/lil_blaster && sudo rake install'
 end
 
-exit
-
 # Run the commands here if we're on a pi
 if @os == :raspberrypi
   cmds.each do |cmd|
