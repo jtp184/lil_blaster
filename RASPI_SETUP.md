@@ -1,6 +1,6 @@
 # Setting up Raspberry Pi
 
-This is a simple start guide to setting up Raspberry Pi for use with taptag
+This is a simple start guide to setting up Raspberry Pi for use with LilBlaster
 
 ## Flashing
 
