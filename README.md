@@ -413,7 +413,7 @@ LilBlaster::Buttons.start_callback(0) do |tick, level, pin, value|
 end
 
 # For simple one liners, you can also use this syntax
-LilBlaster::Buttons[0] = ->(*a) { puts 'Button 1 Pressed' }
+LilBlaster::Buttons[0] = ->(*a) { LilBlaster::Blaster.send_code(:power) }
 
 # To stop a callback, run stop_callback
 LilBlaster::Buttons.stop_callback(0)
