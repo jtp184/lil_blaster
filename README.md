@@ -29,11 +29,11 @@ This gem tries for basic interoperability with the [Linux Infrared Remote Contro
 
 ## CLI
 
-LilBlaster comes with a command line program to enable sending, receiving, identifying, and cataloging the IR transmissions from devices. 
+LilBlaster comes with a command line program to enable sending, receiving, identifying, and cataloging the IR transmissions from devices. This allows you to quickly get started cloning your own remotes, and replacing them with the Pi.
 
 ### `config`
 
-You can use the config subcommand to view and set configuration options, which will then be accessible by the library for defaults
+You can use the config subcommand to view and set configuration options, which will then be accessible by the library for defaults. Most important are the keys for `:codexes_dir` and `:default_codex`, which are used to set the name of the directory to load and save codexes to, and the name of the default codex to load.
 
 ```bash
 # Get all config options
@@ -61,7 +61,7 @@ lil_blaster config --interactive
 
 ### `send_code`
 
-When codexes are available, the send_code command will generate and send a transmission based on the passed symbol
+When codexes are available, the send_code command will generate and send a transmission based on the passed symbol.
 
 ```bash
 # By default, sends the value of ConfigFile[:default_code]
@@ -81,7 +81,7 @@ lil_blaster send_code volume_up --times 4
 
 ### `learn`
 
-Adding new code listings is easiest accomplished by pointing the device at the Raspberry Pi and running the `learn` command. Provide a codex name, and keys to learn. A new codex will ask you to identify the protocol with a precursor session, then launch into learning the new codes
+Adding new code listings is easiest accomplished by pointing the device at the Raspberry Pi and running the `learn` command. Provide a codex name, and keys to learn. A new codex will ask you to identify the protocol with a precursor session, then launch into learning the new codes.
 
 ```bash
 lil_blaster learn --codex television --keys power volume_up volume_down input
