@@ -17,6 +17,7 @@ RDOC_EXCLUDE = %w[
   tmp
   docs
   spec
+  wpa_supplicant.conf
 ].map { |r| "--exclude=#{r}" }.join(' ').freeze
 
 task default: :test
