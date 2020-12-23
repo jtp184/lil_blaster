@@ -57,11 +57,14 @@ end.parse!
   days  = hours / 24
 
   if days.positive?
-    "#{days} day#{days > 1 ? 's' : ''} and #{hours % 24} hours"
+    plur = days > 1 ? 's' : ''
+    "#{days} day#{plur} and #{hours % 24} hours"
   elsif hours.positive?
-    "#{hours} hour#{hours > 1 ? 's' : ''} and #{mins % 60} minutes"
+    plur = hours > 1 ? 's' : ''
+    "#{hours} hour#{plur} and #{mins % 60} minutes"
   elsif mins.positive?
-    "#{mins} minute#{mins > 1 ? 's' : ''} and #{secs % 60} seconds"
+    plur = mins > 1 ? 's' : ''
+    "#{mins} minute#{plur} and #{secs % 60} seconds"
   elsif secs >= 2
     "#{secs} seconds"
   elsif secs == 1
