@@ -10,13 +10,13 @@ See the [Raspberry Pi Documentation](https://www.raspberrypi.org/documentation/i
 
 Run `bin/pi/wpa_config` to enter wifi credentials. This will save a `wpa_supplicant.conf` file. You can also create one manually if you'd like.
 
-![wpa_config](https://justinp-io-production.s3.amazonaws.com/store/36c56b2414c134c7b0425b4b9307542f.png)
+![wpa_config](https://justinp-io-production.s3.amazonaws.com/store/1c97d2fc7d5ba62ef9b7ae0ecff7991e.png)
 
 ## Boot Config
 
 Ensure that the boot volume is mounted. Run `bin/pi/boot_config`, which will set SSH and SPI settings, and copy your `wpa_supplicant.conf` file.
 
-![boot_config](https://justinp-io-production.s3.amazonaws.com/store/587730ee4e834e015d87e197713c71eb.png)
+![boot_config](https://justinp-io-production.s3.amazonaws.com/store/4be1b791d8c2c40fdf861e50ed80b423.png)
 
 ## Installing Dependencies
 
