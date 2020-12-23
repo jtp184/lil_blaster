@@ -92,6 +92,7 @@ tasks = prompt.multi_select('What should be installed?', ic.values)
 
 # Empty array of commands to run
 cmds = []
+# Empty array of gems to install
 gems = []
 
 # Update our apt repos
@@ -114,6 +115,8 @@ if tasks.include?(:ruby)
 end
 
 gems << 'pigpio' if tasks.include?(:pigpio)
+
+# Install gems now that we've obtained them all
 cmds << "sudo gem install #{gems.join(' ')}" unless gems.empty?
 
 # Clone the repo if requested
@@ -151,11 +154,37 @@ if @os == :raspberrypi
     puts fin
     puts
   end
+# Run the commands on the remote device
 else
-  # Run the commands on the remote device
+  # Define a proc for channel close callback
+  on_close = proc do
+    tim = @durationizer[Time.now - @timer]
+
+    if @flags[:verbose].positive?
+      puts [pastel.green.bold('Finished '), "(#{tim})"].join
+      puts
+    else
+      print pastel.green('.')
+    end
+  end
+
+  # Define a proc for execution callback
+  on_exec = proc do |ch, success|
+    puts(pastel.red('Could not execute command')) && abort unless success
+
+    # Show output on our device
+    if @flags[:verbose] > 1
+      ch.on_data { |_c, data| $stdout.print pastel.bright_black(data.to_s) }
+      ch.on_extended_data { |_c, _type, data| $stderr.print pastel.bright_black(data.to_s) }
+    end
+
+    ch.on_close(&on_close)
+  end
+
   Net::SSH.start(host, 'pi') do |ssh|
     cmds.each do |com|
       @timer = Time.now
+
       ssh.open_channel do |chan|
         if @flags[:verbose].positive?
           puts "Running `#{pastel.yellow(com)}`"
@@ -164,26 +193,7 @@ else
           print(pastel.yellow('.'))
         end
 
-        chan.exec(com) do |ch, success|
-          puts(pastel.red('Could not execute command')) && abort unless success
-
-          # Show output on our device
-          if @flags[:verbose] > 1
-            ch.on_data { |_c, data| $stdout.print pastel.bright_black(data.to_s) }
-            ch.on_extended_data { |_c, _type, data| $stderr.print pastel.bright_black(data.to_s) }
-          end
-
-          ch.on_close do
-            tim = @durationizer[Time.now - @timer]
-
-            if @flags[:verbose].positive?
-              puts [pastel.green.bold('Finished '), "(#{tim})"].join
-              puts
-            else
-              print pastel.green('.')
-            end
-          end
-        end
+        chan.exec(com, &on_exec)
       end.wait
     end
   end
