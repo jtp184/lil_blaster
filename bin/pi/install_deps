@@ -154,7 +154,6 @@ if @os == :raspberrypi
     puts fin
     puts
   end
-# Run the commands on the remote device
 else
   # Define a proc for channel close callback
   on_close = proc do
@@ -181,6 +180,7 @@ else
     ch.on_close(&on_close)
   end
 
+  # Run the commands on the remote device
   Net::SSH.start(host, 'pi') do |ssh|
     cmds.each do |com|
       @timer = Time.now
