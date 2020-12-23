@@ -114,7 +114,7 @@ if tasks.include?(:ruby)
 end
 
 gems << 'pigpio' if tasks.include?(:pigpio)
-cmds << "gem install #{gems.join(' ')}" unless gems.empty?
+cmds << "sudo gem install #{gems.join(' ')}" unless gems.empty?
 
 # Clone the repo if requested
 if tasks.include?(:lil_blaster)
@@ -161,7 +161,7 @@ else
           puts "Running `#{pastel.yellow(com)}`"
           puts
         else
-          print '.'.yellow
+          print(pastel.yellow('.'))
         end
 
         chan.exec(com) do |ch, success|
