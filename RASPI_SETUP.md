@@ -22,4 +22,4 @@ Ensure that the boot volume is mounted. Run `bin/pi/boot_config`, which will set
 
 Run `bin/pi/install_deps`. You can install various needed dependencies remotely with this script, including Ruby, the gem itself, and compiling / installing the waveshare libraries on the pi itself.
 
-![install_deps](https://justinp-io-production.s3.amazonaws.com/store/b485a3b2ce85782d9ab6ce2379699607.png)
+![install_deps](https://justinp-io-production.s3.amazonaws.com/store/18f990de56a0ff647c334d7a52d07db9.png)
