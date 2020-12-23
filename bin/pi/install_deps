@@ -1,0 +1,202 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/inline'
+require 'optparse'
+
+gemfile do
+  source 'https://rubygems.org/'
+
+  gem 'bcrypt_pbkdf'
+  gem 'ed25519'
+  gem 'net-ssh'
+  gem 'pastel'
+  gem 'pry'
+  gem 'tty-command'
+  gem 'tty-prompt'
+end
+
+# For color support
+pastel = Pastel.new
+
+# Set up the prompt for user input
+prompt = TTY::Prompt.new(
+  interrupt: proc do
+    puts pastel.bright_black('x')
+    puts pastel.red('Goodbye')
+    abort
+  end
+)
+
+# Run commands on device
+command = TTY::Command.new
+
+@flags = Hash.new(0)
+@os = case RUBY_PLATFORM
+      when /cygwin|mswin|mingw|bccwin|wince|emx/
+        :windows
+      when /darwin/
+        :mac
+      when /linux/
+        pi = File.read('/proc/cpuinfo') =~ /Raspberry Pi/
+        pi ? :raspberrypi : :linux
+      end
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: install_deps [options]'
+
+  opts.on('-v', '--verbose [LEVEL]', Integer, 'Print output of commands') do |v|
+    @flags[:verbose] = v
+  end
+end.parse!
+
+@durationizer = proc do |var|
+  secs  = var.to_int
+  mins  = secs / 60
+  hours = mins / 60
+  days  = hours / 24
+
+  if days.positive?
+    plur = days > 1 ? 's' : ''
+    "#{days} day#{plur} and #{hours % 24} hours"
+  elsif hours.positive?
+    plur = hours > 1 ? 's' : ''
+    "#{hours} hour#{plur} and #{mins % 60} minutes"
+  elsif mins.positive?
+    plur = mins > 1 ? 's' : ''
+    "#{mins} minute#{plur} and #{secs % 60} seconds"
+  elsif secs >= 2
+    "#{secs} seconds"
+  elsif secs == 1
+    '1 second'
+  else
+    '0 seconds'
+  end
+end
+
+# Figure out if we have hosts set up
+host = prompt.ask('Pi hostname:', default: 'raspberrypi.local')
+
+# Pre-programmed install choices
+ic = {
+  custom_package: pastel.cyan('Custom packages'),
+  custom_gem: pastel.magenta('Custom gems'),
+  lil_blaster: 'LilBlaster',
+  pigpio: 'Pigpio',
+  ruby: 'Ruby'
+}
+
+# Ask for what should be installed
+tasks = prompt.multi_select('What should be installed?', ic.values)
+              .map { |t| ic.key(t) }
+
+# Empty array of commands to run
+cmds = []
+# Empty array of gems to install
+gems = []
+
+# Update our apt repos
+cmds << 'sudo apt-get update' if tasks.include?(:custom_package) || tasks.include?(:ruby)
+
+# Handle custom apt installs
+if tasks.include?(:custom_package)
+  pkgs = prompt.ask('Enter space separated list of packages to install with apt:')
+  cmds << "sudo apt-get install #{pkgs} -y"
+end
+
+# Handle custom gems
+gems << prompt.ask('Enter space separated list of gems to install:') if tasks.include?(:custom_gem)
+
+if tasks.include?(:ruby)
+  # Build the system level install command
+  cmds << 'sudo apt-get install ruby-full -y'
+  # Install ruby basic gems
+  gems += %w[bundler rake]
+end
+
+gems << 'pigpio' if tasks.include?(:pigpio)
+
+# Install gems now that we've obtained them all
+cmds << "sudo gem install #{gems.join(' ')}" unless gems.empty?
+
+# Clone the repo if requested
+if tasks.include?(:lil_blaster)
+  cmds << 'sudo rm -rf ~/lil_blaster'
+  cmds << 'git clone https://github.com/jtp184/lil_blaster.git ~/lil_blaster'
+  cmds << 'cd ~/lil_blaster && bundle'
+  cmds << 'cd ~/lil_blaster && sudo rake install'
+end
+
+# Run the commands here if we're on a pi
+if @os == :raspberrypi
+  cmds.each do |cmd|
+    @timer = Time.now
+
+    puts "Running #{pastel.yellow(cmd)}" unless @flags[:verbose] < 1
+
+    begin
+      out, err = command.run(cmd)
+    rescue TTY::Command::ExitError
+      puts pastel.red('Could not execute command')
+      abort
+    end
+
+    if @flags[:verbose].zero?
+      print pastel.green('.')
+      next
+    end
+
+    msg = [out, err].map { |s| pastel.bright_black(s) }
+    tim = @durationizer[Time.now - @timer]
+    fin = [pastel.green.bold('Finished '), "(#{tim})"].join
+
+    puts msg if @flags[:verbose] > 1
+    puts fin
+    puts
+  end
+# Run the commands on the remote device
+else
+  # Define a proc for channel close callback
+  on_close = proc do
+    tim = @durationizer[Time.now - @timer]
+
+    if @flags[:verbose].positive?
+      puts [pastel.green.bold('Finished '), "(#{tim})"].join
+      puts
+    else
+      print pastel.green('.')
+    end
+  end
+
+  # Define a proc for execution callback
+  on_exec = proc do |ch, success|
+    puts(pastel.red('Could not execute command')) && abort unless success
+
+    # Show output on our device
+    if @flags[:verbose] > 1
+      ch.on_data { |_c, data| $stdout.print pastel.bright_black(data.to_s) }
+      ch.on_extended_data { |_c, _type, data| $stderr.print pastel.bright_black(data.to_s) }
+    end
+
+    ch.on_close(&on_close)
+  end
+
+  Net::SSH.start(host, 'pi') do |ssh|
+    cmds.each do |com|
+      @timer = Time.now
+
+      ssh.open_channel do |chan|
+        if @flags[:verbose].positive?
+          puts "Running `#{pastel.yellow(com)}`"
+          puts
+        else
+          print(pastel.yellow('.'))
+        end
+
+        chan.exec(com, &on_exec)
+      end.wait
+    end
+  end
+end
+
+puts pastel.green('Finished!')

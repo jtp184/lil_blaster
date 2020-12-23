@@ -12,3 +12,4 @@
 
 # project specific
 lil_blaster_config.*
+wpa_supplicant.conf
