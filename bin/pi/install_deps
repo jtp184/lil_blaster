@@ -7,12 +7,13 @@ require 'optparse'
 gemfile do
   source 'https://rubygems.org/'
 
-  gem 'pry'
-  gem 'pastel'
-  gem 'tty-prompt'
-  gem 'net-ssh'
-  gem 'ed25519'
   gem 'bcrypt_pbkdf'
+  gem 'ed25519'
+  gem 'net-ssh'
+  gem 'pastel'
+  gem 'pry'
+  gem 'tty-command'
+  gem 'tty-prompt'
 end
 
 # For color support
@@ -27,7 +28,19 @@ prompt = TTY::Prompt.new(
   end
 )
 
+# Run commands on device
+command = TTY::Command.new
+
 @flags = Hash.new(0)
+@os = case RUBY_PLATFORM
+      when /cygwin|mswin|mingw|bccwin|wince|emx/
+        :windows
+      when /darwin/
+        :mac
+      when /linux/
+        pi = File.read('/proc/cpuinfo') =~ /Raspberry Pi/
+        pi ? :raspberrypi : :linux
+      end
 
 OptionParser.new do |opts|
   opts.banner = 'Usage: install_deps [options]'
@@ -121,41 +134,68 @@ if tasks.include?(:lil_blaster)
   cmds << 'cd ~/lil_blaster && sudo rake install'
 end
 
-binding.pry
-
-# Run the commands on the remote device
-Net::SSH.start(host, 'pi') do |ssh|
-  cmds.each do |com|
+# Run the commands here if we're on a pi
+if @os == :raspberrypi
+  cmds.each do |cmd|
     @timer = Time.now
-    ssh.open_channel do |chan|
-      if @flags[:verbose].positive?
-        puts "Running `#{pastel.yellow(com)}`"
-        puts
-      else
-        print '.'.yellow
-      end
 
-      chan.exec(com) do |ch, success|
-        raise 'Could not execute command' unless success
+    puts "Running #{pastel.yellow(cmd)}" unless @flags[:verbose] < 1
 
-        # Show output on our device
-        if @flags[:verbose] > 1
-          ch.on_data { |_c, data| $stdout.print pastel.bright_black(data.to_s) }
-          ch.on_extended_data { |_c, _type, data| $stderr.print pastel.bright_black(data.to_s) }
+    begin
+      out, err = command.run(cmd)
+    rescue TTY::Command::ExitError
+      puts pastel.red('Could not execute command')
+      abort
+    end
+
+    if @flags[:verbose].zero?
+      print pastel.green('.')
+      next
+    end
+
+    msg = [out, err].map { |s| pastel.bright_black(s) }
+    tim = @durationizer[Time.now - @timer]
+    fin = [pastel.green.bold('Finished '), "(#{tim})"].join
+
+    puts msg if @flags[:verbose] > 1
+    puts fin
+    puts
+  end
+else
+  # Run the commands on the remote device
+  Net::SSH.start(host, 'pi') do |ssh|
+    cmds.each do |com|
+      @timer = Time.now
+      ssh.open_channel do |chan|
+        if @flags[:verbose].positive?
+          puts "Running `#{pastel.yellow(com)}`"
+          puts
+        else
+          print '.'.yellow
         end
 
-        ch.on_close do
-          tim = @durationizer[Time.now - @timer]
+        chan.exec(com) do |ch, success|
+          puts(pastel.red('Could not execute command')) && abort unless success
 
-          if @flags[:verbose].positive?
-            puts [pastel.green.bold('Finished '), "(#{tim})"].join
-            puts
-          else
-            print pastel.green('.')
+          # Show output on our device
+          if @flags[:verbose] > 1
+            ch.on_data { |_c, data| $stdout.print pastel.bright_black(data.to_s) }
+            ch.on_extended_data { |_c, _type, data| $stderr.print pastel.bright_black(data.to_s) }
+          end
+
+          ch.on_close do
+            tim = @durationizer[Time.now - @timer]
+
+            if @flags[:verbose].positive?
+              puts [pastel.green.bold('Finished '), "(#{tim})"].join
+              puts
+            else
+              print pastel.green('.')
+            end
           end
         end
-      end
-    end.wait
+      end.wait
+    end
   end
 end
 
