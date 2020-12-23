@@ -9,6 +9,7 @@ end
 RDOC_EXCLUDE = %w[
   bin/setup
   bin/console
+  bin/pi
   coverage
   pkg
   Gemfile
@@ -27,7 +28,7 @@ task :docs do
 end
 
 task :docs? do
-  sh "rdoc -C --output=docs --format=hanna --all --main=README.md #{RDOC_EXCLUDE}"
+  sh "rdoc -C --all #{RDOC_EXCLUDE}"
 end
 
 task :reinstall do

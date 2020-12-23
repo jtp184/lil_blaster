@@ -16,6 +16,7 @@ prompt = TTY::Prompt.new(
 )
 
 module LilBlaster
+  # Holds Pi related functionality
   module Pi
     # Captures multiple wifi network setups and the country code, generates the
     # file via its to_s method
