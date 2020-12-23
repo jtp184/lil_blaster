@@ -1,4 +1,4 @@
-Tue, 22 Dec 2020 21:13:13 -0800
+Tue, 22 Dec 2020 21:15:27 -0800
 ./bin/pi/boot_config	Tue, 22 Dec 2020 21:13:13 -0800
 ./bin/pi/install_deps	Tue, 22 Dec 2020 21:13:13 -0800
 ./bin/pi/wpa_config	Tue, 22 Dec 2020 21:13:13 -0800
@@ -29,4 +29,3 @@ Tue, 22 Dec 2020 21:13:13 -0800
 ./lib/lil_blaster.rb	Wed, 16 Dec 2020 17:39:26 -0800
 ./RASPI_SETUP.md	Tue, 22 Dec 2020 21:13:13 -0800
 ./README.md	Tue, 22 Dec 2020 21:13:13 -0800
-./wpa_supplicant.conf	Tue, 22 Dec 2020 19:14:25 -0800
