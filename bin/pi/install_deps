@@ -104,9 +104,7 @@ if tasks.include?(:custom_package)
 end
 
 # Handle custom gems
-if tasks.include?(:custom_gem)
-  gems << prompt.ask('Enter space separated list of gems to install:')
-end
+gems << prompt.ask('Enter space separated list of gems to install:') if tasks.include?(:custom_gem)
 
 if tasks.include?(:ruby)
   # Build the system level install command
@@ -116,7 +114,6 @@ if tasks.include?(:ruby)
 end
 
 gems << 'pigpio' if tasks.include?(:pigpio)
-
 cmds << "gem install #{gems.join(' ')}" unless gems.empty?
 
 # Clone the repo if requested
