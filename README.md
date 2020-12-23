@@ -90,9 +90,13 @@ lil_blaster learn --codex television --keys power volume_up volume_down input
 
 <!-- Image of learn codex -->
 
+![learn_codex](https://justinp-io-production.s3.amazonaws.com/store/d5b422e716f920ccef8e7945760ca924.png)
+
 When run interactively, you can choose from some default options for keys, as well as select an existing codex from a drop down. Codexes are saved and loaded to the codexes directory defined by the config file.
 
 <!-- Image of learn interactively -->
+
+![learn_interactively](https://justinp-io-production.s3.amazonaws.com/store/92cc12bc61da46e24739f697a790cde6.png)
 
 ## Usage
 
