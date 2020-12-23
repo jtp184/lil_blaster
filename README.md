@@ -430,3 +430,21 @@ LilBlaster::Buttons[0] = nil
 ```
 
 ### Configuration
+
+In case you want to use the gem with a different IR shield, or a custom wiring setup, there are module level attribute accessors which let you change the pinout. Also on the module is a function to identify the host OS.
+
+```ruby
+# Switches depending on the platform
+LilBlaster.host_os # => :windows / :mac / :linux / :raspberrypi
+
+LilBlaster.transmitter_pin # => defaults to 17
+LilBlaster.transmitter_pin = 23
+
+LilBlaster.reader_pin # => defaults to 18
+LilBlaster.reader_pin = 24
+
+# Adding more button pins will register more indexes on the Buttons class
+LilBlaster.button_pins # => defaults to [27, 22]
+LilBlaster.button_pins = [27, 22, 28, 29]
+
+```
