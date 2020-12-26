@@ -6,8 +6,37 @@ module LilBlaster
     class << self
       # Takes in a +str+, either a lirc.conf file or its filepath, and returns a codex version
       def call(str)
-        parse(str)
+        text = File.exist?(str) ? File.read(str) : str
 
+        rblocks = substring_ranges(text, 'begin remote', 'end remote').map! do |r|
+          parse(text[r])
+          codexify
+        end
+
+        rblocks.one? ? rblocks.first : rblocks
+      end
+
+      # Given a +str+, extracts the options from it with +parse_options+ and returns the hash
+      def parse(str)
+        if str.index('begin remote')
+          rblocks = substring_ranges(str, 'begin remote', 'end remote').map! do |r|
+            @matches = {}
+            parse_options(str[r])
+            @matches
+          end
+
+          rblocks.one? ? rblocks.first : rblocks
+        else
+          @matches = {}
+          parse_options(str)
+          @matches
+        end
+      end
+
+      private
+
+      # Encodes the current matches as a codex, and returns it
+      def codexify
         ret = Codex.new(
           remote_name: @matches[:remote_name],
           codes: {}.merge(@matches[:codes] || {}).merge(@matches[:raw_codes] || {})
@@ -17,22 +46,11 @@ module LilBlaster
         ret
       end
 
-      # Given a +str+, extracts the options from it with +parse_options+ and returns the hash
-      def parse(str)
-        text = File.exist?(str) ? File.read(str) : str
-        @matches = {}
-        parse_options(text)
-        @matches
-      end
-
-      private
-
       # Takes in the +text+ and parses the matched config options out of it
       def parse_options(text)
-        ctext = text[substring_range(text, 'begin remote', 'end remote')]
-        extract_conf_options(ctext)
+        extract_conf_options(text)
         handle_meta_options
-        handle_code_extracts(ctext)
+        handle_code_extracts(text)
       end
 
       # Scans the +text+ for the essential values to create the protocol
@@ -220,13 +238,44 @@ module LilBlaster
         Transmission.new(data: raw.scan(/\d+/).map { |val| Integer(val) })
       end
 
+      public
+
+      # Return an array of ranges within +text+ demarkated by +start_str+ and +end_str+
+      def substring_ranges(text, start_str, end_str)
+        marker = 0
+        rngs = []
+
+        until marker >= text.length.pred
+          begin
+            r = substring_range(text, start_str, end_str, marker)
+            rngs << r
+          rescue ArgumentError => e
+            raise e unless e.message =~ /^Could not find/
+
+            break
+          end
+          marker = rngs.last.end
+        end
+
+        rngs
+      end
+
+      private
+
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range
       # which will capture the substring
-      def substring_range(text, start_str, end_str)
-        (text.index(start_str) + start_str.length)..(text.index(end_str) + end_str.length)
-      rescue NoMethodError => e
+      def substring_range(text, start_str, end_str, offset = nil)
+        sarg = [start_str, offset].compact
+        earg = [end_str, offset].compact
+
+        sr = text.index(*sarg) + start_str.length
+        er = text.index(*earg) + end_str.length
+        sr..er
+      rescue StandardError => e
+        raise e unless e.is_a?(NoMethodError) || e.is_a?(TypeError)
+
         err_str = "Could not find '#{start_str}'..'#{end_str}' in string"
-        not_found = text.index(start_str).nil? || text.index(end_str).nil?
+        not_found = text.index(*sarg).nil? || text.index(*earg).nil?
         raise ArgumentError, err_str if not_found
 
         raise e
