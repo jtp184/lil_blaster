@@ -220,13 +220,44 @@ module LilBlaster
         Transmission.new(data: raw.scan(/\d+/).map { |val| Integer(val) })
       end
 
+      public
+
+      # Return an array of ranges within +text+ demarkated by +start_str+ and +end_str+
+      def substring_ranges(text, start_str, end_str)
+        marker = 0
+        rngs = []
+
+        until marker >= text.length.pred
+          begin
+            r = substring_range(text, start_str, end_str, marker)
+            rngs << r
+          rescue ArgumentError => e
+            raise e unless e.message =~ /^Could not find/
+
+            break
+          end
+          marker = rngs.last.end
+        end
+
+        rngs
+      end
+
+      private
+
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range
       # which will capture the substring
-      def substring_range(text, start_str, end_str)
-        (text.index(start_str) + start_str.length)..(text.index(end_str) + end_str.length)
-      rescue NoMethodError => e
+      def substring_range(text, start_str, end_str, offset = nil)
+        sarg = [start_str, offset].compact
+        earg = [end_str, offset].compact
+
+        sr = text.index(*sarg) + start_str.length
+        er = text.index(*earg) + end_str.length
+        sr..er
+      rescue StandardError => e
+        raise e unless e.is_a?(NoMethodError) || e.is_a?(TypeError)
+
         err_str = "Could not find '#{start_str}'..'#{end_str}' in string"
-        not_found = text.index(start_str).nil? || text.index(end_str).nil?
+        not_found = text.index(*sarg).nil? || text.index(*earg).nil?
         raise ArgumentError, err_str if not_found
 
         raise e
