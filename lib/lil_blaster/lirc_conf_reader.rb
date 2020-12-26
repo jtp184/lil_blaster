@@ -18,9 +18,19 @@ module LilBlaster
 
       # Given a +str+, extracts the options from it with +parse_options+ and returns the hash
       def parse(str)
-        @matches = {}
-        parse_options(str)
-        @matches
+        if str.index('begin remote')
+          rblocks = substring_ranges(str, 'begin remote', 'end remote').map! do |r|
+            @matches = {}
+            parse_options(str[r])
+            @matches
+          end
+
+          rblocks.one? ? rblocks.first : rblocks
+        else
+          @matches = {}
+          parse_options(str)
+          @matches
+        end
       end
 
       private
