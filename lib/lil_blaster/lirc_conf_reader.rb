@@ -238,8 +238,6 @@ module LilBlaster
         Transmission.new(data: raw.scan(/\d+/).map { |val| Integer(val) })
       end
 
-      public
-
       # Return an array of ranges within +text+ demarkated by +start_str+ and +end_str+
       def substring_ranges(text, start_str, end_str)
         marker = 0
@@ -259,8 +257,6 @@ module LilBlaster
 
         rngs
       end
-
-      private
 
       # Given a string +text+ and a +start_str+ and +end_str+ to search between, returns a range
       # which will capture the substring
