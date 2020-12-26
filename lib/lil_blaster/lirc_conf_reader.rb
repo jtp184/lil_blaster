@@ -6,8 +6,26 @@ module LilBlaster
     class << self
       # Takes in a +str+, either a lirc.conf file or its filepath, and returns a codex version
       def call(str)
-        parse(str)
+        text = File.exist?(str) ? File.read(str) : str
 
+        rblocks = substring_ranges(text, 'begin remote', 'end remote').map! do |r|
+          parse(text[r])
+          codexify
+        end
+
+        rblocks.one? ? rblocks.first : rblocks
+      end
+
+      # Given a +str+, extracts the options from it with +parse_options+ and returns the hash
+      def parse(str)
+        @matches = {}
+        parse_options(str)
+        @matches
+      end
+
+      private
+
+      def codexify
         ret = Codex.new(
           remote_name: @matches[:remote_name],
           codes: {}.merge(@matches[:codes] || {}).merge(@matches[:raw_codes] || {})
@@ -17,22 +35,11 @@ module LilBlaster
         ret
       end
 
-      # Given a +str+, extracts the options from it with +parse_options+ and returns the hash
-      def parse(str)
-        text = File.exist?(str) ? File.read(str) : str
-        @matches = {}
-        parse_options(text)
-        @matches
-      end
-
-      private
-
       # Takes in the +text+ and parses the matched config options out of it
       def parse_options(text)
-        ctext = text[substring_range(text, 'begin remote', 'end remote')]
-        extract_conf_options(ctext)
+        extract_conf_options(text)
         handle_meta_options
-        handle_code_extracts(ctext)
+        handle_code_extracts(text)
       end
 
       # Scans the +text+ for the essential values to create the protocol
