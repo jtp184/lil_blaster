@@ -35,6 +35,7 @@ module LilBlaster
 
       private
 
+      # Encodes the current matches as a codex, and returns it
       def codexify
         ret = Codex.new(
           remote_name: @matches[:remote_name],
