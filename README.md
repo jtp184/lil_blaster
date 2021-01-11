@@ -211,6 +211,26 @@ pr.encode(0x40BF) # => <LilBlaster::Transmission...>
 
 The `RCMM` protocol class handles [RCMM](https://www.sbprojects.net/knowledge/ir/nec.php) transmissions, with 4-bit data transmissions.
 
+```ruby
+props = {
+  pulse_values: {
+    header: [480,228],
+    zero: [216, 228],
+    one: [216, 395],
+    two: [216, 559],
+    three: [216, 726],
+  },
+  pre_data: 8,
+  post_bit: 216,
+  gap: 27_497
+}
+
+pr = LilBlaster::Protocol::RCMM.new(props)
+
+pr.encode(0x1) + pr.encode(0x81)
+
+```
+
 ### Codexes
 
 The `Codex` class provides a way to collect codes that use the same protocol, allowing the organizing and sharing of codes for devices.
