@@ -187,6 +187,26 @@ protocol.to_bytestring(command) # => "11100000111000000100000010111111"
 
 The `Manchester` protocol class handles both [RC5](https://www.sbprojects.net/knowledge/ir/rc5.php) and [NEC](https://www.sbprojects.net/knowledge/ir/nec.php) remotes.
 
+```ruby
+# Manchester transmissions have a header, and 2 bit data with post_bit and a gap
+# It also often includes a precursor data burst
+props = {
+  system_data: 0xE0E0,
+  pulse_values: {
+    header: [4511, 4540],
+    zero: [517, 1732],
+    one: [517, 609]
+  },
+  post_bit: 517,
+  gap: 47_312
+}
+
+pr = LilBlaster::Protocol::Manchester.new(props)
+
+pr.encode(0x40BF) # => <LilBlaster::Transmission...>
+
+```
+
 #### RCMM Protocol
 
 The `RCMM` protocol class handles [RCMM](https://www.sbprojects.net/knowledge/ir/nec.php) transmissions, with 4-bit data transmissions.
