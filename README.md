@@ -139,6 +139,8 @@ t4.count # => 24
 
 ### Protocols
 
+#### Base Protocol
+
 The `Protocol` module collects different protocol implementations, which are subclasses of the `BaseProtocol` class. The module itself serves as an interface for matching transmissions to those protocols.
 
 ```ruby
@@ -180,6 +182,14 @@ tr1 == tr2 # => true
 protocol.to_bytestring(command) # => "11100000111000000100000010111111"
 
 ```
+
+#### Manchester Protocol
+
+The `Manchester` protocol class handles both [RC5](https://www.sbprojects.net/knowledge/ir/rc5.php) and [NEC](https://www.sbprojects.net/knowledge/ir/nec.php) remotes.
+
+#### RCMM Protocol
+
+The `RCMM` protocol class handles [RCMM](https://www.sbprojects.net/knowledge/ir/nec.php) transmissions, with 4-bit data transmissions.
 
 ### Codexes
 
