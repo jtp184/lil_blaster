@@ -139,6 +139,8 @@ t4.count # => 24
 
 ### Protocols
 
+#### Base Protocol
+
 The `Protocol` module collects different protocol implementations, which are subclasses of the `BaseProtocol` class. The module itself serves as an interface for matching transmissions to those protocols.
 
 ```ruby
@@ -178,6 +180,54 @@ tr1 == tr2 # => true
 
 # Or get a string representation
 protocol.to_bytestring(command) # => "11100000111000000100000010111111"
+
+```
+
+#### Manchester Protocol
+
+The `Manchester` protocol class handles both [RC5](https://www.sbprojects.net/knowledge/ir/rc5.php) and [NEC](https://www.sbprojects.net/knowledge/ir/nec.php) remotes.
+
+```ruby
+# Manchester transmissions have a header, and 2 bit data with post_bit and a gap
+# It also often includes a precursor data burst
+props = {
+  system_data: 0xE0E0,
+  pulse_values: {
+    header: [4511, 4540],
+    zero: [517, 1732],
+    one: [517, 609]
+  },
+  post_bit: 517,
+  gap: 47_312
+}
+
+pr = LilBlaster::Protocol::Manchester.new(props)
+
+pr.encode(0x40BF) # => <LilBlaster::Transmission...>
+
+```
+
+#### RCMM Protocol
+
+The `RCMM` protocol class handles [RCMM](https://www.sbprojects.net/knowledge/ir/nec.php) transmissions, with 4-bit data transmissions.
+
+```ruby
+props = {
+  pulse_values: {
+    header: [480,228],
+    zero: [216, 228],
+    one: [216, 395],
+    two: [216, 559],
+    three: [216, 726],
+  },
+  pre_data: 8,
+  post_bit: 216,
+  gap: 27_497
+}
+
+pr = LilBlaster::Protocol::RCMM.new(props)
+
+pr.encode(0x1) + pr.encode(0x81)
 
 ```
 
