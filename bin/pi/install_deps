@@ -51,16 +51,8 @@ end.parse!
 @durationizer = proc do |var|
   secs  = var.to_int
   mins  = secs / 60
-  hours = mins / 60
-  days  = hours / 24
 
-  if days.positive?
-    plur = days > 1 ? 's' : ''
-    "#{days} day#{plur} and #{hours % 24} hours"
-  elsif hours.positive?
-    plur = hours > 1 ? 's' : ''
-    "#{hours} hour#{plur} and #{mins % 60} minutes"
-  elsif mins.positive?
+  if mins.positive?
     plur = mins > 1 ? 's' : ''
     "#{mins} minute#{plur} and #{secs % 60} seconds"
   elsif secs >= 2
