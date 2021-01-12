@@ -91,6 +91,7 @@ module LilBlaster
 
     desc 'guess', 'Guesses the remote from the LIRC remotes dump'
 
+    # Infer a codex out of the LIRC project
     def guess
       if options[:help]
         invoke :help, [:send_code]

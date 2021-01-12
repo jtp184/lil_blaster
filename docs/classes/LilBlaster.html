@@ -52,6 +52,9 @@ LilBlaster
 <a href="../files/lib/lil_blaster/commands/config_rb.html">lib/lil_blaster/commands/config.rb</a>
 </li>
 <li class='other'>
+<a href="../files/lib/lil_blaster/commands/guess_rb.html">lib/lil_blaster/commands/guess.rb</a>
+</li>
+<li class='other'>
 <a href="../files/lib/lil_blaster/commands/learn_rb.html">lib/lil_blaster/commands/learn.rb</a>
 </li>
 <li class='other'>
@@ -123,6 +126,11 @@ LilBlaster
 <li><a href="#attribute-c-reader_pin">reader_pin</a></li>
 <li><a href="#method-c-transmitter_pin">transmitter_pin</a></li>
 <li><a href="#attribute-c-transmitter_pin">transmitter_pin</a></li>
+<li><a href="#method-c-vendor_path">vendor_path</a></li>
+</ol>
+<h3>Private Class</h3>
+<ol>
+<li><a href="#method-c-locate_gem_folder">locate_gem_folder</a></li>
 </ol>
 </div>
 <div id='context'>
@@ -254,6 +262,45 @@ Returns one of :windows, :mac, :linux, or :raspberrypi</p>
 [show source]
 </a>
 <pre id='method-c-transmitter_pin-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 28</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transmitter_pin</span>&#x000A;  <span class="ruby-ivar">@transmitter_pin</span> <span class="ruby-operator">||=</span> <span class="ruby-value">17</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-vendor_path'>
+<a name='method-c-vendor_path'></a>
+<div class='synopsis'>
+<span class='name'>vendor_path</span><span class='arguments'>(*paths)</span>
+
+</div>
+<div class='description'>
+
+<p>Returns the path to the vendor directory for this gem, to access non-ruby
+assets like the lirc_remotes_dump. If <code>paths</code> are appended,
+joins them to the base with &#39;/&#39;</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-vendor_path-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-vendor_path-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 59</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">vendor_path</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">paths</span>)&#x000A;  <span class="ruby-ivar">@vendor_path</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">locate_gem_folder</span>).<span class="ruby-identifier">tap</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">str</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;/gems&#39;</span>&#x000A;    <span class="ruby-identifier">str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;/lil_blaster-#{LilBlaster::VERSION}&quot;</span>&#x000A;    <span class="ruby-identifier">str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;/vendor&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@vendor_path</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">paths</span>.<span class="ruby-identifier">empty?</span>&#x000A;&#x000A;  [<span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@vendor_path</span>)].<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">paths</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;/&#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<h2>Private Class methods</h2>
+<div class='method private-class' id='method-method-c-locate_gem_folder'>
+<a name='method-c-locate_gem_folder'></a>
+<div class='synopsis'>
+<span class='name'>locate_gem_folder</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Figures out where to look for gems using Gem.path</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-locate_gem_folder-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-locate_gem_folder-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">locate_gem_folder</span>&#x000A;  <span class="ruby-identifier">looks</span>, <span class="ruby-identifier">_nopes</span> = <span class="ruby-constant">Gem</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">partition</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">pth</span>) }&#x000A;&#x000A;  <span class="ruby-identifier">has_them</span>, <span class="ruby-identifier">_doesnt</span> = <span class="ruby-identifier">looks</span>.<span class="ruby-identifier">partition</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">entries</span>(<span class="ruby-identifier">pth</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;gems&#39;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">has_them</span>.<span class="ruby-identifier">first</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
