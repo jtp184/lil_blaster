@@ -52,5 +52,33 @@ module LilBlaster
         pi ? :raspberrypi : :linux
       end
     end
+
+    # Returns the path to the vendor directory for this gem, to access non-ruby
+    # assets like the lirc_remotes_dump.
+    # If +paths+ are appended, joins them to the base with '/'
+    def vendor_path(*paths)
+      @vendor_path ||= String.new(locate_gem_folder).tap do |str|
+        str << '/gems'
+        str << "/lil_blaster-#{LilBlaster::VERSION}"
+        str << '/vendor'
+      end
+
+      return @vendor_path if paths.empty?
+
+      [String.new(@vendor_path)].concat(paths).join('/')
+    end
+
+    private
+
+    # Figures out where to look for gems using Gem.path
+    def locate_gem_folder
+      looks, _nopes = Gem.path.partition { |pth| Dir.exist?(pth) }
+
+      has_them, _doesnt = looks.partition do |pth|
+        Dir.entries(pth).include?('gems')
+      end
+
+      has_them.first
+    end
   end
 end
