@@ -58,7 +58,7 @@ module LilBlaster
           protocol: {
             system_data: proto.system_data(transmissions.first)
           },
-          codes: codes.uniq { |c| proto.bytestring_for(c) }.map { |c| proto.command_data(c) }
+          codes: transmissions.uniq { |c| proto.bytestring_for(c) }.map { |c| proto.command_data(c) }
         }
       end
 
