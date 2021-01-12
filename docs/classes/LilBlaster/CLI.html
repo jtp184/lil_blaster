@@ -53,6 +53,7 @@ command objects</p>
 <h3>Public Instance</h3>
 <ol>
 <li><a href="#method-i-config">config</a></li>
+<li><a href="#method-i-guess">guess</a></li>
 <li><a href="#method-i-learn">learn</a></li>
 <li><a href="#method-i-send_code">send_code</a></li>
 <li><a href="#method-i-version">version</a></li>
@@ -114,6 +115,24 @@ command objects</p>
 [show source]
 </a>
 <pre id='method-i-config-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 43</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">config</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:help</span>]&#x000A;    <span class="ruby-identifier">invoke</span> <span class="ruby-value">:help</span>, [<span class="ruby-value">:config</span>]&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">require_relative</span> <span class="ruby-string">&#39;commands/config&#39;</span>&#x000A;&#x000A;    <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Commands</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>).<span class="ruby-identifier">execute</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-guess'>
+<a name='method-i-guess'></a>
+<div class='synopsis'>
+<span class='name'>guess</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Infer a codex out of the LIRC project</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-guess-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-guess-source'><span class="ruby-comment"># File lib/lil_blaster/cli.rb, line 94</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">guess</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:help</span>]&#x000A;    <span class="ruby-identifier">invoke</span> <span class="ruby-value">:help</span>, [<span class="ruby-value">:send_code</span>]&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">require_relative</span> <span class="ruby-string">&#39;commands/guess&#39;</span>&#x000A;&#x000A;    <span class="ruby-constant">LilBlaster</span><span class="ruby-operator">::</span><span class="ruby-constant">Commands</span><span class="ruby-operator">::</span><span class="ruby-constant">Guess</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>).<span class="ruby-identifier">execute</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-learn'>
