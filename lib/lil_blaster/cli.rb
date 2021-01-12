@@ -88,5 +88,17 @@ module LilBlaster
         LilBlaster::Commands::Learn.new(options).execute
       end
     end
+
+    desc 'guess', 'Guesses the remote from the LIRC remotes dump'
+
+    def guess
+      if options[:help]
+        invoke :help, [:send_code]
+      else
+        require_relative 'commands/guess'
+
+        LilBlaster::Commands::Guess.new(options).execute
+      end
+    end
   end
 end

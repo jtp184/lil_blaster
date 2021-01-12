@@ -69,8 +69,6 @@ module LilBlaster
                               end
                             elsif @options[:raw] && @options[:interactive]
                               interactive_codex_choice
-                            elsif LilBlaster::Codex.default
-                              LilBlaster::Codex.default
                             elsif @options[:interactive]
                               interactive_codex_choice
                             end
