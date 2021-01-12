@@ -21,11 +21,12 @@ module LilBlaster
 
       # Prompts to choose one of the +guesses+ and save it to the codexes directory
       def choose_result(guesses)
-        choice = prompt.select('Possible matches:', guesses.map(&:remote_name))
-        codex = lirc_remotes_dump.find { |r| r.remote_name == choice }
+        codex = prompt.select('Possible matches:', guesses.map(&:remote_name))
+                      .yield_self { |c| lirc_remotes_dump.find { |r| r.remote_name == c } }
 
         fpath = LilBlaster::ConfigFile[:codexes_dir] + "/#{codex.remote_name}_codex.yml"
         codex.save_file(fpath)
+
         puts "Saved to #{pastel.yellow(fpath)}"
       end
 
@@ -50,15 +51,15 @@ module LilBlaster
         puts 'Please press several different buttons on your remote'
 
         transmissions = LilBlaster::Reader.record(seconds: 10, first: 30)
-        proto = LilBlaster::Protocol[LilBlaster::Protocol.identify(transmissions.first)]
+        pro = LilBlaster::Protocol[LilBlaster::Protocol.identify(transmissions.first)]
 
         puts pastel.green('Done!')
 
         {
           protocol: {
-            system_data: proto.system_data(transmissions.first)
+            system_data: pro.system_data(transmissions.first)
           },
-          codes: transmissions.uniq { |c| proto.bytestring_for(c) }.map { |c| proto.command_data(c) }
+          codes: transmissions.uniq { |c| pro.bytestring_for(c) }.map { |c| pro.command_data(c) }
         }
       end
 
