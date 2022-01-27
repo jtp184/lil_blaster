@@ -68,6 +68,33 @@ module LilBlaster
       [String.new(@vendor_path)].concat(paths).join('/')
     end
 
+    # Returns a blob for use with PiMaker
+    def pi_maker_recipe
+      {
+        boot_config_options: {
+          config: { 'dtparam=spi': 'on' }
+        },
+        initial_setup_options: {
+          apt_packages: %w[ruby-full],
+          github_repos: {
+            'jtp184/lil_blaster': [
+              'cd ~/repos/lil_blaster && bundle',
+              'cd ~/repos/lil_blaster && rake install'
+            ]
+          },
+          gems: %w[
+            bundler
+            rake
+            colorize
+            pigpio
+          ],
+          shell: ['touch ~/.hushlogin'],
+          raspi_config: { do_expand_rootfs: nil },
+          bashrc: ['if ! [ -e /var/run/pigpiod.pid ]; then sudo pigpiod start; fi']
+        }
+      }
+    end
+
     private
 
     # Figures out where to look for gems using Gem.path

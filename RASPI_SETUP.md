@@ -8,18 +8,21 @@ See the [Raspberry Pi Documentation](https://www.raspberrypi.org/documentation/i
 
 ## Wifi setup
 
-Run `bin/pi/wpa_config` to enter wifi credentials. This will save a `wpa_supplicant.conf` file. You can also create one manually if you'd like.
-
-![wpa_config](https://justinp-io-production.s3.amazonaws.com/store/1c97d2fc7d5ba62ef9b7ae0ecff7991e.png)
+Create a [`wpa_supplicant.conf`](https://wiki.archlinux.org/title/wpa_supplicant) file and load it onto the flashed boot drive
 
 ## Boot Config
 
-Ensure that the boot volume is mounted. Run `bin/pi/boot_config`, which will set SSH and SPI settings, and copy your `wpa_supplicant.conf` file.
+Modify the `config.txt` and set `dtparam=spi on`. Touch a file named `ssh` in the boot directory to enable ssh on boot
 
-![boot_config](https://justinp-io-production.s3.amazonaws.com/store/4be1b791d8c2c40fdf861e50ed80b423.png)
+## Installing Dependencies and gem
 
-## Installing Dependencies
+SSH into the pi and run
 
-Run `bin/pi/install_deps`. You can install various needed dependencies remotely with this script, including Ruby, the gem itself, and compiling / installing the waveshare libraries on the pi itself.
+```bash
+sudo apt-get update
+sudo apt-get install ruby-full
+sudo gem install bundler rake pigpio
 
-![install_deps](https://justinp-io-production.s3.amazonaws.com/store/18f990de56a0ff647c334d7a52d07db9.png)
+mkdir -p ~/repos && cd ~/repos && git clone https://github.com/jtp184/lil_blaster.git
+cd lil_blaster && bundle && sudo rake install
+```
