@@ -17,7 +17,7 @@ cd lil_blaster
 rake install
 ```
 
-For help setting up your pi for use with this gem, check out the [RASPI_SETUP](https://github.com/jtp184/lil_blaster/blob/master/RASPI_SETUP.md) instructions
+For help setting up your pi for use with this gem, check out my [PiMaker](https://github.com/jtp184/pi_maker) gem, or the [RASPI_SETUP](https://github.com/jtp184/lil_blaster/blob/master/RASPI_SETUP.md) instructions.
 
 ## Hardware
 

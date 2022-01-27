@@ -30,7 +30,7 @@ RASPI_SETUP.md
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-12-22 21:13:13 -0800</span>
+<span class='datetime'>2022-01-26 21:56:55 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -50,30 +50,21 @@ cards.</p>
 
 <h2 id="label-Wifi+setup">Wifi setup<span><a href="#label-Wifi+setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Run <code>bin/pi/wpa_config</code> to enter wifi credentials. This will
-save a <code>wpa_supplicant.conf</code> file. You can also create one
-manually if you&#39;d like.</p>
-
-<p><img
-src="https://justinp-io-production.s3.amazonaws.com/store/1c97d2fc7d5ba62ef9b7ae0ecff7991e.png"></p>
+<p>Create a <a
+href="https://wiki.archlinux.org/title/wpa_supplicant">wpa_supplicant.conf</a>
+file and load it onto the flashed boot drive</p>
 
 <h2 id="label-Boot+Config">Boot Config<span><a href="#label-Boot+Config">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Ensure that the boot volume is mounted. Run
-<code>bin/pi/boot_config</code>, which will set SSH and SPI settings, and
-copy your <code>wpa_supplicant.conf</code> file.</p>
+<p>Modify the <code>config.txt</code> and set <code>dtparam=spi on</code>.
+Touch a file named <code>ssh</code> in the boot directory to enable ssh on
+boot</p>
 
-<p><img
-src="https://justinp-io-production.s3.amazonaws.com/store/4be1b791d8c2c40fdf861e50ed80b423.png"></p>
+<h2 id="label-Installing+Dependencies+and+gem">Installing Dependencies and gem<span><a href="#label-Installing+Dependencies+and+gem">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<h2 id="label-Installing+Dependencies">Installing Dependencies<span><a href="#label-Installing+Dependencies">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<p>SSH into the pi and run</p>
 
-<p>Run <code>bin/pi/install_deps</code>. You can install various needed
-dependencies remotely with this script, including Ruby, the gem itself, and
-compiling / installing the waveshare libraries on the pi itself.</p>
-
-<p><img
-src="https://justinp-io-production.s3.amazonaws.com/store/18f990de56a0ff647c334d7a52d07db9.png"></p>
+<pre>sudo apt-get update&#x000A;sudo apt-get install ruby-full&#x000A;sudo gem install bundler rake pigpio&#x000A;mkdir -p ~/repos &amp;&amp; cd ~/repos &amp;&amp; git clone https://github.com/jtp184/lil_blaster.git&#x000A;cd lil_blaster &amp;&amp; bundle &amp;&amp; sudo rake install</pre>
 </div>
 <div id='context'>
 </div>

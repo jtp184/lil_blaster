@@ -122,6 +122,7 @@ LilBlaster
 <li><a href="#method-c-button_pins">button_pins</a></li>
 <li><a href="#attribute-c-button_pins">button_pins</a></li>
 <li><a href="#method-c-host_os">host_os</a></li>
+<li><a href="#method-c-pi_maker_recipe">pi_maker_recipe</a></li>
 <li><a href="#method-c-reader_pin">reader_pin</a></li>
 <li><a href="#attribute-c-reader_pin">reader_pin</a></li>
 <li><a href="#method-c-transmitter_pin">transmitter_pin</a></li>
@@ -228,6 +229,24 @@ Returns one of :windows, :mac, :linux, or :raspberrypi</p>
 <pre id='method-c-host_os-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 44</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">host_os</span>&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-constant">RUBY_PLATFORM</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/cygwin|mswin|mingw|bccwin|wince|emx/</span>&#x000A;    <span class="ruby-value">:windows</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/darwin/</span>&#x000A;    <span class="ruby-value">:mac</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/linux/</span>&#x000A;    <span class="ruby-identifier">pi</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-string">&#39;/proc/cpuinfo&#39;</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Raspberry Pi/</span>&#x000A;    <span class="ruby-identifier">pi</span> <span class="ruby-operator">?</span> <span class="ruby-value">:raspberrypi</span> <span class="ruby-operator">:</span> <span class="ruby-value">:linux</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
+<div class='method public-class' id='method-method-c-pi_maker_recipe'>
+<a name='method-c-pi_maker_recipe'></a>
+<div class='synopsis'>
+<span class='name'>pi_maker_recipe</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+<p>Returns a blob for use with PiMaker</p>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-pi_maker_recipe-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-pi_maker_recipe-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 72</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pi_maker_recipe</span>&#x000A;  {&#x000A;    <span class="ruby-value">boot_config_options:</span> {&#x000A;      <span class="ruby-value">config:</span> { <span class="ruby-value">&#39;dtparam=spi&#39;:</span> <span class="ruby-string">&#39;on&#39;</span> }&#x000A;    },&#x000A;    <span class="ruby-value">initial_setup_options:</span> {&#x000A;      <span class="ruby-value">apt_packages:</span> <span class="ruby-node">%w[ruby-full]</span>,&#x000A;      <span class="ruby-value">github_repos:</span> {&#x000A;        <span class="ruby-value">&#39;jtp184/lil_blaster&#39;:</span> [&#x000A;          <span class="ruby-string">&#39;cd ~/repos/lil_blaster &amp;&amp; bundle&#39;</span>,&#x000A;          <span class="ruby-string">&#39;cd ~/repos/lil_blaster &amp;&amp; rake install&#39;</span>&#x000A;        ]&#x000A;      },&#x000A;      <span class="ruby-value">gems:</span> <span class="ruby-node">%w[&#x000A;        bundler&#x000A;        rake&#x000A;        colorize&#x000A;        pigpio&#x000A;      ]</span>,&#x000A;      <span class="ruby-value">shell:</span> [<span class="ruby-string">&#39;touch ~/.hushlogin&#39;</span>],&#x000A;      <span class="ruby-value">raspi_config:</span> { <span class="ruby-value">do_expand_rootfs:</span> <span class="ruby-keyword">nil</span> },&#x000A;      <span class="ruby-value">bashrc:</span> [<span class="ruby-string">&#39;if ! [ -e /var/run/pigpiod.pid ]; then sudo pigpiod start; fi&#39;</span>]&#x000A;    }&#x000A;  }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-class' id='method-method-c-reader_pin'>
 <a name='method-c-reader_pin'></a>
 <div class='synopsis'>
@@ -300,7 +319,7 @@ joins them to the base with &#39;/&#39;</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-locate_gem_folder-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-locate_gem_folder-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 74</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">locate_gem_folder</span>&#x000A;  <span class="ruby-identifier">looks</span>, <span class="ruby-identifier">_nopes</span> = <span class="ruby-constant">Gem</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">partition</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">pth</span>) }&#x000A;&#x000A;  <span class="ruby-identifier">has_them</span>, <span class="ruby-identifier">_doesnt</span> = <span class="ruby-identifier">looks</span>.<span class="ruby-identifier">partition</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">entries</span>(<span class="ruby-identifier">pth</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;gems&#39;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">has_them</span>.<span class="ruby-identifier">first</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-locate_gem_folder-source'><span class="ruby-comment"># File lib/lil_blaster.rb, line 101</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">locate_gem_folder</span>&#x000A;  <span class="ruby-identifier">looks</span>, <span class="ruby-identifier">_nopes</span> = <span class="ruby-constant">Gem</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">partition</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">pth</span>) }&#x000A;&#x000A;  <span class="ruby-identifier">has_them</span>, <span class="ruby-identifier">_doesnt</span> = <span class="ruby-identifier">looks</span>.<span class="ruby-identifier">partition</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pth</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">entries</span>(<span class="ruby-identifier">pth</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;gems&#39;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">has_them</span>.<span class="ruby-identifier">first</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
