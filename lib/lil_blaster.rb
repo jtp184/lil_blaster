@@ -75,7 +75,7 @@ module LilBlaster
           config: { 'dtparam=spi': 'on' }
         },
         initial_setup_options: {
-          apt_packages: %w[ruby-full],
+          ruby_version: '2.7.5',
           github_repos: {
             'jtp184/lil_blaster': [
               'cd ~/repos/lil_blaster && bundle',
